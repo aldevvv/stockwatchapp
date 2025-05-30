@@ -1,0 +1,121 @@
+.pricing-intro {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 3rem !important;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  gap: 2rem;
+  margin-top: 2rem;
+  align-items: stretch; 
+}
+
+.pricing-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex; 
+  flex-direction: column; 
+  justify-content: space-between; 
+}
+
+.pricing-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+
+.pricing-card.popular {
+  border-color: #007bff;
+  position: relative;
+}
+.pricing-card.popular::before {
+  content: "Paling Populer";
+  position: absolute;
+  top: -15px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #007bff;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  z-index: 1;
+}
+
+.pricing-card h3 {
+  color: #007bff;
+  font-size: 1.5rem; 
+  margin-top: 0; 
+  margin-bottom: 1rem;
+}
+
+.pricing-card .price {
+  font-size: 2.2rem; 
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 1rem;
+}
+.pricing-card .price-period {
+  font-size: 1rem;
+  color: #777;
+  font-weight: 400;
+}
+
+.pricing-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 1.5rem 0;
+  text-align: left;
+  flex-grow: 1; 
+}
+
+.pricing-card ul li {
+  margin-bottom: 0.75rem;
+  color: #555;
+  padding-left: 1.5rem;
+  position: relative;
+  font-size: 0.95rem; 
+}
+.pricing-card ul li::before {
+  content: "✓";
+  color: #28a745;
+  position: absolute;
+  left: 0;
+  font-weight: bold;
+}
+
+.btn-pricing {
+  background-color: #007bff;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  text-decoration: none;
+  border-radius: 5px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  display: inline-block; 
+  width: 100%; 
+  margin-top: auto; 
+  transition: background-color 0.2s ease;
+}
+.btn-pricing.btn-popular {
+  background-color: #007bff; 
+}
+.btn-pricing.btn-contact {
+  background-color: #007bff; 
+}
+.btn-pricing:hover {
+  background-color: #004085; 
+}
+.btn-pricing.btn-popular:hover {
+  background-color: #003f7e; 
+}
+.btn-pricing.btn-contact:hover {
+  background-color: #003f7e; 
+}

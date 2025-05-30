@@ -1,0 +1,10 @@
+# Dependencies
+/node_modules
+
+# Build folder
+/dist
+
+# Environment variables
+.env
+
+/backend/src/config/firebaseAdminSDK.json

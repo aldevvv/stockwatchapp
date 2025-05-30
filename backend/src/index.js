@@ -1,0 +1,26 @@
+import express from 'express';
+import cors from 'cors';
+import authRoutes from './auth/auth.routes.js';
+import stokRoutes from './stok/stok.routes.js'; 
+import userRoutes from './user/user.routes.js';
+import './scheduler/index.js'; // Impor untuk menjalankan scheduler
+
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
+
+// 2. Gunakan rute yang sudah diimpor
+app.use('/api/auth', authRoutes);
+app.use('/api/stok', stokRoutes);
+app.use('/api/users', userRoutes);
+
+app.get('/', (req, res) => {
+  res.status(200).json({ message: 'API StockWatch Aktif!' });
+});
+
+app.listen(PORT, () => {
+  console.log(`Server backend berjalan di http://localhost:${PORT}`);
+});

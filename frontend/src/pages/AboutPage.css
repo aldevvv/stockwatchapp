@@ -1,0 +1,227 @@
+.about-page-new {
+  font-family: 'Arial', sans-serif;
+  color: #333;
+  line-height: 1.7;
+}
+
+.about-hero-new {
+  background-color: #0056b3;
+  color: white;
+  text-align: center;
+  padding: 70px 20px;
+}
+.about-hero-content-new h1 {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+.about-hero-content-new p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+  opacity: 0.9;
+}
+
+.about-section-new {
+  padding: 50px 20px;
+}
+.about-section-new .container-new {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+.about-section-new h2 {
+  font-size: 2.2rem;
+  color: #333;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+.about-section-new .section-title-new {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 3rem;
+}
+.about-section-new p {
+  font-size: 1.05rem;
+  color: #555;
+  margin-bottom: 1rem;
+}
+
+.two-column-layout-new {
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+  margin-bottom: 2rem;
+}
+.two-column-layout-new .column-text-new {
+  flex: 1;
+}
+.two-column-layout-new .column-image-new {
+  flex: 1;
+  text-align: center;
+}
+.two-column-layout-new .column-image-new img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+.two-column-layout-new.reverse {
+  flex-direction: row-reverse;
+}
+
+.mission-vision-section {
+  background-color: #f8f9fa;
+}
+.mission-vision-section strong {
+    color: #007bff;
+}
+
+.values-section {
+    background-color: #fff;
+}
+.values-grid-new {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+}
+.value-card-new {
+  text-align: center;
+  padding: 1.5rem;
+}
+.value-icon-new {
+  font-size: 2.5rem;
+  color: #007bff;
+  margin-bottom: 0.75rem;
+}
+.value-card-new h3 {
+  font-size: 1.3rem;
+  color: #333;
+  margin-bottom: 0.5rem;
+}
+.value-card-new p {
+  font-size: 0.95rem;
+  color: #666;
+}
+
+.team-section {
+  background-color: #eef7ff;
+}
+.team-grid-new {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.team-member-card-new {
+  text-align: center;
+  max-width: 180px;
+  margin: 0 auto;
+}
+.team-member-img-new {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+.team-member-card-new h3 {
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+.team-member-card-new p {
+  font-size: 0.85rem;
+  color: #007bff;
+}
+
+.final-cta-about {
+  background-color: #343a40;
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+}
+.final-cta-about .container-new {
+    text-align: center;
+}
+.final-cta-about h2 {
+  color: white;
+  font-size: 2.2rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.final-cta-about p {
+  color: rgba(255,255,255,0.8);
+  max-width: 600px;
+  margin: 0 auto 1.5rem auto;
+}
+
+.btn-new {
+  display: inline-block;
+  font-weight: 600;
+  text-align: center;
+  vertical-align: middle;
+  cursor: pointer;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid transparent;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+}
+.btn-primary-new {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+.btn-primary-new:hover {
+  background-color: #0056b3;
+  border-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+/* Media Queries */
+@media (min-width: 1200px) {
+    .team-grid-new {
+        grid-template-columns: repeat(5, 1fr);
+    }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+    .team-grid-new {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+@media (max-width: 767px) {
+  .about-hero-content-new h1 {
+    font-size: 2rem;
+  }
+  .about-hero-content-new p {
+    font-size: 1rem;
+  }
+  .about-section-new h2, .about-section-new .section-title-new {
+    font-size: 1.8rem;
+  }
+  .two-column-layout-new {
+    flex-direction: column !important;
+  }
+  .two-column-layout-new .column-image-new {
+    margin-top: 2rem;
+  }
+  .two-column-layout-new.reverse .column-image-new {
+    margin-top: 0;
+    margin-bottom: 2rem;
+  }
+  .team-grid-new {
+    grid-template-columns: 1fr; /* Mengubah menjadi 1 kolom */
+  }
+  .team-member-card-new {
+    max-width: 250px; /* Bisa sedikit lebih lebar karena 1 kolom */
+  }
+  .team-member-img-new {
+    width: 120px; /* Sedikit lebih besar di mobile jika 1 kolom */
+    height: 120px;
+  }
+}

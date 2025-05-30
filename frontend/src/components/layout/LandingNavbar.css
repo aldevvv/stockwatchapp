@@ -1,0 +1,284 @@
+.landing-navbar {
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem 0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  font-family: sans-serif;
+}
+
+.landing-navbar-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-logo {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #007bff;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Biarkan .navbar-links mengambil sisa ruang */
+  justify-content: center; /* Ini akan menengahkan semua item di dalamnya jika ada ruang */
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+  /* Agar menu mengambil ruang dan mendorong tombol auth ke kanan */
+  /* Jika justify-content: center di .navbar-links tidak cukup, kita bisa atur ini */
+  /* margin-right: auto; -- ini akan mendorong tombol auth ke kanan */
+  /* margin-left: auto; -- ini akan mendorong menu ke kanan jika tombol auth kecil */
+}
+
+.navbar-menu li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.navbar-menu li a:hover {
+  color: #007bff;
+}
+
+.navbar-auth-buttons {
+  /* Pastikan ini tidak mengambil ruang di kiri secara otomatis jika menu ingin di tengah */
+  margin-left: 2rem; /* Beri jarak dari menu, akan didorong oleh menu jika menu di tengah */
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Untuk menengahkan .navbar-menu dan menjaga .navbar-auth-buttons di kanan: */
+/* Kita buat .navbar-links mengambil semua sisa ruang antara logo dan "tidak ada apa-apa" */
+/* Lalu di dalam .navbar-links, kita gunakan space-between lagi */
+
+/* Coba strategi baru untuk .navbar-links dan anak-anaknya */
+.navbar-links {
+  display: flex;
+  align-items: center;
+  flex-grow: 1; /* Mengambil ruang yang tersedia */
+  /* Hapus justify-content: center; dari sini */
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0 auto; /* KUNCI: Ini akan menengahkan .navbar-menu di dalam .navbar-links */
+  padding: 0;
+  align-items: center;
+}
+
+.navbar-auth-buttons {
+  margin-left: auto; /* Mendorong tombol auth ke paling kanan dari .navbar-links */
+  /* Jika .navbar-menu sudah margin auto, ini mungkin tidak diperlukan atau perlu disesuaikan */
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+/* Finalisasi setelah beberapa percobaan: */
+/* Kita ingin logo kiri, tombol auth kanan, menu di tengah. */
+/* Kontainer utama: space-between */
+/* .navbar-links akan berisi menu dan tombol auth. */
+/* Kita buat .navbar-links mengambil ruang yang tersedia, lalu .navbar-menu di tengahnya, */
+/* dan .navbar-auth-buttons di kanannya. */
+
+.landing-navbar-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  justify-content: space-between; /* Logo di kiri, .navbar-links di kanan */
+  align-items: center;
+}
+
+.navbar-links { /* Ini pembungkus menu dan tombol auth */
+  display: flex;
+  align-items: center;
+  /* Kita tidak set flex-grow di sini, biarkan lebarnya natural */
+  /* Atau kita bisa set flex-grow: 1; dan atur item di dalamnya */
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 2rem;
+  margin: 0; /* Akan diatur oleh parent flex jika kita ingin menengahkan */
+  padding: 0;
+  align-items: center;
+}
+
+/* Ini adalah pendekatan yang paling umum: */
+/* Jadikan logo, menu, dan tombol sebagai 3 item flex utama */
+/* Namun karena sudah ada .navbar-links, kita atur .landing-navbar-container */
+.landing-navbar-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    /* justify-content: space-between; Dihapus untuk penengah menu */
+}
+
+.navbar-logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #007bff;
+    text-decoration: none;
+    flex-shrink: 0;
+    /* margin-right: auto; -- Kita akan gunakan ini jika menu dan tombol adalah satu grup */
+}
+
+.navbar-links { /* Ini grup untuk menu dan tombol auth */
+    display: flex;
+    align-items: center;
+    margin-left: auto; /* Mendorong seluruh grup links ke kanan setelah logo */
+    /* Jika kita ingin menu di tengah, ini harus fleksibel */
+}
+
+/* Untuk menengahkan menu, sementara tombol tetap di kanan: */
+/* Solusi yang paling mungkin adalah membuat .navbar-menu mengambil ruang */
+/* dan mendorong tombol, atau sebaliknya, atau memberi margin auto pada menu. */
+.landing-navbar-container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+}
+.navbar-logo {
+    /* Tidak ada margin auto di sini */
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #007bff;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.navbar-menu {
+    list-style: none;
+    display: flex;
+    gap: 2rem;
+    margin: 0 auto; /* KUNCI untuk menengahkan menu */
+    padding: 0;
+    align-items: center;
+}
+.navbar-auth-buttons {
+    /* Tidak ada margin auto di sini, akan berada di paling kanan */
+    margin-left: 2rem; /* Jarak dari menu (jika menu tidak full width) atau dari logo jika menu di tengah */
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+/* Styling Tombol */
+.navbar-auth-buttons .btn {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.navbar-auth-buttons .btn-login {
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+}
+
+.navbar-auth-buttons .btn-login:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.navbar-auth-buttons .btn-register {
+  background-color: #007bff;
+  color: white;
+}
+
+.navbar-auth-buttons .btn-register:hover {
+  background-color: #0056b3;
+}
+
+
+/* Styling Mobile (seharusnya tidak terpengaruh jika perubahan hanya di atas @media) */
+.navbar-toggler {
+  display: none;
+  font-size: 1.8rem;
+  background: none;
+  border: none;
+  color: #333;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navbar-toggler {
+    display: block;
+  }
+  .landing-navbar-container {
+      justify-content: space-between;
+  }
+  .navbar-menu {
+    margin: 0; /* Reset margin auto untuk mobile */
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+  }
+  .navbar-links {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    position: absolute;
+    top: 100%; 
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    padding: 1rem 0;
+  }
+  .navbar-links.active {
+    display: flex;
+  }
+  .navbar-menu li {
+    width: 100%;
+    text-align: center;
+  }
+  .navbar-menu li a {
+    display: block;
+    padding: 1rem 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .navbar-menu li:last-child a {
+      border-bottom: none;
+  }
+  .navbar-auth-buttons {
+    margin-left: auto; /* Tengahkan grup tombol di mobile */
+    margin-right: auto;
+    margin-top: 1rem;
+    flex-direction: column;
+    width: 90%;
+    gap: 0.75rem;
+  }
+  .navbar-auth-buttons .btn {
+    width: 100%;
+  }
+}

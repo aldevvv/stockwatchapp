@@ -1,0 +1,272 @@
+import jwt from 'jsonwebtoken';
+import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
+import db from '../config/firebase.js';
+import { sendEmailNotification } from '../services/notification.service.js';
+
+export const register = async (req, res) => {
+  try {
+    const { namaToko, email, nomorWhatsAppNotifikasi, password } = req.body;
+
+    if (!namaToko || !email || !nomorWhatsAppNotifikasi || !password) {
+      return res.status(400).json({ message: 'Semua field wajib diisi.' });
+    }
+
+    const usersRef = db.ref('users');
+    const emailCheckSnapshot = await usersRef.orderByChild('profile/email').equalTo(email).once('value');
+    if (emailCheckSnapshot.exists()) {
+      return res.status(400).json({ message: 'Email ini sudah terdaftar.' });
+    }
+
+    const phoneCheckSnapshot = await usersRef.orderByChild('profile/nomorWhatsAppNotifikasi').equalTo(nomorWhatsAppNotifikasi).once('value');
+    if (phoneCheckSnapshot.exists()) {
+      return res.status(400).json({ message: 'Nomor WhatsApp ini sudah terdaftar.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    const emailVerificationToken = crypto.randomBytes(32).toString('hex');
+    const emailVerificationTokenExpires = Date.now() + 3600000; // 1 jam
+
+    const newUserRef = usersRef.push();
+    const newUserId = newUserRef.key;
+
+    const userData = {
+      profile: {
+        email,
+        namaToko,
+        nomorWhatsAppNotifikasi,
+        isEmailVerified: false,
+        createdAt: new Date().toISOString()
+      },
+      credentials: {
+        password: hashedPassword
+      },
+      verification: {
+        emailToken: emailVerificationToken,
+        emailTokenExpires: emailVerificationTokenExpires
+      },
+      stok: {}
+    };
+
+    await db.ref(`users/${newUserId}`).set(userData);
+
+    const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email/${emailVerificationToken}`;
+    const emailSubject = 'Verifikasi Email Akun StockWatch Anda';
+    const emailBody = `
+      <p>Selamat datang di StockWatch, ${namaToko || email}!</p>
+      <p>Silakan klik link di bawah ini untuk memverifikasi alamat email Anda:</p>
+      <p><a href="${verificationUrl}">${verificationUrl}</a></p>
+      <p>Link ini akan kedaluwarsa dalam 1 jam.</p>
+      <p>Jika Anda tidak merasa mendaftar, abaikan email ini.</p>
+      <p>Terima kasih,<br/>Tim StockWatch</p>
+    `;
+    
+    const emailSent = await sendEmailNotification(email, emailSubject, emailBody);
+    if (emailSent) {
+      console.log(`Email verifikasi berhasil dikirim ke ${email}.`);
+    } else {
+      console.warn(`Gagal mengirim email verifikasi ke ${email}, namun registrasi tetap dilanjutkan.`);
+    }
+
+    res.status(201).json({ 
+      message: `Registrasi berhasil untuk ${email}. Silakan cek email Anda untuk verifikasi.` 
+    });
+
+  } catch (error) {
+    console.error("Error di register:", error);
+    res.status(500).json({ message: 'Terjadi kesalahan pada server saat registrasi', error: error.message });
+  }
+};
+
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+  
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email dan password wajib diisi.' });
+  }
+
+  try {
+    const usersRef = db.ref('users');
+    const snapshot = await usersRef.orderByChild('profile/email').equalTo(email).once('value');
+    
+    if (!snapshot.exists()) {
+      return res.status(401).json({ message: 'Kredensial tidak valid.' });
+    }
+
+    let userId;
+    let userData;
+    snapshot.forEach(childSnapshot => {
+      userId = childSnapshot.key;
+      userData = childSnapshot.val();
+      return true; 
+    });
+
+    if (!userData.profile?.isEmailVerified) {
+      return res.status(403).json({ message: 'Email belum diverifikasi. Silakan cek email Anda.' });
+    }
+
+    const storedPassword = userData.credentials?.password;
+    if (!storedPassword) {
+      return res.status(401).json({ message: 'Kredensial tidak valid (data pengguna tidak lengkap).' });
+    }
+
+    const isMatch = await bcrypt.compare(password, storedPassword);
+    if (!isMatch) {
+      return res.status(401).json({ message: 'Kredensial tidak valid.' });
+    }
+
+    const userPayload = { id: userId, email: userData.profile.email };
+    const token = jwt.sign(userPayload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+
+    res.json({
+      message: 'Login berhasil!',
+      token,
+      user: userPayload
+    });
+
+  } catch (error) {
+    console.error("Error di login:", error);
+    res.status(500).json({ message: 'Terjadi kesalahan pada server saat login', error: error.message });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  try {
+    const { token } = req.params;
+
+    const usersRef = db.ref('users');
+    const snapshot = await usersRef.orderByChild('verification/emailToken').equalTo(token).once('value');
+
+    if (!snapshot.exists()) {
+      return res.status(400).json({ message: 'Token verifikasi tidak valid atau sudah digunakan.' });
+    }
+
+    let userId;
+    let userData;
+    snapshot.forEach(childSnapshot => {
+      userId = childSnapshot.key;
+      userData = childSnapshot.val();
+      return true;
+    });
+
+    if (!userData.verification || userData.verification.emailToken !== token || userData.verification.emailTokenExpires < Date.now()) {
+      await db.ref(`users/${userId}/verification`).remove();
+      return res.status(400).json({ message: 'Token verifikasi tidak valid atau sudah kedaluwarsa.' });
+    }
+
+    await db.ref(`users/${userId}/profile`).update({ isEmailVerified: true });
+    await db.ref(`users/${userId}/verification`).remove();
+
+    res.status(200).json({ message: 'Email berhasil diverifikasi. Anda sekarang bisa login.' });
+
+  } catch (error) {
+    console.error("Error di verifyEmail:", error);
+    res.status(500).json({ message: 'Terjadi kesalahan pada server saat verifikasi email.', error: error.message });
+  }
+};
+
+export const requestPasswordReset = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ message: 'Email wajib diisi.' });
+    }
+
+    const usersRef = db.ref('users');
+    const snapshot = await usersRef.orderByChild('profile/email').equalTo(email).once('value');
+
+    if (!snapshot.exists()) {
+      return res.status(200).json({ message: 'Jika email Anda terdaftar, link reset password akan dikirim.' });
+    }
+
+    let userId;
+    snapshot.forEach(childSnapshot => {
+      userId = childSnapshot.key;
+      return true;
+    });
+
+    const passwordResetToken = crypto.randomBytes(32).toString('hex');
+    const passwordResetTokenExpires = Date.now() + 3600000; // 1 jam
+
+    await db.ref(`users/${userId}/passwordReset`).set({
+      token: passwordResetToken,
+      expires: passwordResetTokenExpires
+    });
+
+    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${passwordResetToken}`;
+    const emailSubject = 'Reset Password Akun StockWatch Anda';
+    const emailBody = `
+      <p>Halo,</p>
+      <p>Anda menerima email ini karena ada permintaan untuk mereset password akun StockWatch Anda.</p>
+      <p>Silakan klik link di bawah ini untuk mengatur ulang password Anda:</p>
+      <p><a href="${resetUrl}">${resetUrl}</a></p>
+      <p>Link ini akan kedaluwarsa dalam 1 jam.</p>
+      <p>Jika Anda tidak merasa meminta reset password, abaikan email ini.</p>
+      <p>Terima kasih,<br/>Tim StockWatch</p>
+    `;
+
+    const emailSent = await sendEmailNotification(email, emailSubject, emailBody);
+    if (emailSent) {
+        console.log(`Email reset password berhasil dikirim ke ${email}.`);
+    } else {
+        console.warn(`Gagal mengirim email reset password ke ${email}, namun proses tetap dilanjutkan di sisi server.`);
+    }
+
+    res.status(200).json({ message: 'Jika email Anda terdaftar, link reset password akan dikirim.' });
+
+  } catch (error) {
+    console.error("Error di requestPasswordReset:", error);
+    res.status(500).json({ message: 'Terjadi kesalahan pada server.' });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password, confirmPassword } = req.body;
+
+    if (!password || !confirmPassword) {
+      return res.status(400).json({ message: 'Password baru dan konfirmasi password wajib diisi.' });
+    }
+    if (password !== confirmPassword) {
+      return res.status(400).json({ message: 'Password baru dan konfirmasi password tidak cocok.' });
+    }
+    if (password.length < 6) { 
+        return res.status(400).json({ message: 'Password minimal harus 6 karakter.' });
+    }
+
+    const usersRef = db.ref('users');
+    const snapshot = await usersRef.orderByChild('passwordReset/token').equalTo(token).once('value');
+
+    if (!snapshot.exists()) {
+      return res.status(400).json({ message: 'Token reset password tidak valid atau sudah digunakan.' });
+    }
+
+    let userId;
+    let userData;
+    snapshot.forEach(childSnapshot => {
+      userId = childSnapshot.key;
+      userData = childSnapshot.val();
+      return true;
+    });
+
+    if (!userData.passwordReset || userData.passwordReset.token !== token || userData.passwordReset.expires < Date.now()) {
+      await db.ref(`users/${userId}/passwordReset`).remove();
+      return res.status(400).json({ message: 'Token reset password tidak valid atau sudah kedaluwarsa.' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    await db.ref(`users/${userId}/credentials`).update({ password: hashedPassword });
+    await db.ref(`users/${userId}/passwordReset`).remove();
+
+    res.status(200).json({ message: 'Password berhasil direset. Silakan login dengan password baru Anda.' });
+
+  } catch (error) {
+    console.error("Error di resetPassword:", error);
+    res.status(500).json({ message: 'Terjadi kesalahan pada server.' });
+  }
+};

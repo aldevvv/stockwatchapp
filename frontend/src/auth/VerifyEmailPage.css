@@ -1,0 +1,58 @@
+.verify-email-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f0f2f5;
+  font-family: sans-serif;
+  padding: 20px;
+}
+
+.verify-email-box {
+  padding: 30px 40px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 100%;
+  max-width: 500px;
+}
+
+.verify-email-box h1 {
+  margin-bottom: 24px;
+  color: #333;
+  font-size: 1.8rem;
+}
+
+.status-loading {
+  color: #555;
+  font-size: 1.1rem;
+}
+
+.status-success {
+  color: #28a745; /* Hijau untuk sukses */
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.status-error {
+  color: #dc3545; /* Merah untuk error */
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.login-button-verify {
+  display: inline-block;
+  margin-top: 24px;
+  padding: 12px 24px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.login-button-verify:hover {
+  background-color: #0056b3;
+}

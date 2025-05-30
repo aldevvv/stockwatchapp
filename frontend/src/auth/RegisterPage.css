@@ -1,0 +1,98 @@
+.register-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh; /* min-height agar footer tidak naik jika konten sedikit */
+  background-color: #f0f2f5;
+  font-family: sans-serif;
+  padding: 20px; /* Padding untuk layar kecil */
+}
+
+.register-form {
+  padding: 30px 40px; /* Padding disesuaikan */
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 450px; /* Max-width disesuaikan */
+}
+
+.register-form h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #333;
+}
+
+.input-group {
+  margin-bottom: 16px;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #555;
+}
+
+.input-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box; /* Agar padding tidak menambah width */
+}
+
+.register-button {
+  width: 100%;
+  padding: 12px;
+  background-color: #28a745; /* Warna hijau untuk registrasi */
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.register-button:hover {
+  background-color: #218838;
+}
+.register-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-link a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}
+
+.error-message {
+  color: red;
+  background-color: #ffebee;
+  border: 1px solid red;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.success-message {
+  color: green;
+  background-color: #e8f5e9;
+  border: 1px solid green;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  text-align: center;
+}
