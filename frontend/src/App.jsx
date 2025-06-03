@@ -3,11 +3,13 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './context/AuthContext';
 
 import PublicLayout from './components/layout/PublicLayout';
+import DashboardLayout from './components/layout/DashboardLayout';
+
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import PricingPage from './pages/PricingPage';
-import PricingInfoPage from './pages/PricingInfoPage';
 import TestimonialsPage from './pages/TestimonialsPage';
+import PricingInfoPage from './pages/PricingInfoPage';
 
 import LoginPage from './auth/LoginPage';
 import RegisterPage from './auth/RegisterPage';
@@ -29,8 +31,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/pricing" element={<PricingPage />} />
-          <Route path="/testimonials" element={<TestimonialsPage />} />
           <Route path="/pricing-info" element={<PricingInfoPage />} />
+          <Route path="/testimonials" element={<TestimonialsPage />} />
         </Route>
 
         <Route path="/login" element={token ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
@@ -38,23 +40,18 @@ function App() {
         <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
         <Route path="/request-password-reset" element={token ? <Navigate to="/dashboard" replace /> : <RequestPasswordResetPage />} />
         <Route path="/reset-password/:token" element={token ? <Navigate to="/dashboard" replace /> : <ResetPasswordPage />} />
-        
+            
         <Route 
-          path="/dashboard"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <DashboardLayout /> 
             </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/profil"
-          element={
-            <ProtectedRoute>
-              <ProfilePage />
-            </ProtectedRoute>
-          } 
-        />
+          }
+        >
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/profil" element={<ProfilePage />} />
+        </Route>
+
         <Route path="*" element={<Navigate to={token ? "/dashboard" : "/"} replace />} />
       </Routes>
     </BrowserRouter>

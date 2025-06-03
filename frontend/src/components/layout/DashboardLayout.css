@@ -1,0 +1,31 @@
+/* frontend/src/components/layout/DashboardLayout.css */
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh; /* Minimal setinggi viewport */
+  font-family: sans-serif;
+}
+
+.dashboard-main-content {
+  flex-grow: 1; /* Mengambil sisa ruang setelah sidebar */
+  padding: 2rem; /* Padding untuk konten */
+  margin-left: 250px; /* Sebesar lebar sidebar, agar konten tidak tertutup sidebar */
+  background-color: #f4f6f9; /* Warna latar untuk area konten */
+  overflow-y: auto; /* Scroll jika konten panjang */
+}
+
+/* Responsiveness untuk mobile - Sidebar bisa disembunyikan/ditampilkan */
+@media (max-width: 768px) {
+  .sidebar {
+    /* Di mobile, Anda bisa memilih untuk menyembunyikan sidebar secara default */
+    /* dan menampilkannya dengan tombol toggle (implementasi lebih lanjut) */
+    /* Untuk sekarang, kita buat lebarnya lebih kecil atau tetap */
+    width: 220px; /* Contoh lebar lebih kecil di mobile */
+  }
+  .dashboard-main-content {
+    margin-left: 220px; /* Sesuaikan dengan lebar sidebar mobile */
+    padding: 1.5rem;
+  }
+  /* Jika ingin sidebar benar-benar toggleable (sembunyi/tampil) di mobile, */
+  /* itu memerlukan state management tambahan di DashboardLayout atau context */
+  /* dan perubahan pada posisi/transform sidebar */
+}

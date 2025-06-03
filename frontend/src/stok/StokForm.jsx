@@ -2,54 +2,44 @@ import React, { useState, useEffect } from 'react';
 import { createStok, updateStok } from './stokService';
 import './StokForm.css';
 
-/**
- * Komponen form untuk menambah atau mengedit data stok.
- * @param {function} onSuccess - Callback function yang dijalankan setelah submit berhasil.
- * @param {function} onClose - Callback function untuk menutup modal.
- * @param {object|null} initialData - Data awal untuk form, jika null berarti mode 'Tambah', jika ada data berarti mode 'Edit'.
- */
-function StokForm({ onSuccess, onClose, initialData = null }) {
+function StokForm({ onSuccess, onClose, initialData = null }) { 
   const [formData, setFormData] = useState({
     namaBarang: '',
     jumlah: '',
     satuan: 'pcs',
     batasMinimum: '',
+    supplier: ''
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Menentukan apakah form ini dalam mode 'Edit' berdasarkan props initialData
+  
   const isEditMode = initialData !== null;
 
-  // useEffect ini akan berjalan setiap kali `initialData` berubah.
-  // Gunanya untuk mengisi form secara otomatis saat mode 'Edit'.
   useEffect(() => {
     if (isEditMode) {
-      // Mengisi form dengan data yang ada, beri nilai default jika ada field yang kosong
       setFormData({
         namaBarang: initialData.namaBarang || '',
         jumlah: initialData.jumlah || '',
         satuan: initialData.satuan || 'pcs',
         batasMinimum: initialData.batasMinimum || '',
+        supplier: initialData.supplier || ''
       });
     } else {
-      // Reset form jika mode 'Tambah'
       setFormData({
         namaBarang: '',
         jumlah: '',
         satuan: 'pcs',
         batasMinimum: '',
+        supplier: ''
       });
     }
   }, [initialData, isEditMode]);
 
-  // Handler untuk setiap perubahan pada input form
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prevData => ({ ...prevData, [name]: value }));
   };
 
-  // Handler saat form disubmit
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsSubmitting(true);
@@ -58,29 +48,32 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
     try {
       let response;
       const dataToSend = { 
-        ...formData, 
+        namaBarang: formData.namaBarang,
         jumlah: Number(formData.jumlah),
-        batasMinimum: Number(formData.batasMinimum)
+        satuan: formData.satuan,
+        batasMinimum: Number(formData.batasMinimum),
+        supplier: formData.supplier
       };
 
+      if (!dataToSend.namaBarang || dataToSend.jumlah === '' || !dataToSend.satuan || dataToSend.batasMinimum === '') {
+        setError('Field Nama Barang, Jumlah, Satuan, dan Batas Minimum wajib diisi.');
+        setIsSubmitting(false);
+        return;
+      }
+
+
       if (isEditMode) {
-        // Panggil service update jika mode 'Edit'
         response = await updateStok(initialData.id, dataToSend);
         alert('Stok berhasil diperbarui!');
       } else {
-        // Panggil service create jika mode 'Tambah'
         response = await createStok(dataToSend);
         alert('Stok berhasil ditambahkan!');
       }
-
-      // Panggil callback onSuccess dan kirim data yang baru/terupdate ke parent component (DashboardPage)
       onSuccess(response.data.data);
-
     } catch (err) {
-      const errorMessage = `Gagal ${isEditMode ? 'memperbarui' : 'menambahkan'} stok.`;
+      const errorMessage = err.response?.data?.message || `Gagal ${isEditMode ? 'memperbarui' : 'menambahkan'} stok.`;
       setError(errorMessage);
       console.error(err);
-      alert(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
@@ -108,6 +101,18 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
       <div className="form-group">
         <label htmlFor="satuan">Satuan</label>
         <input id="satuan" name="satuan" type="text" value={formData.satuan} onChange={handleChange} required />
+      </div>
+
+      <div className="form-group">
+        <label htmlFor="supplier">Nama Supplier (Opsional)</label>
+        <input 
+          id="supplier" 
+          name="supplier" 
+          type="text" 
+          value={formData.supplier} 
+          onChange={handleChange} 
+          placeholder="Contoh: PT Pemasok Jaya"
+        />
       </div>
 
       <div className="form-actions">

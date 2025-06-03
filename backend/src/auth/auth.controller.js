@@ -6,10 +6,10 @@ import { sendEmailNotification } from '../services/notification.service.js';
 
 export const register = async (req, res) => {
   try {
-    const { namaToko, email, nomorWhatsAppNotifikasi, password } = req.body;
+    const { namaLengkap, namaToko, email, nomorWhatsAppNotifikasi, password } = req.body;
 
-    if (!namaToko || !email || !nomorWhatsAppNotifikasi || !password) {
-      return res.status(400).json({ message: 'Semua field wajib diisi.' });
+    if (!namaLengkap || !namaToko || !email || !nomorWhatsAppNotifikasi || !password) {
+      return res.status(400).json({ message: 'Semua field (Nama Lengkap, Nama Toko, Email, No. WhatsApp, Password) wajib diisi.' });
     }
 
     const usersRef = db.ref('users');
@@ -27,13 +27,14 @@ export const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const emailVerificationToken = crypto.randomBytes(32).toString('hex');
-    const emailVerificationTokenExpires = Date.now() + 3600000; // 1 jam
+    const emailVerificationTokenExpires = Date.now() + 3600000;
 
     const newUserRef = usersRef.push();
     const newUserId = newUserRef.key;
 
     const userData = {
       profile: {
+        namaLengkap,
         email,
         namaToko,
         nomorWhatsAppNotifikasi,
@@ -55,7 +56,7 @@ export const register = async (req, res) => {
     const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email/${emailVerificationToken}`;
     const emailSubject = 'Verifikasi Email Akun StockWatch Anda';
     const emailBody = `
-      <p>Selamat datang di StockWatch, ${namaToko || email}!</p>
+      <p>Selamat datang di StockWatch, ${namaLengkap}!</p>
       <p>Silakan klik link di bawah ini untuk memverifikasi alamat email Anda:</p>
       <p><a href="${verificationUrl}">${verificationUrl}</a></p>
       <p>Link ini akan kedaluwarsa dalam 1 jam.</p>
@@ -117,13 +118,20 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Kredensial tidak valid.' });
     }
 
-    const userPayload = { id: userId, email: userData.profile.email };
-    const token = jwt.sign(userPayload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+    const userPayloadForJwt = { id: userId, email: userData.profile.email };
+    const token = jwt.sign(userPayloadForJwt, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
+
+    const userProfileResponse = {
+        id: userId,
+        email: userData.profile.email,
+        namaLengkap: userData.profile.namaLengkap,
+        namaToko: userData.profile.namaToko
+    };
 
     res.json({
       message: 'Login berhasil!',
       token,
-      user: userPayload
+      user: userProfileResponse
     });
 
   } catch (error) {
@@ -182,13 +190,15 @@ export const requestPasswordReset = async (req, res) => {
     }
 
     let userId;
+    let userProfileData; // Untuk mengambil namaLengkap atau namaToko
     snapshot.forEach(childSnapshot => {
       userId = childSnapshot.key;
+      userProfileData = childSnapshot.val().profile; // Ambil data profil
       return true;
     });
 
     const passwordResetToken = crypto.randomBytes(32).toString('hex');
-    const passwordResetTokenExpires = Date.now() + 3600000; // 1 jam
+    const passwordResetTokenExpires = Date.now() + 3600000; 
 
     await db.ref(`users/${userId}/passwordReset`).set({
       token: passwordResetToken,
@@ -198,7 +208,7 @@ export const requestPasswordReset = async (req, res) => {
     const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${passwordResetToken}`;
     const emailSubject = 'Reset Password Akun StockWatch Anda';
     const emailBody = `
-      <p>Halo,</p>
+      <p>Halo ${userProfileData.namaLengkap || userProfileData.namaToko || ''},</p>
       <p>Anda menerima email ini karena ada permintaan untuk mereset password akun StockWatch Anda.</p>
       <p>Silakan klik link di bawah ini untuk mengatur ulang password Anda:</p>
       <p><a href="${resetUrl}">${resetUrl}</a></p>
@@ -206,7 +216,7 @@ export const requestPasswordReset = async (req, res) => {
       <p>Jika Anda tidak merasa meminta reset password, abaikan email ini.</p>
       <p>Terima kasih,<br/>Tim StockWatch</p>
     `;
-
+    
     const emailSent = await sendEmailNotification(email, emailSubject, emailBody);
     if (emailSent) {
         console.log(`Email reset password berhasil dikirim ke ${email}.`);

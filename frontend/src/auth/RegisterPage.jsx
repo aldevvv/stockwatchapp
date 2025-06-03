@@ -1,13 +1,11 @@
-// frontend/src/auth/RegisterPage.jsx
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-// Nanti kita buat fungsi register di authService
-// import { register } from './authService'; 
-import axios from 'axios'; // Kita gunakan axios langsung dulu untuk kesederhanaan
-import './RegisterPage.css'; // Kita akan buat file CSS ini
+import axios from 'axios';
+import './RegisterPage.css';
 
 function RegisterPage() {
   const [formData, setFormData] = useState({
+    namaLengkap: '',
     namaToko: '',
     email: '',
     nomorWhatsAppNotifikasi: '',
@@ -32,21 +30,25 @@ function RegisterPage() {
       setError('Password dan konfirmasi password tidak cocok.');
       return;
     }
-
+    if (formData.password.length < 6) {
+        setError('Password minimal harus 6 karakter.');
+        return;
+    }
+    
     setIsLoading(true);
     try {
-      // Langsung panggil API backend (nanti bisa dipindah ke authService.js)
       const response = await axios.post('http://localhost:5000/api/auth/register', {
+        namaLengkap: formData.namaLengkap,
         namaToko: formData.namaToko,
         email: formData.email,
         nomorWhatsAppNotifikasi: formData.nomorWhatsAppNotifikasi,
         password: formData.password
       });
-
+      
       setSuccess(response.data.message + ' Anda akan diarahkan ke halaman login.');
       setTimeout(() => {
         navigate('/login');
-      }, 3000); // Arahkan ke login setelah 3 detik
+      }, 3000); 
 
     } catch (err) {
       setError(err.response?.data?.message || 'Registrasi gagal. Silakan coba lagi.');
@@ -62,6 +64,10 @@ function RegisterPage() {
         {error && <p className="error-message">{error}</p>}
         {success && <p className="success-message">{success}</p>}
         <form onSubmit={handleSubmit}>
+          <div className="input-group">
+            <label htmlFor="namaLengkap">Nama Lengkap Anda</label>
+            <input type="text" id="namaLengkap" name="namaLengkap" value={formData.namaLengkap} onChange={handleChange} required />
+          </div>
           <div className="input-group">
             <label htmlFor="namaToko">Nama Toko</label>
             <input type="text" id="namaToko" name="namaToko" value={formData.namaToko} onChange={handleChange} required />
