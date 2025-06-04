@@ -1,15 +1,20 @@
-// frontend/src/components/layout/DashboardLayout.jsx
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
-import './DashboardLayout.css'; // Kita akan buat file CSS ini
+import './DashboardLayout.css';
 
 function DashboardLayout() {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
-    <div className="dashboard-layout">
-      <Sidebar />
+    <div className={`dashboard-layout ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
       <main className="dashboard-main-content">
-        <Outlet /> {/* Konten halaman (DashboardPage, ProfilePage, dll.) akan dirender di sini */}
+        <Outlet />
       </main>
     </div>
   );

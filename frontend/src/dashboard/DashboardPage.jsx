@@ -85,11 +85,11 @@ function DashboardPage() {
         <thead>
           <tr>
             <th>Nama Barang</th>
-            <th>Jumlah</th>
-            <th>Batas Min.</th>
+            <th>Jumlah Stok</th>
+            <th>Batas Minimum Stok</th>
             <th>Satuan</th>
             <th>Supplier</th>
-            <th>Aksi</th>
+            <th>Ubah</th>
           </tr>
         </thead>
         <tbody>

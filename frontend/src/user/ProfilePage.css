@@ -1,129 +1,179 @@
-.profile-container {
-  max-width: 600px;
+.profile-page-content {
+  max-width: 700px;
   margin: 2rem auto;
-  padding: 2rem;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fff;
+  padding: 1rem; 
   font-family: sans-serif;
 }
 
-.profile-container h1 {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: #333;
-}
-
-.profile-display p {
-  margin-bottom: 1rem;
-  font-size: 1.1rem;
-  color: #555;
-}
-
-.profile-display p strong {
-  color: #333;
-}
-
-.profile-actions,
-.profile-form .form-actions {
+.profile-header {
   display: flex;
-  justify-content: flex-end; /* Membuat tombol ke kanan */
-  gap: 1rem;
-  margin-top: 2rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid #eee; /* Garis pemisah */
-}
-
-/* Styling umum untuk semua tombol aksi di halaman profil */
-.button-edit-profile,
-.profile-form .button-save,
-.profile-form .button-cancel,
-.button-back-to-dashboard {
-  display: inline-flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: 4px;
-  border: 1px solid transparent;
-  cursor: pointer;
-  font-size: 1rem;
-  font-weight: 600;
-  text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #e0e0e0;
 }
 
-.button-edit-profile {
+.profile-header h1 {
+  font-size: 1.8rem;
+  color: #333;
+  margin: 0;
+}
+
+.button-edit-profile-header {
   background-color: #007bff;
   color: white;
-  border-color: #007bff;
-  /* Jika ingin tombol Edit Profil sendirian ke kanan di mode display */
-  /* margin-left: auto; */ 
-}
-.button-edit-profile:hover {
-  background-color: #0056b3;
-  border-color: #0056b3;
-}
-
-.profile-form .form-group {
-  margin-bottom: 1rem;
-}
-
-.profile-form label {
-  display: block;
-  margin-bottom: 0.5rem;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  cursor: pointer;
   font-weight: 500;
-  color: #444;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+.button-edit-profile-header:hover {
+  background-color: #0056b3;
 }
 
-.profile-form input {
+.profile-message {
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  border-radius: 4px;
+  text-align: center;
+  font-weight: 500;
+}
+.profile-message.success {
+  background-color: #e8f5e9;
+  color: #28a745;
+  border: 1px solid #c8e6c9;
+}
+.profile-message.error {
+  background-color: #ffebee;
+  color: #dc3545;
+  border: 1px solid #ffcdd2;
+}
+
+.profile-card {
+  background-color: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.profile-card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #e0e0e0;
+     background-color: #f2f2f2;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.profile-card-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #333;
+}
+
+.profile-card-body {
+  padding: 1.5rem;
+}
+
+.form-group-profile {
+  margin-bottom: 1.25rem;
+}
+.form-group-profile:last-child {
+  margin-bottom: 0;
+}
+
+.form-group-profile label {
+  display: block;
+  font-size: 0.9rem;
+  color: #555;
+  margin-bottom: 0.25rem; /* DIKURANGI dari 0.5rem */
+  font-weight: 600;
+}
+
+.form-group-profile input[type="text"],
+.form-group-profile input[type="email"] {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
   box-sizing: border-box;
   font-size: 1rem;
+  background-color: #fff;
+}
+.form-group-profile input:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
 }
 
-.profile-form .button-save {
+.form-group-profile p {
+  font-size: 1rem;
+  color: #333;
+  padding: 0.5rem 0 0.5rem 0; /* Padding atas dikurangi, bawah disamakan dengan input agar total tingginya mirip */
+  margin: 0;
+  /* min-height: calc(0.75rem * 2 + 1rem + 2px); -- Dihapus sementara atau sesuaikan jika perlu */
+  display: flex;
+  align-items: center;
+  line-height: 1.5; /* Samakan dengan input jika input punya line-height eksplisit */
+  min-height: 40px; /* Perkiraan tinggi input agar sejajar, sesuaikan */
+}
+
+
+.profile-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid #e0e0e0;
+}
+
+.button-cancel-profile,
+.button-save-profile {
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.button-cancel-profile {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+.button-cancel-profile:hover {
+  background-color: #545b62;
+  border-color: #545b62;
+}
+
+.button-save-profile {
   background-color: #28a745;
   color: white;
   border-color: #28a745;
 }
-.profile-form .button-save:hover {
+.button-save-profile:hover {
   background-color: #1e7e34;
   border-color: #1e7e34;
 }
-.profile-form .button-save:disabled {
+.button-save-profile:disabled {
   background-color: #cccccc;
   border-color: #cccccc;
   color: #666666;
   cursor: not-allowed;
 }
 
-.profile-form .button-cancel {
-  background-color: #6c757d;
-  color: white;
-  border-color: #6c757d;
-}
-.profile-form .button-cancel:hover {
-  background-color: #545b62;
-  border-color: #545b62;
-}
-
-.button-back-to-dashboard {
-  background-color: #f8f9fa;
-  color: #007bff;
-  border-color: #007bff;
-}
-
-.button-back-to-dashboard:hover {
-  background-color: #e2e6ea;
-  color: #0056b3;
-  border-color: #0056b3;
-}
-
 .error-message {
   color: red;
-  margin-bottom: 1rem;
+  background-color: #ffebee;
+  border: 1px solid red;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 16px;
   text-align: center;
 }

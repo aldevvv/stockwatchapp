@@ -1,7 +1,9 @@
+// frontend/src/user/ProfilePage.jsx
 import React, { useState, useEffect } from 'react';
+// Link tidak lagi dibutuhkan di sini jika navigasi utama via Sidebar
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile, updateUserProfile } from './userService';
-import './ProfilePage.css';
+import './ProfilePage.css'; // Kita akan banyak memodifikasi ini
 
 function ProfilePage() {
   const { user: authUser, token, login: loginContext } = useAuth();
@@ -14,6 +16,7 @@ function ProfilePage() {
   const [initialProfileData, setInitialProfileData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [successMessage, setSuccessMessage] = useState(''); // Untuk notifikasi sukses
   const [isEditing, setIsEditing] = useState(false);
 
   useEffect(() => {
@@ -21,6 +24,7 @@ function ProfilePage() {
       try {
         setIsLoading(true);
         setError(null);
+        setSuccessMessage('');
         const response = await getUserProfile();
         if (response.data.data) {
           setProfileData(response.data.data);
@@ -47,6 +51,7 @@ function ProfilePage() {
   const handleCancelEdit = () => {
     setIsEditing(false);
     setError(null);
+    setSuccessMessage('');
     if (initialProfileData) {
       setProfileData(initialProfileData);
     }
@@ -56,76 +61,113 @@ function ProfilePage() {
     e.preventDefault();
     setIsLoading(true);
     setError(null);
+    setSuccessMessage('');
     try {
       const response = await updateUserProfile(profileData);
-      alert('Profil berhasil diperbarui!');
       const updatedUserFromServer = response.data.data;
       setProfileData(updatedUserFromServer);
       setInitialProfileData(updatedUserFromServer);
       
-      if (authUser && (authUser.email !== updatedUserFromServer.email || authUser.namaLengkap !== updatedUserFromServer.namaLengkap)) {
+      if (authUser && token && (authUser.email !== updatedUserFromServer.email || authUser.namaLengkap !== updatedUserFromServer.namaLengkap)) {
           loginContext({ token: token, user: updatedUserFromServer });
       }
       setIsEditing(false);
+      setSuccessMessage('Profil berhasil diperbarui!'); // Notifikasi sukses
+      // Hilangkan pesan sukses setelah beberapa detik
+      setTimeout(() => setSuccessMessage(''), 3000);
     } catch (err) {
       console.error("Gagal update profil:", err);
       const errorMessage = err.response?.data?.message || "Gagal memperbarui profil.";
       setError(errorMessage);
-      alert(`Gagal memperbarui profil: ${errorMessage}`);
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (isLoading && !initialProfileData && !isEditing) {
-    return <p>Memuat profil...</p>;
+  if (isLoading && !initialProfileData) { // Tampilkan loading hanya jika data awal belum ada
+    return <div className="profile-page-loading"><p>Memuat profil...</p></div>;
   }
 
-  if (error && !initialProfileData && !isEditing && !authUser) {
-    return <p style={{ color: 'red' }}>Error: {error}</p>;
+  // Error saat fetch awal dan belum ada data di state
+  if (error && !initialProfileData && !authUser) { 
+    return <div className="profile-page-error"><p style={{ color: 'red' }}>Error: {error}</p></div>;
   }
 
   return (
-    <div className="profile-page-content">
-      <h1>Profil Pengguna</h1>
-      {error && isEditing && <p className="error-message">{error}</p>} 
+    <div className="profile-page"> {/* Class utama untuk halaman profil */}
+      <div className="profile-header">
+        <h1>Profil Saya</h1>
+        {!isEditing && (
+          <button onClick={() => { setIsEditing(true); setError(null); setSuccessMessage(''); }} className="button-edit-profile-header">
+            Edit Profil
+          </button>
+        )}
+      </div>
+
+      {successMessage && <div className="profile-message success">{successMessage}</div>}
+      {error && isEditing && <div className="profile-message error">{error}</div>}
       
-      {!isEditing ? (
-        <div className="profile-display">
-          <p><strong>Nama Lengkap:</strong> {profileData.namaLengkap || authUser?.namaLengkap || '-'}</p>
-          <p><strong>Email:</strong> {profileData.email || authUser?.email || '-'}</p>
-          <p><strong>Nama Toko:</strong> {profileData.namaToko || authUser?.namaToko || '-'}</p>
-          <p><strong>Nomor WhatsApp Notifikasi:</strong> {profileData.nomorWhatsAppNotifikasi || '-'}</p>
-          <div className="profile-actions">
-            <button onClick={() => { setIsEditing(true); setError(null); }} className="button-edit-profile">Edit Profil</button>
+      <form onSubmit={handleSubmit}>
+        <div className="profile-card">
+          <div className="profile-card-header">
+            <h3>Informasi Akun</h3>
+          </div>
+          <div className="profile-card-body">
+            <div className="form-group-profile">
+              <label htmlFor="namaLengkap">Nama Lengkap</label>
+              {isEditing ? (
+                <input type="text" id="namaLengkap" name="namaLengkap" value={profileData.namaLengkap || ''} onChange={handleChange} required />
+              ) : (
+                <p>{profileData.namaLengkap || authUser?.namaLengkap || '-'}</p>
+              )}
+            </div>
+            <div className="form-group-profile">
+              <label htmlFor="email">Email</label>
+              {isEditing ? (
+                <input type="email" id="email" name="email" value={profileData.email || ''} onChange={handleChange} required />
+              ) : (
+                <p>{profileData.email || authUser?.email || '-'}</p>
+              )}
+            </div>
+            <div className="form-group-profile">
+              <label htmlFor="namaToko">Nama Toko</label>
+              {isEditing ? (
+                <input type="text" id="namaToko" name="namaToko" value={profileData.namaToko || ''} onChange={handleChange} />
+              ) : (
+                <p>{profileData.namaToko || authUser?.namaToko || '-'}</p>
+              )}
+            </div>
           </div>
         </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="profile-form">
-          <div className="form-group">
-            <label htmlFor="namaLengkap">Nama Lengkap Anda</label>
-            <input type="text" id="namaLengkap" name="namaLengkap" value={profileData.namaLengkap || ''} onChange={handleChange} required />
+
+        <div className="profile-card">
+          <div className="profile-card-header">
+            <h3>Pengaturan Notifikasi</h3>
           </div>
-          <div className="form-group">
-            <label htmlFor="email">Email</label>
-            <input type="email" id="email" name="email" value={profileData.email || ''} onChange={handleChange} required />
+          <div className="profile-card-body">
+            <div className="form-group-profile">
+              <label htmlFor="nomorWhatsAppNotifikasi">Nomor WhatsApp Notifikasi</label>
+              {isEditing ? (
+                <input type="text" id="nomorWhatsAppNotifikasi" name="nomorWhatsAppNotifikasi" value={profileData.nomorWhatsAppNotifikasi || ''} onChange={handleChange} placeholder="Contoh: 6281234567890" required />
+              ) : (
+                <p>{profileData.nomorWhatsAppNotifikasi || '-'}</p>
+              )}
+            </div>
+            {/* Di sini nanti bisa ditambahkan opsi channel notifikasi */}
           </div>
-          <div className="form-group">
-            <label htmlFor="namaToko">Nama Toko</label>
-            <input type="text" id="namaToko" name="namaToko" value={profileData.namaToko || ''} onChange={handleChange} />
-          </div>
-          <div className="form-group">
-            <label htmlFor="nomorWhatsAppNotifikasi">Nomor WhatsApp Notifikasi</label>
-            <input type="text" id="nomorWhatsAppNotifikasi" name="nomorWhatsAppNotifikasi" value={profileData.nomorWhatsAppNotifikasi || ''} onChange={handleChange} placeholder="Contoh: 6281234567890" required />
-          </div>
-          <div className="form-actions">
-            <button type="button" onClick={handleCancelEdit} className="button-cancel">Batal</button>
-            <button type="submit" disabled={isLoading} className="button-save">
+        </div>
+        
+        {isEditing && (
+          <div className="profile-form-actions">
+            <button type="button" onClick={handleCancelEdit} className="button-cancel-profile">
+              Batal
+            </button>
+            <button type="submit" disabled={isLoading} className="button-save-profile">
               {isLoading ? 'Menyimpan...' : 'Simpan Perubahan'}
             </button>
           </div>
-        </form>
-      )}
+        )}
+      </form>
     </div>
   );
 }
