@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { requestPasswordReset } from './authService';
+import { showSuccessToast, showErrorToast, showInfoToast } from '../utils/toastHelper';
 import './LoginPage.css'; 
 
 function RequestPasswordResetPage() {
   const [email, setEmail] = useState('');
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setMessage('');
-    setError('');
     setIsLoading(true);
     try {
       const response = await requestPasswordReset(email);
-      setMessage(response.message);
+      showInfoToast(response.message);
     } catch (err) {
-      setError(err.response?.data?.message || 'Terjadi kesalahan. Silakan coba lagi.');
+      showErrorToast(err.response?.data?.message || 'Terjadi kesalahan. Silakan coba lagi.');
     } finally {
       setIsLoading(false);
     }
@@ -31,8 +28,6 @@ function RequestPasswordResetPage() {
         <p style={{ marginBottom: '20px', textAlign: 'center', color: '#666' }}>
           Masukkan alamat email Anda. Kami akan mengirimkan link untuk mereset password Anda.
         </p>
-        {message && <p className="success-message">{message}</p>}
-        {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="email">Email</label>

@@ -1,0 +1,131 @@
+.supplier-form-container { /* Kelas baru untuk membungkus form jika diperlukan, atau langsung ke .supplier-form */
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  padding: 0.5rem; /* Sedikit padding di dalam form jika form ini langsung anak dari .modal-body */
+}
+
+.supplier-form-container .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.supplier-form-container .form-row.two-columns {
+  flex-direction: row;
+}
+
+.supplier-form-container .form-group-flex {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.3rem;
+}
+
+.supplier-form-container label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.supplier-form-container input[type="text"],
+.supplier-form-container input[type="number"],
+.supplier-form-container input[type="email"],
+.supplier-form-container select,
+.supplier-form-container textarea { /* Tambahkan textarea jika Anda memutuskan menggunakannya kembali */
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.supplier-form-container select {
+  min-height: calc(1.5em + 1.5rem + 2px); 
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right .9rem center;
+  background-size: .55em auto;
+  padding-right: 2.5rem;
+}
+.supplier-form-container select:disabled {
+    background-color: #e9ecef;
+    opacity: 0.7;
+}
+
+.supplier-form-container input:focus,
+.supplier-form-container select:focus,
+.supplier-form-container textarea:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+  outline: none;
+}
+
+.supplier-form-container .form-group-separator {
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.supplier-form-container .form-group-separator label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #007bff;
+}
+
+.supplier-form-container .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.supplier-form-container .button-cancel,
+.supplier-form-container .button-submit {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.supplier-form-container .button-submit {
+  background-color: #17a2b8; /* Warna submit untuk supplier, bisa disamakan dengan tombol tambah supplier */
+  color: white;
+  border-color: #17a2b8;
+}
+.supplier-form-container .button-submit:hover {
+  background-color: #138496;
+  border-color: #117a8b;
+}
+.supplier-form-container .button-submit:disabled {
+  background-color: #cccccc;
+  border-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.supplier-form-container .button-cancel {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+.supplier-form-container .button-cancel:hover {
+  background-color: #545b62;
+  border-color: #545b62;
+}
+
+.supplier-form-container .error-message-inline { 
+  color: #721c24;
+  font-size: 0.85rem;
+  margin-top: 0.25rem; 
+  /* Tidak lagi pakai background, biarkan teks merah saja di bawah input jika diperlukan */
+}

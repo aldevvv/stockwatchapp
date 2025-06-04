@@ -7,7 +7,7 @@ const META_API_VERSION = 'v19.0';
 const sendMetaWhatsAppMessage = async (to, templateName, languageCode, templateParams) => {
   const phoneNumberId = process.env.META_WA_PHONE_NUMBER_ID;
   const accessToken = process.env.META_WA_ACCESS_TOKEN;
-  const recipientNumber = to.startsWith('whatsapp:') ? to.substring(9) : to;
+  const recipientNumber = String(to).startsWith('whatsapp:') ? String(to).substring(9) : String(to);
   const formattedTo = recipientNumber.startsWith('+') ? recipientNumber.substring(1) : recipientNumber;
 
   const url = `https://graph.facebook.com/${META_API_VERSION}/${phoneNumberId}/messages`;
@@ -82,7 +82,7 @@ export const sendEmailNotification = async (toEmail, subject, htmlBody) => {
 };
 
 export const checkStockAndSendNotifications = async () => {
-  console.log('Scheduler berjalan: Memeriksa stok barang (Dinamis - Email & Meta API - Kirim Sekali per Siklus)...');
+  console.log('Scheduler berjalan: Memeriksa stok barang (Dinamis WA & Email - Kirim Sekali per Siklus)...');
   try {
     const usersRef = db.ref('users'); 
     const usersSnapshot = await usersRef.once('value');
@@ -105,11 +105,19 @@ export const checkStockAndSendNotifications = async () => {
       
       const emailPenerima = userProfile.email;
       const nomorWaPenerima = userProfile.nomorWhatsAppNotifikasi;
+      const kirimNotifEmail = userProfile.hasOwnProperty('preferensiNotifikasiEmail') ? userProfile.preferensiNotifikasiEmail : true;
+      const kirimNotifWhatsApp = userProfile.hasOwnProperty('preferensiNotifikasiWhatsApp') ? userProfile.preferensiNotifikasiWhatsApp : true;
 
-      if (!emailPenerima && !nomorWaPenerima) {
-          console.log(`Email dan Nomor WhatsApp tidak disetel untuk User: ${userId}. Skip notifikasi untuk user ini.`);
+      if (!kirimNotifEmail && !kirimNotifWhatsApp) {
+        console.log(`Semua notifikasi dinonaktifkan untuk User: ${userId}. Skip.`);
+        continue;
+      }
+      
+      if ((!emailPenerima && kirimNotifEmail) && (!nomorWaPenerima && kirimNotifWhatsApp) ) {
+          console.log(`Email dan Nomor WhatsApp tidak disetel (atau channel aktif tapi data kontak kosong) untuk User: ${userId}. Skip notifikasi untuk user ini.`);
           continue;
       }
+
 
       for (const itemId in userStok) {
         const item = userStok[itemId];
@@ -132,7 +140,7 @@ export const checkStockAndSendNotifications = async () => {
               let waMessageSent = false;
               let emailMsgSent = false;
 
-              if (nomorWaPenerima) {
+              if (nomorWaPenerima && kirimNotifWhatsApp && typeof nomorWaPenerima === 'string' && nomorWaPenerima.trim() !== '') {
                 const templateName = 'notifikasi_stok_stockwatch'; 
                 const languageCode = 'id'; 
                 const templateParamsWA = [
@@ -150,10 +158,10 @@ export const checkStockAndSendNotifications = async () => {
                   templateParamsWA
                 );
               } else {
-                console.log(`Nomor WhatsApp tidak diset untuk User: ${userId}. Skip notifikasi WA untuk item ${itemId}.`);
+                if (kirimNotifWhatsApp) console.log(`Nomor WhatsApp tidak valid atau tidak diset untuk User: ${userId}. Skip notifikasi WA untuk item ${itemId}.`);
               }
 
-              if (emailPenerima) {
+              if (emailPenerima && kirimNotifEmail && typeof emailPenerima === 'string' && emailPenerima.trim() !== '') {
                 const emailSubject = `StockWatch - Peringatan Stok Rendah - ${namaBarang}`;
                 const emailBody = `
                   <p>Halo Pengguna StockWatch (Toko: ${userProfile.namaToko || 'Anda'}),</p>
@@ -165,7 +173,7 @@ export const checkStockAndSendNotifications = async () => {
                 `;
                 emailMsgSent = await sendEmailNotification(emailPenerima, emailSubject, emailBody);
               } else {
-                 console.log(`Email tidak diset untuk User: ${userId}. Skip notifikasi Email untuk item ${itemId}.`);
+                 if (kirimNotifEmail) console.log(`Email tidak valid atau tidak diset untuk User: ${userId}. Skip notifikasi Email untuk item ${itemId}.`);
               }
               
               if (waMessageSent || emailMsgSent) {
@@ -187,7 +195,7 @@ export const checkStockAndSendNotifications = async () => {
       }
     }
   } catch (error) {
-    console.error('Error saat menjalankan pengecekan stok (Dinamis - Email & Meta API):', error);
+    console.error('Error saat menjalankan pengecekan stok (Dinamis WA & Email):', error);
   }
-  console.log('Pengecekan stok selesai (Dinamis - Email & Meta API - Kirim Sekali per Siklus).');
+  console.log('Pengecekan stok selesai (Dinamis WA & Email - Kirim Sekali per Siklus).');
 };

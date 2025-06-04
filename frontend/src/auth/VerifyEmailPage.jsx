@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import axios from 'axios'; 
-import './VerifyEmailPage.css'; 
+import { verifyEmailToken } from './authService';
+import { showSuccessToast, showErrorToast, showInfoToast } from '../utils/toastHelper';
+import './VerifyEmailPage.css';
 
 function VerifyEmailPage() {
   const { token } = useParams();
-  const [verificationStatus, setVerificationStatus] = useState('loading'); 
   const [message, setMessage] = useState('Sedang memverifikasi email Anda...');
   const navigate = useNavigate();
 
   useEffect(() => {
     if (token) {
+      showInfoToast('Memproses verifikasi email...');
       const verifyToken = async () => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/auth/verify-email/${token}`);
-          setVerificationStatus('success');
+          const response = await verifyEmailToken(token);
           setMessage(response.data.message);
-
+          showSuccessToast(response.data.message + ' Anda akan diarahkan ke halaman login.');
+          
           setTimeout(() => {
             navigate('/login');
-          }, 10000); 
+          }, 5000);
 
         } catch (err) {
-          setVerificationStatus('error');
-          setMessage(err.response?.data?.message || 'Verifikasi gagal. Token mungkin tidak valid atau sudah kedaluwarsa.');
+          const errorMsg = err.response?.data?.message || 'Verifikasi gagal. Token mungkin tidak valid atau sudah kedaluwarsa.';
+          setMessage(errorMsg);
+          showErrorToast(errorMsg);
         }
       };
       verifyToken();
     } else {
-      setVerificationStatus('error');
-      setMessage('Token verifikasi tidak ditemukan.');
+      const errorMsg = 'Token verifikasi tidak ditemukan.';
+      setMessage(errorMsg);
+      showErrorToast(errorMsg);
     }
   }, [token, navigate]);
 
@@ -37,11 +40,11 @@ function VerifyEmailPage() {
     <div className="verify-email-container">
       <div className="verify-email-box">
         <h1>Status Verifikasi Email</h1>
-        {verificationStatus === 'loading' && <p className="status-loading">{message}</p>}
-        {verificationStatus === 'success' && <p className="status-success">{message} Anda akan diarahkan ke halaman login dalam 5 detik.</p>}
-        {verificationStatus === 'error' && <p className="status-error">{message}</p>}
-
-        {(verificationStatus === 'success' || verificationStatus === 'error') && (
+        <p className={`status-message ${message.includes('berhasil') ? 'status-success-inline' : message.includes('gagal') || message.includes('tidak valid') || message.includes('kedaluwarsa') || message.includes('tidak ditemukan') ? 'status-error-inline' : 'status-loading-inline'}`}>
+            {message}
+        </p>
+        
+        {(!message.includes('Sedang memverifikasi')) && (
           <Link to="/login" className="login-button-verify">Ke Halaman Login</Link>
         )}
       </div>

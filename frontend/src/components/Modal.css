@@ -1,41 +1,61 @@
+/* frontend/src/components/Modal.css */
 .modal-backdrop {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-display: flex;
-justify-content: center;
-align-items: center;
-z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px; /* Memberi ruang jika modal sangat tinggi/lebar */
+  box-sizing: border-box;
 }
 
 .modal-content {
   background: white;
-  padding: 24px;
+  padding: 0; /* Padding akan diatur oleh header, body, footer modal */
   border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
+  width: 100%;
+  max-width: 550px; /* Lebar modal bisa disesuaikan */
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  display: flex; /* PENTING: Menggunakan flexbox */
+  flex-direction: column; /* PENTING: Konten diatur secara vertikal */
+  max-height: 90vh; /* PENTING: Batas tinggi maksimum modal agar tidak melebihi layar */
 }
 
 .modal-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 1rem 1.5rem;
   border-bottom: 1px solid #eee;
-  padding-bottom: 16px;
-  margin-bottom: 16px;
+  flex-shrink: 0; /* PENTING: Header tidak boleh menyusut */
 }
 
 .modal-header h2 {
   margin: 0;
+  font-size: 1.3rem;
+  color: #333;
 }
 
 .modal-close-button {
   background: transparent;
   border: none;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   cursor: pointer;
+  color: #777;
+  padding: 0.25rem 0.5rem;
+  line-height: 1;
+}
+.modal-close-button:hover {
+    color: #333;
+}
+
+.modal-body {
+  padding: 1.5rem; /* Padding untuk konten form */
+  overflow-y: auto; /* PENTING: Ini akan menambahkan scrollbar jika konten lebih tinggi */
+  flex-grow: 1; /* PENTING: Memastikan body mengambil ruang yang tersedia */
 }

@@ -1,18 +1,25 @@
+/* frontend/src/auth/VerifyEmailPage.css */
 .verify-email-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f0f2f5;
   font-family: sans-serif;
   padding: 20px;
+  /* --- BACKGROUND BARU --- */
+  background: 
+    linear-gradient(rgba(20, 130, 50, 0.75), rgba(40, 167, 69, 0.65)),
+    url('https://images.pexels.com/photos/264636/pexels-photo-264636.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+  background-size: cover;
+  background-position: center;
+  /* ---------------------- */
 }
 
 .verify-email-box {
   padding: 30px 40px;
-  background-color: white;
+  background-color: rgba(255, 255, 255, 0.92); /* Latar putih semi-transparan */
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.25);
   text-align: center;
   width: 100%;
   max-width: 500px;
@@ -24,21 +31,23 @@
   font-size: 1.8rem;
 }
 
-.status-loading {
-  color: #555;
+.status-message {
   font-size: 1.1rem;
+  margin-bottom: 20px;
 }
 
-.status-success {
-  color: #28a745; /* Hijau untuk sukses */
-  font-size: 1.1rem;
+.status-success-inline {
+  color: #155724;
   font-weight: bold;
 }
 
-.status-error {
-  color: #dc3545; /* Merah untuk error */
-  font-size: 1.1rem;
+.status-error-inline {
+  color: #721c24;
   font-weight: bold;
+}
+
+.status-loading-inline {
+  color: #444;
 }
 
 .login-button-verify {

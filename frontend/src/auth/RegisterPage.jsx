@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { registerUser } from './authService';
+import { showSuccessToast, showErrorToast } from '../utils/toastHelper';
 import './RegisterPage.css';
 
 function RegisterPage() {
@@ -12,8 +13,6 @@ function RegisterPage() {
     password: '',
     confirmPassword: ''
   });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -23,21 +22,19 @@ function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
 
     if (formData.password !== formData.confirmPassword) {
-      setError('Password dan konfirmasi password tidak cocok.');
+      showErrorToast('Password dan konfirmasi password tidak cocok.');
       return;
     }
     if (formData.password.length < 6) {
-        setError('Password minimal harus 6 karakter.');
+        showErrorToast('Password minimal harus 6 karakter.');
         return;
     }
     
     setIsLoading(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/auth/register', {
+      const response = await registerUser({
         namaLengkap: formData.namaLengkap,
         namaToko: formData.namaToko,
         email: formData.email,
@@ -45,13 +42,14 @@ function RegisterPage() {
         password: formData.password
       });
       
-      setSuccess(response.data.message + ' Anda akan diarahkan ke halaman login.');
+      showSuccessToast(response.message + ' Anda akan diarahkan ke halaman login.');
       setTimeout(() => {
         navigate('/login');
       }, 3000); 
 
     } catch (err) {
-      setError(err.response?.data?.message || 'Registrasi gagal. Silakan coba lagi.');
+      const registerErrorMsg = err.response?.data?.message || 'Registrasi gagal. Silakan coba lagi.';
+      showErrorToast(registerErrorMsg);
     } finally {
       setIsLoading(false);
     }
@@ -61,8 +59,6 @@ function RegisterPage() {
     <div className="register-container">
       <div className="register-form">
         <h2>Daftar Akun StockWatch</h2>
-        {error && <p className="error-message">{error}</p>}
-        {success && <p className="success-message">{success}</p>}
         <form onSubmit={handleSubmit}>
           <div className="input-group">
             <label htmlFor="namaLengkap">Nama Lengkap Anda</label>

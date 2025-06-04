@@ -1,33 +1,135 @@
-.stok-form .form-group {
-  margin-bottom: 1rem;
+.stok-form.profesional {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* Jarak antar baris form */
+  padding: 0.5rem; /* Sedikit padding di dalam form modal */
 }
-.stok-form label {
-  display: block;
-  margin-bottom: 0.5rem;
+
+.stok-form.profesional .form-row {
+  display: flex;
+  flex-direction: column; /* Default untuk field tunggal */
+  gap: 1rem; /* Jarak jika ada field berdampingan */
 }
-.stok-form input {
+
+.stok-form.profesional .form-row.two-columns {
+  flex-direction: row; /* Untuk field yang ingin berdampingan */
+}
+
+.stok-form.profesional .form-group-flex {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* Agar field dalam .two-columns bisa membagi ruang */
+  gap: 0.3rem; /* Jarak antara label dan input */
+}
+
+.stok-form.profesional label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.stok-form.profesional input[type="text"],
+.stok-form.profesional input[type="number"],
+.stok-form.profesional input[type="email"],
+.stok-form.profesional select {
   width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 0.8rem 0.75rem; /* Padding lebih nyaman */
+  border: 1px solid #ced4da; /* Warna border standar Bootstrap */
+  border-radius: 0.25rem; /* Radius standar */
   box-sizing: border-box;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
-.stok-form .form-actions {
+
+.stok-form.profesional select {
+  min-height: calc(1.5em + 1.6rem + 2px); /* Sesuaikan dengan padding input */
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right .9rem center;
+  background-size: .55em auto;
+  padding-right: 2.5rem;
+}
+.stok-form.profesional select:disabled {
+    background-color: #e9ecef;
+    opacity: 0.7;
+}
+
+
+.stok-form.profesional input:focus,
+.stok-form.profesional select:focus {
+  border-color: #80bdff; /* Aksen biru saat fokus */
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+  outline: none;
+}
+
+.stok-form.profesional .form-group-separator {
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem; /* Kurangi margin bawah karena form-row sudah punya gap */
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.stok-form.profesional .form-group-separator label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #007bff;
+}
+
+
+.stok-form.profesional .form-actions {
   display: flex;
   justify-content: flex-end;
   gap: 1rem;
   margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
 }
-.stok-form button {
-  padding: 0.6rem 1.2rem;
-  border-radius: 4px;
-  border: none;
+
+.stok-form.profesional .button-cancel,
+.stok-form.profesional .button-submit {
+  padding: 0.7rem 1.4rem; /* Padding tombol disesuaikan */
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
   cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500; /* Sedikit lebih tipis */
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
-.button-submit {
-  background-color: #007bff;
+
+.stok-form.profesional .button-submit {
+  background-color: #28a745;
   color: white;
+  border-color: #28a745;
 }
-.button-cancel {
-  background-color: #f1f1f1;
+.stok-form.profesional .button-submit:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+.stok-form.profesional .button-submit:disabled {
+  background-color: #cccccc;
+  border-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.stok-form.profesional .button-cancel {
+  background-color: #6c757d;
+  color: white;
+  border-color: #6c757d;
+}
+.stok-form.profesional .button-cancel:hover {
+  background-color: #545b62;
+  border-color: #545b62;
+}
+
+/* Untuk pesan error inline jika masih digunakan di JSX */
+.stok-form.profesional .error-message { 
+  color: #721c24;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border-radius: .25rem;
+  font-size: 0.9rem;
 }

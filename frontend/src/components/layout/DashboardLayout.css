@@ -7,7 +7,8 @@
 
 .dashboard-main-content {
   flex-grow: 1;
-  padding: 2rem;
+  padding: 0.5rem 2rem 2rem 2rem; /* Atas: 0.5rem */
+  margin-left: 250px;
   background-color: #f4f6f9;
   overflow-y: auto;
   transition: margin-left 0.3s ease-in-out;
