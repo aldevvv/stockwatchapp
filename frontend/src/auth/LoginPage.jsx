@@ -9,16 +9,21 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login: loginContext } = useAuth();
+  const { login: loginContextAction } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const data = await loginService(email, password);
-      loginContext(data);
-      navigate('/dashboard');
+      const authData = await loginService(email, password);
+      loginContextAction(authData); 
+
+      if (authData.user && authData.user.role === 'admin') {
+        navigate('/admin/users'); 
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       showErrorToast(err.response?.data?.message || 'Login gagal. Periksa kembali kredensial Anda.');
     } finally {

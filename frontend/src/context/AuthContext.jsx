@@ -11,13 +11,20 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const loadUser = async () => {
       const storedToken = localStorage.getItem('stockwatch_token');
-      if (storedToken) {
-        setToken(storedToken); // Make sure token state is set
+      if (storedToken && !user) { 
+        setToken(storedToken);
         try {
           const response = await fetchUserProfileAPI();
-          setUser(response.data.data);
+          if (response.data && response.data.data) {
+            setUser(response.data.data);
+          } else {
+            console.error("Profil pengguna tidak ditemukan atau format data salah saat refresh.");
+            localStorage.removeItem('stockwatch_token');
+            setToken(null);
+            setUser(null);
+          }
         } catch (error) {
-          console.error("Gagal memuat data user dari token:", error);
+          console.error("Gagal memuat data user dari token saat refresh:", error.response?.data || error.message);
           localStorage.removeItem('stockwatch_token');
           setToken(null);
           setUser(null);
@@ -25,8 +32,13 @@ export const AuthProvider = ({ children }) => {
       }
       setIsLoadingUser(false);
     };
-    loadUser();
-  }, [token]); 
+
+    if (token && !user && isLoadingUser) { 
+        loadUser();
+    } else if (!token) {
+        setIsLoadingUser(false); 
+    }
+  }, [token, user, isLoadingUser]);
 
   const login = (authData) => {
     localStorage.setItem('stockwatch_token', authData.token);

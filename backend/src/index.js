@@ -6,6 +6,8 @@ import userRoutes from './user/user.routes.js';
 import './scheduler/index.js'; // Impor untuk menjalankan scheduler
 import laporanRoutes from './laporan/laporan.routes.js';
 import supplierRoutes from './supplier/supplier.routes.js'; // <-- TAMBAHKAN INI
+import adminRoutes from './admin/admin.routes.js'; // <-- PASTIKAN BARIS IMPOR INI ADA
+
 
 
 
@@ -21,6 +23,8 @@ app.use('/api/stok', stokRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/laporan', laporanRoutes);
 app.use('/api/suppliers', supplierRoutes); // <-- TAMBAHKAN INI
+app.use('/api/admin', adminRoutes); // <-- 2. Daftarkan rute admin
+
 
 
 app.get('/', (req, res) => {

@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import PublicLayout from './components/layout/PublicLayout';
 import DashboardLayout from './components/layout/DashboardLayout';
+import AdminLayout from './admin/components/layout/AdminLayout';
 
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
@@ -25,10 +26,20 @@ import PengaturanPage from './user/PengaturanPage';
 import RiwayatStokPage from './laporan/RiwayatStokPage';
 import SupplierPage from './supplier/SupplierPage';
 
+import AdminDashboardPage from './admin/pages/AdminDashboardPage';
+import AdminUsersPage from './admin/pages/AdminUsersPage';
+import AdminUserStockPage from './admin/pages/AdminUserStockPage';
+import AdminSendMessagePage from './admin/pages/AdminSendMessagePage';
+
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminProtectedRoute from './admin/components/AdminProtectedRoute';
 
 function App() {
-  const { token } = useAuth();
+  const { token, user, isLoadingUser } = useAuth();
+
+  if (isLoadingUser && token) {
+      return <p style={{ textAlign: 'center', marginTop: '50px', fontSize: '1.2rem' }}>Memuat sesi pengguna...</p>;
+  }
 
   return (
     <BrowserRouter>
@@ -52,11 +63,11 @@ function App() {
           <Route path="/pricing-info" element={<PricingInfoPage />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
           
-          <Route path="/login" element={token ? <Navigate to="/dashboard" replace /> : <LoginPage />} />
-          <Route path="/register" element={token ? <Navigate to="/dashboard" replace /> : <RegisterPage />} />
+          <Route path="/login" element={token && user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : (token && user?.role !== 'admin' ? <Navigate to="/dashboard" replace /> : <LoginPage />)} />
+          <Route path="/register" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dashboard" replace />) : <RegisterPage />} />
           <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
-          <Route path="/request-password-reset" element={token ? <Navigate to="/dashboard" replace /> : <RequestPasswordResetPage />} />
-          <Route path="/reset-password/:token" element={token ? <Navigate to="/dashboard" replace /> : <ResetPasswordPage />} />
+          <Route path="/request-password-reset" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dashboard" replace />) : <RequestPasswordResetPage />} />
+          <Route path="/reset-password/:token" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dashboard" replace />) : <ResetPasswordPage />} />
         </Route>
             
         <Route 
@@ -72,7 +83,20 @@ function App() {
           <Route path="/suppliers" element={<SupplierPage />} />
         </Route>
 
-        <Route path="*" element={<Navigate to={token ? "/dashboard" : "/"} replace />} />
+        <Route
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout />
+            </AdminProtectedRoute>
+          }
+        >
+          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+          <Route path="/admin/users" element={<AdminUsersPage />} />
+          <Route path="/admin/users/:targetUserId/stok" element={<AdminUserStockPage />} />
+          <Route path="/admin/messages/send" element={<AdminSendMessagePage />} />
+        </Route>
+
+        <Route path="*" element={<Navigate to={token ? (user?.role === 'admin' ? "/admin/dashboard" : "/dashboard") : "/"} replace />} />
       </Routes>
     </BrowserRouter>
   );

@@ -1,23 +1,21 @@
 import api from '../services/api.js';
 
+export const createStok = (stokData) => {
+  return api.post('/stok', stokData);
+};
+
 export const getAllStok = () => {
   return api.get('/stok');
 };
 
-// FUNGSI BARU UNTUK MENAMBAH STOK
-export const createStok = (stokData) => {
-  // stokData adalah objek { namaBarang, jumlah, satuan }
-  return api.post('/stok', stokData);
+export const updateJumlahStokService = (itemId, dataJumlah) => {
+  return api.put(`/stok/${itemId}/jumlah`, dataJumlah);
 };
 
-// ... (fungsi getAllStok dan createStok sudah ada)
-
-// FUNGSI BARU UNTUK UPDATE
-export const updateStok = (id, stokData) => {
-  return api.put(`/stok/${id}`, stokData);
+export const updateDetailStokItemService = (itemId, dataDetail) => {
+  return api.put(`/stok/${itemId}/detail`, dataDetail);
 };
 
-// FUNGSI BARU UNTUK DELETE
-export const deleteStok = (id) => {
-  return api.delete(`/stok/${id}`);
+export const deleteStok = (itemId) => {
+  return api.delete(`/stok/${itemId}`);
 };

@@ -1,17 +1,21 @@
 import express from 'express';
-import { createStok, getAllStok, updateStok, deleteStok } from './stok.controller.js';
+import { 
+    tambahStokItem, 
+    getAllStok, 
+    updateJumlahStok, 
+    updateDetailStokItem, 
+    hapusStokItem 
+} from './stok.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
 
 router.use(authMiddleware);
 
-router.post('/', createStok);
-
+router.post('/', tambahStokItem);
 router.get('/', getAllStok);
-
-// Nanti kita tambahkan rute untuk Update dan Delete di sini
-router.put('/:id', updateStok);
-router.delete('/:id', deleteStok);
+router.put('/:itemId/jumlah', updateJumlahStok); // Khusus update jumlah
+router.put('/:itemId/detail', updateDetailStokItem); // Khusus update detail non-jumlah
+router.delete('/:itemId', hapusStokItem);
 
 export default router;

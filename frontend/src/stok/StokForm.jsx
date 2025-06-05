@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { createStok, updateStok } from './stokService';
+import { createStok, updateJumlahStokService, updateDetailStokItemService } from './stokService';
 import { getAllSuppliers } from '../supplier/supplierService';
 import { showSuccessToast, showErrorToast } from '../utils/toastHelper';
 import './StokForm.css';
 
-const INPUT_MODE_NONE = ''; 
 const INPUT_MODE_SELECT = 'select';
 const INPUT_MODE_MANUAL = 'manual';
+const INPUT_MODE_NONE = '';
 
 function StokForm({ onSuccess, onClose, initialData = null }) {
   const [formData, setFormData] = useState({
@@ -14,10 +14,16 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
     jumlah: '',
     satuan: 'pcs',
     batasMinimum: '',
-    supplier: '' 
+    supplier: '',
+    hargaBeliSatuan: '',
+    hargaBeliAwal: '', 
+    hargaBeliTerakhir: '',
+    keterangan: ''
   });
   
-  const [supplierInputMode, setSupplierInputMode] = useState(INPUT_MODE_NONE); 
+  const [initialJumlah, setInitialJumlah] = useState(0);
+  
+  const [supplierInputMode, setSupplierInputMode] = useState(INPUT_MODE_NONE);
   const [selectedSupplierFromList, setSelectedSupplierFromList] = useState('');
   const [manualSupplierName, setManualSupplierName] = useState('');
   
@@ -44,28 +50,33 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
 
   useEffect(() => {
     if (isEditMode && initialData) {
-      const initialSupplier = initialData.supplier || '';
+      const initialSupplierValue = initialData.supplier || '';
       setFormData({
         namaBarang: initialData.namaBarang || '',
         jumlah: initialData.jumlah || '',
         satuan: initialData.satuan || 'pcs',
         batasMinimum: initialData.batasMinimum || '',
-        supplier: initialSupplier 
+        supplier: initialSupplierValue,
+        hargaBeliSatuan: '', 
+        hargaBeliAwal: initialData.hargaBeliAwal || '',
+        hargaBeliTerakhir: initialData.hargaBeliTerakhir || '',
+        keterangan: initialData.keterangan || ''
       });
+      setInitialJumlah(Number(initialData.jumlah || 0));
       
-      if (initialSupplier) {
-        const existingSupplier = daftarSupplier.find(s => s.namaSupplier === initialSupplier);
+      if (initialSupplierValue) {
+        const existingSupplier = daftarSupplier.find(s => s.namaSupplier === initialSupplierValue);
         if (existingSupplier && daftarSupplier.length > 0) {
           setSupplierInputMode(INPUT_MODE_SELECT);
-          setSelectedSupplierFromList(initialSupplier);
+          setSelectedSupplierFromList(initialSupplierValue);
           setManualSupplierName('');
         } else { 
           setSupplierInputMode(INPUT_MODE_MANUAL);
-          setManualSupplierName(initialSupplier);
+          setManualSupplierName(initialSupplierValue);
           setSelectedSupplierFromList('');
         }
       } else { 
-        setSupplierInputMode(INPUT_MODE_NONE); // Atau INPUT_MODE_SELECT jika ingin default
+        setSupplierInputMode(INPUT_MODE_NONE);
         setSelectedSupplierFromList('');
         setManualSupplierName('');
       }
@@ -75,9 +86,14 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
         jumlah: '',
         satuan: 'pcs',
         batasMinimum: '',
-        supplier: ''
+        supplier: '',
+        hargaBeliSatuan: '',
+        hargaBeliAwal: '',
+        hargaBeliTerakhir: '',
+        keterangan: ''
       });
-      setSupplierInputMode(INPUT_MODE_NONE); // Atau INPUT_MODE_SELECT
+      setInitialJumlah(0);
+      setSupplierInputMode(INPUT_MODE_NONE);
       setSelectedSupplierFromList('');
       setManualSupplierName('');
     }
@@ -91,7 +107,6 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
   const handleSupplierInputModeChange = (e) => {
     const mode = e.target.value;
     setSupplierInputMode(mode);
-    
     if (mode === INPUT_MODE_SELECT) {
       setFormData(prev => ({ ...prev, supplier: selectedSupplierFromList }));
       setManualSupplierName(''); 
@@ -99,9 +114,9 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
       setFormData(prev => ({ ...prev, supplier: manualSupplierName }));
       setSelectedSupplierFromList(''); 
     } else {
-      setFormData(prev => ({...prev, supplier: ''}));
-      setSelectedSupplierFromList('');
-      setManualSupplierName('');
+        setFormData(prev => ({...prev, supplier: ''}));
+        setSelectedSupplierFromList('');
+        setManualSupplierName('');
     }
   };
 
@@ -130,32 +145,106 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
         supplierToSubmit = manualSupplierName.trim();
     }
     
-    const finalFormData = { ...formData, supplier: supplierToSubmit }; 
+    const currentJumlah = Number(formData.jumlah);
+    const currentHargaBeliSatuan = parseFloat(formData.hargaBeliSatuan);
+    const currentHargaBeliAwal = parseFloat(formData.hargaBeliAwal);
+    const currentHargaBeliTerakhir = parseFloat(formData.hargaBeliTerakhir);
+
+    if (!formData.namaBarang || formData.jumlah === '' || !formData.satuan || formData.batasMinimum === '') {
+      showErrorToast('Nama Barang, Jumlah, Satuan, dan Batas Minimum wajib diisi.');
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (!isEditMode && (formData.hargaBeliSatuan === '' || isNaN(currentHargaBeliSatuan) || currentHargaBeliSatuan < 0)) {
+      showErrorToast('Harga Beli Satuan wajib diisi dengan angka valid saat menambah barang baru.');
+      setIsSubmitting(false);
+      return;
+    }
 
     try {
-      let response;
-      const dataToSend = { 
-        namaBarang: finalFormData.namaBarang,
-        jumlah: Number(finalFormData.jumlah),
-        satuan: finalFormData.satuan,
-        batasMinimum: Number(finalFormData.batasMinimum),
-        supplier: finalFormData.supplier 
-      };
-
-      if (!dataToSend.namaBarang || formData.jumlah === '' || !dataToSend.satuan || formData.batasMinimum === '') {
-        showErrorToast('Field Nama Barang, Jumlah, Satuan, dan Batas Minimum wajib diisi.');
-        setIsSubmitting(false);
-        return;
-      }
+      let successMessage = '';
+      let finalItemData;
 
       if (isEditMode) {
-        response = await updateStok(initialData.id, dataToSend);
-        showSuccessToast('Stok berhasil diperbarui!');
+        let itemAfterJumlahUpdate = null;
+
+        if (currentJumlah !== initialJumlah) {
+          const jumlahPerubahan = currentJumlah - initialJumlah;
+          const jenisPerubahan = jumlahPerubahan > 0 ? 'PENAMBAHAN_MANUAL' : 'PENGURANGAN_MANUAL';
+          
+          let hargaBeliUntukUpdate = 0;
+          if (jenisPerubahan === 'PENAMBAHAN_MANUAL') {
+            if (formData.hargaBeliSatuan === '' || isNaN(currentHargaBeliSatuan) || currentHargaBeliSatuan < 0) {
+              showErrorToast('Harga Beli Satuan wajib diisi dengan angka valid untuk penambahan stok.');
+              setIsSubmitting(false);
+              return;
+            }
+            hargaBeliUntukUpdate = currentHargaBeliSatuan;
+          }
+
+          const jumlahPayload = {
+            jenisPerubahan,
+            jumlahPerubahan,
+            keterangan: formData.keterangan || `Jumlah diubah dari ${initialJumlah} ke ${currentJumlah}`,
+            ...(jenisPerubahan === 'PENAMBAHAN_MANUAL' && { hargaBeliSatuan: hargaBeliUntukUpdate })
+          };
+          const responseJumlah = await updateJumlahStokService(initialData.id, jumlahPayload);
+          itemAfterJumlahUpdate = responseJumlah.data.data;
+          successMessage = 'Jumlah stok berhasil diperbarui. ';
+        }
+
+        const detailDataToUpdate = {
+            namaBarang: formData.namaBarang,
+            satuan: formData.satuan,
+            batasMinimum: Number(formData.batasMinimum),
+            supplier: supplierToSubmit,
+            keterangan: formData.keterangan,
+            hargaBeliAwal: formData.hargaBeliAwal !== '' && !isNaN(currentHargaBeliAwal) ? currentHargaBeliAwal : Number(initialData.hargaBeliAwal || 0),
+            hargaBeliTerakhir: formData.hargaBeliTerakhir !== '' && !isNaN(currentHargaBeliTerakhir) ? currentHargaBeliTerakhir : Number(initialData.hargaBeliTerakhir || 0)
+        };
+        
+        let hasDetailChanges = false;
+        if (initialData) {
+            if (initialData.namaBarang !== detailDataToUpdate.namaBarang ||
+                initialData.satuan !== detailDataToUpdate.satuan ||
+                Number(initialData.batasMinimum) !== detailDataToUpdate.batasMinimum ||
+                (initialData.supplier || '') !== detailDataToUpdate.supplier ||
+                (initialData.keterangan || '') !== detailDataToUpdate.keterangan ||
+                Number(initialData.hargaBeliAwal || 0) !== detailDataToUpdate.hargaBeliAwal ||
+                Number(initialData.hargaBeliTerakhir || 0) !== detailDataToUpdate.hargaBeliTerakhir ) {
+                hasDetailChanges = true;
+            }
+        }
+        
+        if (hasDetailChanges) {
+            const responseDetail = await updateDetailStokItemService(initialData.id, detailDataToUpdate);
+            finalItemData = responseDetail.data.data;
+            successMessage += 'Detail stok berhasil diperbarui.';
+        } else if (itemAfterJumlahUpdate) {
+            finalItemData = itemAfterJumlahUpdate;
+        } else {
+            finalItemData = initialData; 
+            successMessage = "Tidak ada perubahan disimpan.";
+        }
+        
+        showSuccessToast(successMessage.trim() || "Perubahan stok berhasil disimpan.");
+        onSuccess(finalItemData);
+
       } else {
-        response = await createStok(dataToSend);
+        const createData = { 
+          namaBarang: formData.namaBarang,
+          jumlah: currentJumlah,
+          satuan: formData.satuan,
+          batasMinimum: Number(formData.batasMinimum),
+          supplier: supplierToSubmit,
+          hargaBeliSatuan: currentHargaBeliSatuan,
+          keterangan: formData.keterangan
+        };
+        const response = await createStok(createData);
         showSuccessToast('Stok berhasil ditambahkan!');
+        onSuccess(response.data.data);
       }
-      onSuccess(response.data.data);
     } catch (err) {
       const errorMessage = err.response?.data?.message || `Gagal ${isEditMode ? 'memperbarui' : 'menambahkan'} stok.`;
       showErrorToast(errorMessage);
@@ -165,35 +254,65 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
     }
   };
 
+  const showHargaBeliUntukPenambahanInput = !isEditMode || (isEditMode && Number(formData.jumlah) > initialJumlah);
+
   return (
     <form onSubmit={handleSubmit} className="stok-form profesional">
       <div className="form-row">
         <div className="form-group-flex">
-            <label htmlFor="namaBarang">Nama Barang</label>
+            <label htmlFor="namaBarang">Nama Barang*</label>
             <input id="namaBarang" name="namaBarang" type="text" value={formData.namaBarang} onChange={handleInputChange} required />
         </div>
       </div>
       
       <div className="form-row two-columns">
         <div className="form-group-flex">
-          <label htmlFor="jumlah">Jumlah</label>
+          <label htmlFor="jumlah">Jumlah*</label>
           <input id="jumlah" name="jumlah" type="number" value={formData.jumlah} onChange={handleInputChange} required />
         </div>
         <div className="form-group-flex">
-          <label htmlFor="satuan">Satuan</label>
+          <label htmlFor="satuan">Satuan*</label>
           <input id="satuan" name="satuan" type="text" value={formData.satuan} onChange={handleInputChange} placeholder="pcs, kg, liter" required />
         </div>
       </div>
       
-      <div className="form-row">
+      <div className="form-row two-columns">
         <div className="form-group-flex">
-          <label htmlFor="batasMinimum">Batas Minimum Notifikasi</label>
+          <label htmlFor="batasMinimum">Batas Minimum Notifikasi*</label>
           <input id="batasMinimum" name="batasMinimum" type="number" value={formData.batasMinimum} onChange={handleInputChange} placeholder="Contoh: 10" required />
         </div>
+        {showHargaBeliUntukPenambahanInput && (
+            <div className="form-group-flex">
+            <label htmlFor="hargaBeliSatuan">Harga Beli/Modal per Satuan{isEditMode ? ' (Tambahan)' : '*'}</label>
+            <input 
+                id="hargaBeliSatuan" 
+                name="hargaBeliSatuan" 
+                type="number" 
+                step="0.01"
+                value={formData.hargaBeliSatuan} 
+                onChange={handleInputChange} 
+                placeholder="Harga beli item ini"
+                required={!isEditMode}
+            />
+            </div>
+        )}
       </div>
       
+      {isEditMode && (
+          <div className="form-row two-columns">
+              <div className="form-group-flex">
+                  <label htmlFor="hargaBeliAwal">Harga Beli Awal (Info)</label>
+                  <input type="number" id="hargaBeliAwal" name="hargaBeliAwal" value={formData.hargaBeliAwal} onChange={handleInputChange} step="0.01" />
+              </div>
+              <div className="form-group-flex">
+                  <label htmlFor="hargaBeliTerakhir">Harga Beli Terakhir (Info)</label>
+                  <input type="number" id="hargaBeliTerakhir" name="hargaBeliTerakhir" value={formData.hargaBeliTerakhir} onChange={handleInputChange} step="0.01" />
+              </div>
+          </div>
+      )}
+
       <div className="form-group-separator">
-        <label>Informasi Supplier</label>
+        <label>Informasi Tambahan (Opsional)</label>
       </div>
 
       <div className="form-row">
@@ -204,7 +323,6 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
             name="supplierInputMode" 
             value={supplierInputMode} 
             onChange={handleSupplierInputModeChange}
-            className="supplier-input-mode-select"
           >
             <option value={INPUT_MODE_NONE}>-- Pilih Metode --</option>
             <option value={INPUT_MODE_SELECT}>Pilih dari Daftar</option>
@@ -223,7 +341,6 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
               value={selectedSupplierFromList} 
               onChange={handleSupplierListChange}
               disabled={loadingSuppliers || daftarSupplier.length === 0}
-              className="supplier-select-list"
             >
               <option value="">-- {loadingSuppliers ? "Memuat..." : (daftarSupplier.length === 0 ? "Belum ada supplier" : "Pilih Supplier")} --</option>
               {daftarSupplier.map(s => (
@@ -245,11 +362,17 @@ function StokForm({ onSuccess, onClose, initialData = null }) {
               value={manualSupplierName} 
               onChange={handleManualSupplierChange} 
               placeholder="Ketik nama supplier baru atau yang belum ada di daftar"
-              required={supplierInputMode === INPUT_MODE_MANUAL} 
             />
           </div>
         </div>
       )}
+      
+      <div className="form-row">
+        <div className="form-group-flex">
+          <label htmlFor="keterangan">Keterangan</label>
+          <input type="text" id="keterangan" name="keterangan" value={formData.keterangan} onChange={handleInputChange} />
+        </div>
+      </div>
 
       <div className="form-actions">
         <button type="button" onClick={onClose} className="button-cancel">Batal</button>

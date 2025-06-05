@@ -1,0 +1,33 @@
+/* frontend/src/admin/components/layout/AdminLayout.css */
+.admin-layout {
+  display: flex;
+  min-height: 100vh;
+  font-family: sans-serif;
+  position: relative;
+}
+
+.admin-main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  background-color: #e8edf1; /* Warna latar sedikit berbeda untuk admin panel */
+  overflow-y: auto;
+  transition: margin-left 0.3s ease-in-out;
+}
+
+/* Sesuaikan dengan lebar AdminSidebar Anda */
+.admin-layout.sidebar-open .admin-main-content {
+  margin-left: 260px; 
+}
+
+.admin-layout.sidebar-closed .admin-main-content {
+  margin-left: 65px;
+}
+
+@media (max-width: 768px) {
+  .admin-layout.sidebar-open .admin-main-content {
+    margin-left: 230px; /* Sesuaikan dengan lebar AdminSidebar mobile */
+  }
+  .admin-layout.sidebar-closed .admin-main-content {
+    margin-left: 60px; /* Sesuaikan dengan lebar AdminSidebar mobile collapsed */
+  }
+}

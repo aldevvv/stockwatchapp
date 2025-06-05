@@ -9,12 +9,11 @@ import StokForm from '../stok/StokForm';
 import StokBarChart from './StokBarChart';
 import './DashboardPage.css';
 
-const ITEM_PER_HALAMAN_DASHBOARD = 6;
+const ITEM_PER_HALAMAN_DASHBOARD = 10;
 
 function DashboardPage() {
   const { user } = useAuth(); 
   const [stok, setStok] = useState([]);
-  const [suppliers, setSuppliers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,6 +24,7 @@ function DashboardPage() {
     totalItemStok: 0,
     itemStokKritis: 0,
     jumlahSupplier: 0,
+    totalNilaiInventaris: 0,
   });
 
   const fetchData = useCallback(async () => {
@@ -40,16 +40,23 @@ function DashboardPage() {
       const supplierItems = supplierResponse.data.data || [];
 
       setStok(stokItems);
-      setSuppliers(supplierItems);
 
       const totalItems = stokItems.length;
       const kritisItems = stokItems.filter(item => Number(item.jumlah) <= Number(item.batasMinimum)).length;
       const totalSuppliers = supplierItems.length;
+      
+      let nilaiInventaris = 0;
+      stokItems.forEach(item => {
+        const hargaBeli = Number(item.hargaBeliTerakhir || item.hargaBeliAwal || 0);
+        const jumlah = Number(item.jumlah);
+        nilaiInventaris += (hargaBeli * jumlah);
+      });
 
       setKpiData({
         totalItemStok: totalItems,
         itemStokKritis: kritisItems,
         jumlahSupplier: totalSuppliers,
+        totalNilaiInventaris: nilaiInventaris,
       });
 
     } catch (err) {
@@ -89,9 +96,9 @@ function DashboardPage() {
     closeModal();
   };
 
-  const handleEdit = (item) => {
-    setEditingStok(item);
-    setIsModalOpen(true);
+  const handleEdit = (item) => { 
+    setEditingStok(item); 
+    setIsModalOpen(true); 
   };
   
   const handleDelete = async (itemId) => {
@@ -108,14 +115,18 @@ function DashboardPage() {
     }
   };
 
-  const openModalForCreate = () => {
-    setEditingStok(null);
-    setIsModalOpen(true);
+  const openModalForCreate = () => { 
+    setEditingStok(null); 
+    setIsModalOpen(true); 
   };
   
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setEditingStok(null);
+  const closeModal = () => { 
+    setIsModalOpen(false); 
+    setEditingStok(null); 
+  };
+
+  const formatRupiah = (angka) => {
+    return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
   };
 
   const renderStokTable = () => {
@@ -128,27 +139,35 @@ function DashboardPage() {
         <thead>
           <tr>
             <th>Nama Barang</th>
-            <th>Jumlah Stok</th>
-            <th>Batas Minimum</th>
+            <th>Jumlah</th>
+            <th>Harga Modal/Unit</th>
+            <th>Total Modal</th>
+            <th>Batas Min.</th>
             <th>Satuan</th>
             <th>Supplier</th>
-            <th>Perubahan</th>
+            <th>Aksi</th>
           </tr>
         </thead>
         <tbody>
-          {currentStockItems.map((item) => (
-            <tr key={item.id}>
-              <td>{item.namaBarang}</td>
-              <td>{item.jumlah}</td>
-              <td>{item.batasMinimum}</td>
-              <td>{item.satuan}</td>
-              <td>{item.supplier || '-'}</td>
-              <td className="action-buttons">
-                <button onClick={() => handleEdit(item)} className="button-edit">Edit</button>
-                <button onClick={() => handleDelete(item.id)} className="button-delete">Hapus</button>
-              </td>
-            </tr>
-          ))}
+          {currentStockItems.map((item) => {
+            const hargaModalUnit = Number(item.hargaBeliTerakhir || item.hargaBeliAwal || 0);
+            const totalModalItem = hargaModalUnit * Number(item.jumlah);
+            return (
+              <tr key={item.id}>
+                <td>{item.namaBarang}</td>
+                <td>{item.jumlah}</td>
+                <td>{formatRupiah(hargaModalUnit)}</td>
+                <td>{formatRupiah(totalModalItem)}</td>
+                <td>{item.batasMinimum}</td>
+                <td>{item.satuan}</td>
+                <td>{item.supplier || '-'}</td>
+                <td className="action-buttons">
+                  <button onClick={() => handleEdit(item)} className="button-edit">Edit</button>
+                  <button onClick={() => handleDelete(item.id)} className="button-delete">Hapus</button>
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     );
@@ -159,22 +178,27 @@ function DashboardPage() {
       {!loading && !error && (
         <div className="kpi-cards-container">
           <div className="kpi-card">
-            <h3>Total Item</h3>
+            <h3>Total Item Stok</h3>
             <p>{kpiData.totalItemStok}</p>
           </div>
           <div className="kpi-card critical">
-            <h3>Perlu Restock (ROP)</h3>
+            <h3>Stok di Bawah Minimum</h3>
             <p>{kpiData.itemStokKritis}</p>
           </div>
           <div className="kpi-card">
             <h3>Jumlah Supplier</h3>
             <p>{kpiData.jumlahSupplier}</p>
           </div>
+          <div className="kpi-card inventory-value">
+            <h3>Estimasi Nilai Inventaris</h3>
+            <p>{formatRupiah(kpiData.totalNilaiInventaris)}</p>
+          </div>
         </div>
       )}
       
       {loading && stok.length === 0 && <p>Memuat data utama...</p>}
-      {error && stok.length === 0 && <p className="error-message" style={{textAlign: 'center'}}>{error}</p>}
+      {error && stok.length > 0 && <p className="error-message" style={{textAlign: 'center'}}>{error}</p>}
+
 
       <div className="content-header">
         <h2>Daftar Stok Barang</h2>

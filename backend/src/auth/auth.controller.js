@@ -39,6 +39,7 @@ export const register = async (req, res) => {
         namaToko,
         nomorWhatsAppNotifikasi,
         isEmailVerified: false,
+        role: 'user', 
         createdAt: new Date().toISOString()
       },
       credentials: {
@@ -118,20 +119,27 @@ export const login = async (req, res) => {
       return res.status(401).json({ message: 'Kredensial tidak valid.' });
     }
 
-    const userPayloadForJwt = { id: userId, email: userData.profile.email };
+    const userRole = userData.profile?.role || 'user';
+
+    const userPayloadForJwt = { 
+      id: userId, 
+      email: userData.profile.email,
+      role: userRole
+    };
     const token = jwt.sign(userPayloadForJwt, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRES_IN });
 
     const userProfileResponse = {
         id: userId,
         email: userData.profile.email,
         namaLengkap: userData.profile.namaLengkap,
-        namaToko: userData.profile.namaToko
+        namaToko: userData.profile.namaToko,
+        role: userRole
     };
 
     res.json({
       message: 'Login berhasil!',
       token,
-      user: userProfileResponse
+      user: userProfileResponse 
     });
 
   } catch (error) {
@@ -190,10 +198,10 @@ export const requestPasswordReset = async (req, res) => {
     }
 
     let userId;
-    let userProfileData; // Untuk mengambil namaLengkap atau namaToko
+    let userProfileData;
     snapshot.forEach(childSnapshot => {
       userId = childSnapshot.key;
-      userProfileData = childSnapshot.val().profile; // Ambil data profil
+      userProfileData = childSnapshot.val().profile;
       return true;
     });
 
