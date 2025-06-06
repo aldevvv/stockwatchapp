@@ -2,7 +2,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import db from '../config/firebase.js';
-import { sendEmailNotification } from '../services/notification.service.js';
+import { sendEmailNotification, generateEmailTemplate } from '../services/notification.service.js';
 
 export const register = async (req, res) => {
   try {
@@ -54,18 +54,21 @@ export const register = async (req, res) => {
 
     await db.ref(`users/${newUserId}`).set(userData);
 
-    const verificationUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/verify-email/${emailVerificationToken}`;
+    const verificationUrl = `${process.env.FRONTEND_URL || 'https://stockwatch.web.id'}/verify-email/${emailVerificationToken}`;
     const emailSubject = 'Verifikasi Email Akun StockWatch Anda';
-    const emailBody = `
-      <p>Selamat datang di StockWatch, ${namaLengkap}!</p>
-      <p>Silakan klik link di bawah ini untuk memverifikasi alamat email Anda:</p>
-      <p><a href="${verificationUrl}">${verificationUrl}</a></p>
-      <p>Link ini akan kedaluwarsa dalam 1 jam.</p>
-      <p>Jika Anda tidak merasa mendaftar, abaikan email ini.</p>
-      <p>Terima kasih,<br/>Tim StockWatch</p>
+    const contentForEmail = `
+        <p>Selamat datang di StockWatch, ${namaLengkap}!</p>
+        <p>Terima kasih telah mendaftar. Silakan klik tombol di bawah ini untuk memverifikasi alamat email Anda. Link ini akan kedaluwarsa dalam 1 jam.</p>
     `;
-    
-    const emailSent = await sendEmailNotification(email, emailSubject, emailBody);
+    const emailHtml = generateEmailTemplate(
+        'Selamat Datang di StockWatch!',
+        'Satu langkah lagi untuk mengaktifkan akun Anda.',
+        contentForEmail,
+        verificationUrl,
+        'Verifikasi Email Saya'
+    );
+
+    const emailSent = await sendEmailNotification(email, emailSubject, emailHtml);
     if (emailSent) {
       console.log(`Email verifikasi berhasil dikirim ke ${email}.`);
     } else {
@@ -213,19 +216,22 @@ export const requestPasswordReset = async (req, res) => {
       expires: passwordResetTokenExpires
     });
 
-    const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password/${passwordResetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL || 'https://stockwatch.web.id'}/reset-password/${passwordResetToken}`;
     const emailSubject = 'Reset Password Akun StockWatch Anda';
-    const emailBody = `
-      <p>Halo ${userProfileData.namaLengkap || userProfileData.namaToko || ''},</p>
-      <p>Anda menerima email ini karena ada permintaan untuk mereset password akun StockWatch Anda.</p>
-      <p>Silakan klik link di bawah ini untuk mengatur ulang password Anda:</p>
-      <p><a href="${resetUrl}">${resetUrl}</a></p>
-      <p>Link ini akan kedaluwarsa dalam 1 jam.</p>
-      <p>Jika Anda tidak merasa meminta reset password, abaikan email ini.</p>
-      <p>Terima kasih,<br/>Tim StockWatch</p>
+    const contentForEmail = `
+        <p>Halo ${userProfileData.namaLengkap || ''},</p>
+        <p>Kami menerima permintaan untuk mereset password akun Anda. Klik tombol di bawah untuk melanjutkan. Link ini akan kedaluwarsa dalam 1 jam.</p>
+        <p>Jika Anda tidak merasa meminta ini, abaikan saja email ini.</p>
     `;
+    const emailHtml = generateEmailTemplate(
+        'Permintaan Reset Password',
+        'Ikuti instruksi untuk mereset password Anda.',
+        contentForEmail,
+        resetUrl,
+        'Reset Password Sekarang'
+    );
     
-    const emailSent = await sendEmailNotification(email, emailSubject, emailBody);
+    const emailSent = await sendEmailNotification(email, emailSubject, emailHtml);
     if (emailSent) {
         console.log(`Email reset password berhasil dikirim ke ${email}.`);
     } else {
