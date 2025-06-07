@@ -11,3 +11,18 @@ export const updateUserProfile = (userData) => {
 export const changePassword = (passwordData) => {
   return api.post('/users/profile/change-password', passwordData);
 };
+
+export const deleteUserAccount = async (password) => {
+    return api.delete('/users/me', { data: { password } });
+};
+
+export const uploadProfilePicture = (file) => {
+    const formData = new FormData();
+    formData.append('profilePicture', file); 
+
+    return api.post('/users/profile/upload-picture', formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+        },
+    });
+};

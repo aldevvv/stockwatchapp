@@ -1,5 +1,6 @@
 import db from '../config/firebase.js';
 import { v4 as uuidv4 } from 'uuid';
+import bcrypt from 'bcryptjs';
 
 const catatRiwayatStok = async (userId, itemId, namaBarangUntukRiwayat, jenisPerubahan, jumlahSebelum, jumlahPerubahan, jumlahSesudah, hargaBeliSatuan = 0, keterangan = '') => {
   try {
@@ -326,4 +327,41 @@ export const hapusStokItem = async (req, res) => {
     console.error("Error di hapusStokItem:", error);
     res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
   }
+};
+
+export const deleteAllStok = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const userId = req.user.id; // Diambil dari token JWT setelah login
+
+        if (!password) {
+            return res.status(400).json({ message: 'Password dibutuhkan untuk konfirmasi.' });
+        }
+
+        // Ambil data user dari Firebase untuk verifikasi password
+        const userCredentialsRef = db.ref(`users/${userId}/credentials`);
+        const snapshot = await userCredentialsRef.once('value');
+        const credentials = snapshot.val();
+
+        if (!credentials || !credentials.password) {
+            return res.status(500).json({ message: 'Tidak dapat memverifikasi pengguna.' });
+        }
+
+        // Bandingkan password yang diinput dengan hash di database
+        const isMatch = await bcrypt.compare(password, credentials.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Password salah. Aksi dibatalkan.' });
+        }
+
+        // Jika password benar, hapus semua data di node 'stok' untuk user ini
+        const userStokRef = db.ref(`users/${userId}/stok`);
+        await userStokRef.remove();
+
+        res.status(200).json({ message: 'Semua data stok berhasil dihapus.' });
+
+    } catch (error) {
+        console.error("Error di deleteAllStok:", error);
+        res.status(500).json({ message: 'Terjadi kesalahan pada server.', error: error.message });
+    }
 };

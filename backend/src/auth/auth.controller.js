@@ -40,7 +40,9 @@ export const register = async (req, res) => {
         nomorWhatsAppNotifikasi,
         isEmailVerified: false,
         role: 'user', 
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
+        fotoProfilUrl: 'https://cdn2.iconfinder.com/data/icons/circle-icons-1/64/profle-256.png' 
+
       },
       credentials: {
         password: hashedPassword
@@ -68,12 +70,7 @@ export const register = async (req, res) => {
         'Verifikasi Email Saya'
     );
 
-    const emailSent = await sendEmailNotification(email, emailSubject, emailHtml);
-    if (emailSent) {
-      console.log(`Email verifikasi berhasil dikirim ke ${email}.`);
-    } else {
-      console.warn(`Gagal mengirim email verifikasi ke ${email}, namun registrasi tetap dilanjutkan.`);
-    }
+    await sendEmailNotification(email, emailSubject, emailHtml);
 
     res.status(201).json({ 
       message: `Registrasi berhasil untuk ${email}. Silakan cek email Anda untuk verifikasi.` 
@@ -97,7 +94,7 @@ export const login = async (req, res) => {
     const snapshot = await usersRef.orderByChild('profile/email').equalTo(email).once('value');
     
     if (!snapshot.exists()) {
-      return res.status(401).json({ message: 'Kredensial tidak valid.' });
+      return res.status(404).json({ message: 'Email yang Anda masukkan tidak terdaftar.' });
     }
 
     let userId;
@@ -114,12 +111,12 @@ export const login = async (req, res) => {
 
     const storedPassword = userData.credentials?.password;
     if (!storedPassword) {
-      return res.status(401).json({ message: 'Kredensial tidak valid (data pengguna tidak lengkap).' });
+      return res.status(401).json({ message: 'Terjadi masalah dengan data akun Anda.' });
     }
 
     const isMatch = await bcrypt.compare(password, storedPassword);
     if (!isMatch) {
-      return res.status(401).json({ message: 'Kredensial tidak valid.' });
+      return res.status(401).json({ message: 'Password yang Anda masukkan salah.' });
     }
 
     const userRole = userData.profile?.role || 'user';
@@ -197,7 +194,7 @@ export const requestPasswordReset = async (req, res) => {
     const snapshot = await usersRef.orderByChild('profile/email').equalTo(email).once('value');
 
     if (!snapshot.exists()) {
-      return res.status(200).json({ message: 'Jika email Anda terdaftar, link reset password akan dikirim.' });
+      return res.status(404).json({ message: `Email ${email} belum terdaftar.` });
     }
 
     let userId;
@@ -231,14 +228,9 @@ export const requestPasswordReset = async (req, res) => {
         'Reset Password Sekarang'
     );
     
-    const emailSent = await sendEmailNotification(email, emailSubject, emailHtml);
-    if (emailSent) {
-        console.log(`Email reset password berhasil dikirim ke ${email}.`);
-    } else {
-        console.warn(`Gagal mengirim email reset password ke ${email}, namun proses tetap dilanjutkan di sisi server.`);
-    }
-
-    res.status(200).json({ message: 'Jika email Anda terdaftar, link reset password akan dikirim.' });
+    await sendEmailNotification(email, emailSubject, emailHtml);
+    
+    res.status(200).json({ message: `Link reset password telah berhasil dikirim ke ${email}. Silakan periksa inbox Anda.` });
 
   } catch (error) {
     console.error("Error di requestPasswordReset:", error);

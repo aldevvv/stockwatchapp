@@ -192,6 +192,37 @@
   margin: 0 1rem;
 }
 
+/* --- STYLING BARU/DIPERBARUI UNTUK STATUS BADGE --- */
+.status-badge {
+  padding: 0.25rem 0.8rem; /* Sedikit sesuaikan padding agar lebih proporsional */
+  font-size: 0.75rem;
+  font-weight: 700; /* Dibuat lebih tebal */
+  border-radius: 9999px; /* Membuat bentuk pil (pill shape) */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  display: inline-block; /* Pastikan badge berperilaku dengan benar */
+}
+
+.status-aman {
+  color: #155724; /* Teks hijau tua */
+  background-color: #d4edda; /* Latar hijau muda (seperti status "success") */
+}
+
+.status-restock {
+  color: #721c24; /* Teks merah tua */
+  background-color: #f8d7da; /* Latar merah muda (seperti status "danger") */
+}
+
+/* Styling opsional untuk highlight seluruh baris jika stok kritis */
+.stok-table tbody tr.row-kritis {
+  background-color: #fff7f7; /* Latar merah muda sangat tipis */
+}
+.stok-table tbody tr.row-kritis:hover {
+  background-color: #ffe5e5; /* Warna hover sedikit lebih gelap */
+}
+/* ------------------------------------------------ */
+
 
 @media (min-width: 1200px) {
     .kpi-cards-container {
@@ -235,4 +266,5 @@
     flex-direction: column;
     gap: 0.75rem;
   }
+  
 }

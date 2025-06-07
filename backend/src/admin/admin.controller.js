@@ -80,17 +80,17 @@ export const sendMessageToUser = async (req, res) => {
         }
         
         const contentForEmail = `
-            <p>Anda menerima pesan dari administrator StockWatch terkait akun Anda (Toko: ${targetUserProfile.namaToko || 'N/A'}).</p>
+            <p>Anda menerima pesan dari Administrator StockWatch terkait Akun Anda (Toko : ${targetUserProfile.namaToko || 'N/A'}).</p>
             <p><strong>Isi Pesan:</strong></p>
             <p style="padding: 10px; border-left: 3px solid #ccc; background-color: #f8f9fa;">
                 ${messageBody.replace(/\n/g, '<br>')}
             </p>
-            <p>Jika Anda memiliki pertanyaan, silakan balas email ini atau hubungi support kami.</p>
+            <p>Jika Anda memiliki pertanyaan, Silahkan balas Email ini atau Hubungi Customer Support Kami.</p>
         `;
 
         const emailHtml = generateEmailTemplate(
             subject,
-            `Pesan dari Admin: ${subject}`,
+            `Pesan dari Admin : ${subject}`,
             contentForEmail,
             `${process.env.FRONTEND_URL || 'https://stockwatch.web.id'}/dashboard`,
             'Buka Dashboard'

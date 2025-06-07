@@ -55,8 +55,8 @@ export const generateEmailTemplate = (title, preheader, content, buttonUrl, butt
               <tr>
                 <td align="center" style="padding: 20px 30px; background-color: #ecf0f1; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
                   <p style="margin: 0; color: #7f8c8d; font-size: 12px;">
-                    &copy; ${currentYear} StockWatch. All rights reserved.<br/>
-                    Ini adalah email otomatis, mohon untuk tidak membalas.
+                    &copy; ${currentYear} StockWatch. All Rights Reserved.<br/>
+                    Email Ini Adalah Pesan Otomatis, Mohon Untuk Tidak Membalas.
                   </p>
                 </td>
               </tr>
@@ -202,7 +202,7 @@ export const checkStockAndSendNotifications = async () => {
                 const preheader = `Stok untuk ${namaBarang} telah mencapai batas minimum.`;
                 const contentForEmail = `
                   <p>Stok untuk barang <strong>${namaBarang}</strong> hampir habis.</p>
-                  <p>Jumlah saat ini: <strong>${sisaStok} ${satuanBarang}</strong>.</p>
+                  <p>Jumlah saat ini : <strong>${sisaStok} ${satuanBarang}</strong>.</p>
                   <p>Batas minimum yang Anda tetapkan adalah <strong>${batasMin} ${satuanBarang}</strong>.</p>
                   <p>Segera lakukan restock untuk menghindari kehabisan barang!</p>
                 `;
@@ -219,7 +219,7 @@ export const checkStockAndSendNotifications = async () => {
               
               if (waMessageSent || emailMsgSent) {
                 await itemStokUserRef.update({ notifikasiStokRendahSudahTerkirim: true });
-                console.log(`Status notifikasi untuk ${namaBarang} (User: ${userId}) diupdate menjadi true.`);
+                console.log(`Status notifikasi untuk ${namaBarang} (User: ${userId}) diupdate menjadi true.`);y
               }
             }
           } else { 

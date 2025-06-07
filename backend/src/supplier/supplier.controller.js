@@ -1,4 +1,5 @@
 import db from '../config/firebase.js';
+import bcrypt from 'bcryptjs';
 
 export const createSupplier = async (req, res) => {
     try {
@@ -98,15 +99,40 @@ export const updateSupplier = async (req, res) => {
             alamatSupplier: alamatSupplier !== undefined ? alamatSupplier : currentData.alamatSupplier || '',
             hargaBarangDariSupplier: hargaBarangDariSupplier !== undefined ? hargaBarangDariSupplier : currentData.hargaBarangDariSupplier || '',
             updatedAt: new Date().toISOString(),
-            createdAt: currentData.createdAt || new Date().toISOString(), // Pertahankan createdAt
+            createdAt: currentData.createdAt || new Date().toISOString(),
             id: supplierId,
         };
-        
+
         await supplierRef.update(updatedData);
         res.status(200).json({ message: 'Supplier berhasil diperbarui', data: updatedData });
     } catch (error) {
         console.error("Error di updateSupplier:", error);
         res.status(500).json({ message: 'Terjadi kesalahan pada server', error: error.message });
+    }
+};
+
+export const deleteAllSuppliers = async (req, res) => {
+    try {
+        const { password } = req.body;
+        const userId = req.user.id;
+        if (!password) {
+            return res.status(400).json({ message: 'Password dibutuhkan.' });
+        }
+        const userCredentialsRef = db.ref(`users/${userId}/credentials`);
+        const snapshot = await userCredentialsRef.once('value');
+        const credentials = snapshot.val();
+        if (!credentials || !credentials.password) {
+            return res.status(500).json({ message: 'Tidak dapat memverifikasi pengguna.' });
+        }
+        const isMatch = await bcrypt.compare(password, credentials.password);
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Password salah. Aksi dibatalkan.' });
+        }
+        await db.ref(`users/${userId}/suppliers`).remove();
+        res.status(200).json({ message: 'Semua data supplier berhasil dihapus.' });
+    } catch (error) {
+        console.error("Error di deleteAllSuppliers:", error);
+        res.status(500).json({ message: 'Terjadi kesalahan pada server.', error: error.message });
     }
 };
 

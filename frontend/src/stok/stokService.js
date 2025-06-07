@@ -19,3 +19,9 @@ export const updateDetailStokItemService = (itemId, dataDetail) => {
 export const deleteStok = (itemId) => {
   return api.delete(`/stok/${itemId}`);
 };
+
+export const deleteAllStok = async (password) => {
+  return api.delete('/stok/all', {
+    data: { password }
+  });
+};

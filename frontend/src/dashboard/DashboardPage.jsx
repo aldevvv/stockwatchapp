@@ -12,7 +12,7 @@ import './DashboardPage.css';
 const ITEM_PER_HALAMAN_DASHBOARD = 10;
 
 function DashboardPage() {
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const [stok, setStok] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -67,7 +67,7 @@ function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [user]); 
+  }, [user]);
 
   useEffect(() => {
     if (user) {
@@ -91,7 +91,7 @@ function DashboardPage() {
     setHalamanSaatIni(nomorHalaman);
   };
 
-  const handleFormSuccess = (updatedOrNewItem) => {
+  const handleFormSuccess = () => {
     fetchData(); 
     closeModal();
   };
@@ -135,41 +135,53 @@ function DashboardPage() {
     if (!loading && stok.length === 0 && !error) return <p>Anda belum memiliki data stok. Silakan tambahkan.</p>;
 
     return (
-      <table className="stok-table">
-        <thead>
-          <tr>
-            <th>Nama Barang</th>
-            <th>Jumlah</th>
-            <th>Harga Modal/Unit</th>
-            <th>Total Modal</th>
-            <th>Batas Min.</th>
-            <th>Satuan</th>
-            <th>Supplier</th>
-            <th>Aksi</th>
-          </tr>
-        </thead>
-        <tbody>
-          {currentStockItems.map((item) => {
-            const hargaModalUnit = Number(item.hargaBeliTerakhir || item.hargaBeliAwal || 0);
-            const totalModalItem = hargaModalUnit * Number(item.jumlah);
-            return (
-              <tr key={item.id}>
-                <td>{item.namaBarang}</td>
-                <td>{item.jumlah}</td>
-                <td>{formatRupiah(hargaModalUnit)}</td>
-                <td>{formatRupiah(totalModalItem)}</td>
-                <td>{item.batasMinimum}</td>
-                <td>{item.satuan}</td>
-                <td>{item.supplier || '-'}</td>
-                <td className="action-buttons">
-                  <button onClick={() => handleEdit(item)} className="button-edit">Edit</button>
-                  <button onClick={() => handleDelete(item.id)} className="button-delete">Hapus</button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="table-responsive">
+        <table className="stok-table">
+          <thead>
+            <tr>
+              <th>Nama Barang</th>
+              <th>Jumlah</th>
+              <th>Status</th>
+              <th>Harga Modal/Unit</th>
+              <th>Total Modal</th>
+              <th>Batas Min.</th>
+              <th>Satuan</th>
+              <th>Supplier</th>
+              <th>Aksi</th>
+            </tr>
+          </thead>
+          <tbody>
+            {currentStockItems.map((item) => {
+              const hargaModalUnit = Number(item.hargaBeliTerakhir || item.hargaBeliAwal || 0);
+              const totalModalItem = hargaModalUnit * Number(item.jumlah);
+              const isKritis = Number(item.jumlah) <= Number(item.batasMinimum);
+
+              return (
+                <tr key={item.id} className={isKritis ? 'row-kritis' : ''}>
+                  <td>{item.namaBarang}</td>
+                  <td>{item.jumlah}</td>
+                  <td>
+                    {isKritis ? (
+                      <span className="status-badge status-restock">Perlu Restock</span>
+                    ) : (
+                      <span className="status-badge status-aman">Aman</span>
+                    )}
+                  </td>
+                  <td>{formatRupiah(hargaModalUnit)}</td>
+                  <td>{formatRupiah(totalModalItem)}</td>
+                  <td>{item.batasMinimum}</td>
+                  <td>{item.satuan}</td>
+                  <td>{item.supplier || '-'}</td>
+                  <td className="action-buttons">
+                    <button onClick={() => handleEdit(item)} className="button-edit">Edit</button>
+                    <button onClick={() => handleDelete(item.id)} className="button-delete">Hapus</button>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     );
   };
 
@@ -198,7 +210,6 @@ function DashboardPage() {
       
       {loading && stok.length === 0 && <p>Memuat data utama...</p>}
       {error && stok.length > 0 && <p className="error-message" style={{textAlign: 'center'}}>{error}</p>}
-
 
       <div className="content-header">
         <h2>Daftar Stok Barang</h2>
