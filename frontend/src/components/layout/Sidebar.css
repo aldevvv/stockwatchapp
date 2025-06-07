@@ -12,6 +12,8 @@
   transition: width 0.3s ease-in-out;
   z-index: 1050;
   overflow-x: hidden;
+  height: 100%; /* Adjust height to fit screen */
+  overflow-y: hidden; /* Prevent vertical scrolling */
 }
 
 .sidebar.open {
@@ -45,8 +47,9 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  margin-right: 0.5rem;
+  margin: 0 auto; /* Center horizontally */
   transition: color 0.2s ease;
+  text-align: center; /* Center align text */
 }
 .sidebar-logo:hover {
   color: #3498db;
@@ -69,7 +72,7 @@
 }
 
 .sidebar-profile {
-  padding: 1.5rem 1rem;
+  padding: 1rem 0.5rem; /* Reduce padding */
   text-align: center;
   border-bottom: 1px solid #34495e;
   display: flex;
@@ -117,11 +120,11 @@
 .sidebar-menu li a {
   display: flex;
   align-items: center;
-  padding: 0.9rem 1.5rem;
+  padding: 0.7rem 1rem; /* Reduce padding */
   color: #ecf0f1;
   text-decoration: none;
   transition: background-color 0.2s ease, padding-left 0.2s ease;
-  font-size: 0.95rem;
+  font-size: 0.9rem; /* Slightly smaller font size */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -171,7 +174,7 @@
 }
 
 .sidebar-footer {
-  padding: 1.5rem;
+  padding: 1rem; /* Reduce padding */
   border-top: 1px solid #34495e;
   text-align: center;
 }

@@ -222,6 +222,13 @@
   background-color: #ffe5e5; /* Warna hover sedikit lebih gelap */
 }
 /* ------------------------------------------------ */
+.button-list-stock {
+    background-color: #17a2b8; /* Warna toska atau info */
+    color: white;
+}
+.button-list-stock:hover {
+    background-color: #138496;
+}
 
 
 @media (min-width: 1200px) {

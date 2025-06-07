@@ -75,6 +75,9 @@ export const tambahStokItem = async (req, res) => {
             updatedAt: timestamp
         };
 
+        console.log('Debugging itemData:', itemData);
+        console.log('Saving stok data to Firebase:', `users/${userId}/stok/${itemId}`);
+
         await itemStokRef.set(itemData);
 
         await catatRiwayatStok(

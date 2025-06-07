@@ -6,6 +6,7 @@ import { getAllSuppliers } from '../supplier/supplierService';
 import { showSuccessToast, showErrorToast } from '../utils/toastHelper';
 import Modal from '../components/Modal';
 import StokForm from '../stok/StokForm';
+import ListStokForm from '../stockshare/ListStokForm';
 import StokBarChart from './StokBarChart';
 import './DashboardPage.css';
 
@@ -16,10 +17,14 @@ function DashboardPage() {
   const [stok, setStok] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStok, setEditingStok] = useState(null);
-  const [halamanSaatIni, setHalamanSaatIni] = useState(1);
 
+  const [isListModalOpen, setIsListModalOpen] = useState(false);
+  const [itemToSell, setItemToSell] = useState(null);
+
+  const [halamanSaatIni, setHalamanSaatIni] = useState(1);
   const [kpiData, setKpiData] = useState({
     totalItemStok: 0,
     itemStokKritis: 0,
@@ -67,7 +72,7 @@ function DashboardPage() {
     } finally {
       setLoading(false);
     }
-  }, [user]);
+  }, [user]); 
 
   useEffect(() => {
     if (user) {
@@ -125,6 +130,21 @@ function DashboardPage() {
     setEditingStok(null); 
   };
 
+  const handleOpenListModal = (item) => {
+    setItemToSell(item);
+    setIsListModalOpen(true);
+  };
+
+  const handleCloseListModal = () => {
+    setIsListModalOpen(false);
+    setItemToSell(null);
+  };
+
+  const handleListSuccess = () => {
+    fetchData();
+    handleCloseListModal();
+  };
+
   const formatRupiah = (angka) => {
     return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);
   };
@@ -175,6 +195,7 @@ function DashboardPage() {
                   <td className="action-buttons">
                     <button onClick={() => handleEdit(item)} className="button-edit">Edit</button>
                     <button onClick={() => handleDelete(item.id)} className="button-delete">Hapus</button>
+                    <button onClick={() => handleOpenListModal(item)} className="button-list-stock">Jual</button>
                   </td>
                 </tr>
               );
@@ -252,6 +273,20 @@ function DashboardPage() {
           initialData={editingStok}
         />
       </Modal>
+
+      {isListModalOpen && (
+        <Modal
+          title={`Jual "${itemToSell?.namaBarang}" di StockShare`}
+          isOpen={isListModalOpen}
+          onClose={handleCloseListModal}
+        >
+          <ListStokForm 
+            itemToSell={itemToSell}
+            onSuccess={handleListSuccess}
+            onClose={handleCloseListModal}
+          />
+        </Modal>
+      )}
     </div>
   );
 }

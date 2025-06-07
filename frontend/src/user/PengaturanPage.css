@@ -302,6 +302,8 @@
     background-color: #dc3545;
     color: white;
     flex-shrink: 0;
+    width: 200px; /* Set a fixed width for uniformity */
+    text-align: center; /* Center text within the button */
 }
 .button-danger:hover {
     background-color: #c82333;
