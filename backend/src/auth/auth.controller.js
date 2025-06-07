@@ -133,7 +133,9 @@ export const login = async (req, res) => {
         email: userData.profile.email,
         namaLengkap: userData.profile.namaLengkap,
         namaToko: userData.profile.namaToko,
-        role: userRole
+        role: userRole,
+        fotoProfilUrl: userData.profile.fotoProfilUrl || '' 
+
     };
 
     res.json({

@@ -17,6 +17,7 @@ build/
 !/.env.example
 !/.env.template
 
+
 # Jika ada .env spesifik di root (meskipun biasanya tidak untuk frontend/backend terpisah)
 # /.env 
 
