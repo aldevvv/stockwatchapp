@@ -22,9 +22,15 @@ const SupplierIcon = ({ fill = "#ecf0f1" }) => (
     </svg>
 );
 
+const StockShareIcon = ({ fill = "#ecf0f1" }) => (
+    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
+        <path d="M0 0h24v24H0z" fill="none"/><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 8.81C7.5 8.31 6.79 8 6 8c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/>
+    </svg>
+);
+
 const SettingsIcon = ({ fill = "#ecf0f1" }) => (
     <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69-.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
+        <path d="M0 0h24v24H0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61-.25-1.17.59-1.69-.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
     </svg>
 );
 
@@ -48,6 +54,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
     { path: '/dashboard', name: 'Dashboard', iconComponent: DashboardIconSvg },
     { path: '/riwayatstok', name: 'Riwayat Stok', iconComponent: ReportIcon },
     { path: '/suppliers', name: 'Manajemen Supplier', iconComponent: SupplierIcon },
+    { path: '/stockshare', name: 'StockShare', iconComponent: StockShareIcon },
     { path: '/pengaturan', name: 'Pengaturan', iconComponent: SettingsIcon },
   ];
 
@@ -62,9 +69,11 @@ function Sidebar({ isOpen, toggleSidebar }) {
       
       {isOpen && user && (
         <div className="sidebar-profile">
-          <div className="profile-icon-container">
-            <SettingsIcon fill="#bdc3c7" /> 
-          </div>
+          <img 
+            src={user.fotoProfilUrl || 'https://i.ibb.co/hK3aT2v/default-avatar.png'} 
+            alt="Profil" 
+            className="sidebar-profile-picture"
+          />
           <p className="profile-name">{user.namaLengkap || user.email}</p>
           {user.namaToko && <p className="store-name">{user.namaToko}</p>}
         </div>
@@ -78,7 +87,7 @@ function Sidebar({ isOpen, toggleSidebar }) {
             <li key={item.path} title={!isOpen ? item.name : ''}>
               <Link to={item.path} className={isActive ? 'active' : ''}>
                 <span className="menu-icon">
-                  <IconComponent fill={ (isOpen && isActive) || !isOpen ? '#FFFFFF' : '#ecf0f1'} />
+                  <IconComponent fill={ (isOpen && isActive) || !isOpen ? '#FFFFFF' : '#e0e7ee'} />
                 </span>
                 {isOpen && <span className="menu-text">{item.name}</span>}
               </Link>

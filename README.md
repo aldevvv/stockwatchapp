@@ -85,32 +85,280 @@ Proyek ini dikembangkan sebagai bagian dari Program Pembinaan Mahasiswa Wirausah
 
 ---
 
+# Panduan Lengkap Deploy Aplikasi Full-Stack StockWatch
 
-## Instalasi & Setup (Untuk Developer)
+Dokumen ini berisi panduan step-by-step untuk mendeploy aplikasi StockWatch (Frontend React/Vite dan Backend Node.js/Express) di server VPS baru yang menggunakan sistem operasi Ubuntu.
 
-### Prasyarat
-* Node.js (v18 atau lebih baru direkomendasikan)
-* NPM atau Yarn
-* Akun Firebase & buat Realtime Database [cite: 1]
-* Akun Meta Developer & setup WhatsApp Business Platform API (termasuk nomor telepon bisnis dan message template yang disetujui) [cite: 1]
-* Akun Email (misalnya Gmail dengan App Password) untuk layanan SMTP Nodemailer [cite: 1]
+---
 
-### Backend Setup
-1.  Navigasi ke direktori `backend`: `cd backend`
-2.  Salin `.env.example` menjadi `.env`: `cp .env.example .env` (atau buat manual di Windows)
-3.  Isi semua variabel yang dibutuhkan di file `.env` (kunci API, URL database, kredensial email, dll.).
-4.  Unduh file `firebaseAdminSDK.json` dari Firebase project settings (Service Accounts) dan letakkan di `backend/src/config/`.
-5.  Install dependensi: `npm install` (atau `yarn install`)
-6.  Jalankan server development: `npm run dev`
-    Server akan berjalan di `http://localhost:5000` (atau port yang Anda definisikan).
+## Prasyarat
 
-### Frontend Setup
-1.  Navigasi ke direktori `frontend`: `cd frontend`
-2.  Buat file `.env` (jika ada konfigurasi frontend yang perlu variabel lingkungan, contoh: `VITE_API_BASE_URL=http://localhost:5000/api`).
-3.  Install dependensi: `npm install` (atau `yarn install`)
-4.  Jalankan server development: `npm run dev`
-    Aplikasi akan terbuka di `http://localhost:5173` (atau port lain yang ditampilkan).
+Sebelum memulai, pastikan Anda sudah memiliki:
+1.  **Akses VPS:** Alamat IP, username `root`, dan password.
+2.  **Nama Domain:** Nama domain yang sudah Anda beli.
+3.  **Akses DNS Domain:** Bisa login ke dashboard penyedia domain untuk mengatur DNS.
+4.  **Repository GitHub:** Kode proyek terbaru sudah di-push ke repository.
+5.  **File Kredensial Lokal:** Siapkan isi file `backend/.env` dan `backend/src/config/firebaseAdminSDK.json` dari komputer Anda.
 
+---
+
+## Fase 1: Setup Awal & Keamanan Server
+
+*Semua perintah di fase ini dijalankan di terminal VPS setelah login sebagai `root`.*
+
+1.  **Login ke VPS sebagai `root`:**
+    ```bash
+    ssh root@ALAMAT_IP_VPS_ANDA
+    ```
+
+2.  **Buat User Baru (Non-root):**
+    *Ganti `NAMA_USER_BARU` dengan username pilihan Anda (misalnya, `aldev`).*
+    ```bash
+    adduser NAMA_USER_BARU
+    ```
+    (Ikuti instruksi untuk membuat password baru).
+
+3.  **Berikan Hak Akses `sudo`:**
+    ```bash
+    usermod -aG sudo NAMA_USER_BARU
+    ```
+
+4.  **Konfigurasi Firewall Dasar (UFW):**
+    ```bash
+    sudo ufw allow OpenSSH
+    sudo ufw allow 80/tcp
+    sudo ufw allow 443/tcp
+    sudo ufw enable
+    ```
+    (Ketik `y` dan `Enter` untuk konfirmasi).
+
+5.  **Logout dan Login Kembali dengan User Baru:**
+    ```bash
+    exit
+    ```
+    ```bash
+    ssh NAMA_USER_BARU@ALAMAT_IP_VPS_ANDA
+    ```
+    *(Mulai sekarang, semua perintah akan dijalankan sebagai user baru ini).*
+
+---
+
+## Fase 2: Instalasi Perangkat Lunak Inti
+
+*(Semua perintah di fase ini dijalankan di terminal VPS sebagai user baru Anda).*
+
+1.  **Update Sistem:**
+    ```bash
+    sudo apt update && sudo apt upgrade -y
+    ```
+
+2.  **Install Node.js (v20.x) dan npm:**
+    ```bash
+    curl -fsSL [https://deb.nodesource.com/setup_20.x](https://deb.nodesource.com/setup_20.x) | sudo -E bash -
+    sudo apt-get install -y nodejs
+    ```
+    Verifikasi dengan: `node -v` dan `npm -v`.
+
+3.  **Install Git:**
+    ```bash
+    sudo apt-get install -y git
+    ```
+
+4.  **Install PM2 (Process Manager):**
+    ```bash
+    sudo npm install pm2@latest -g
+    ```
+
+5.  **Install Nginx (Web Server):**
+    ```bash
+    sudo apt-get install -y nginx
+    ```
+
+---
+
+## Fase 3: Deploy Kode & Konfigurasi Backend
+
+*(Semua perintah di fase ini dijalankan di terminal VPS).*
+
+1.  **Clone Repository dari GitHub:**
+    *Navigasi ke direktori home (`cd ~`).*
+    ```bash
+    git clone [https://github.com/NAMA_USER_GITHUB/NAMA_REPO.git](https://github.com/NAMA_USER_GITHUB/NAMA_REPO.git) stockwatch-app
+    ```
+    (Masukkan username dan Personal Access Token GitHub Anda saat diminta).
+
+2.  **Install Dependensi Backend:**
+    ```bash
+    cd ~/stockwatch-app/backend
+    npm install
+    ```
+
+3.  **Buat File Konfigurasi Rahasia:**
+    * **File `.env`:**
+        ```bash
+        nano .env
+        ```
+        (Salin-tempel seluruh isi file `.env` dari laptop Anda, lalu simpan dengan `Ctrl+O` dan keluar dengan `Ctrl+X`).
+    * **File `firebaseAdminSDK.json`:**
+        ```bash
+        nano src/config/firebaseAdminSDK.json
+        ```
+        (Salin-tempel seluruh isi file JSON kunci Firebase Anda, lalu simpan dan keluar).
+
+4.  **Buat File Konfigurasi PM2:**
+    ```bash
+    nano ecosystem.config.cjs
+    ```
+    Isi dengan kode berikut, lalu simpan dan keluar:
+    ```javascript
+    module.exports = {
+      apps: [
+        {
+          name: 'StockWatch-API',
+          script: 'src/index.js',
+          node_args: '-r dotenv/config',
+          env: {
+            NODE_ENV: 'production',
+          },
+        },
+      ],
+    };
+    ```
+
+5.  **Jalankan Backend dengan PM2:**
+    ```bash
+    pm2 start ecosystem.config.cjs
+    ```
+    Verifikasi dengan `pm2 list`.
+
+6.  **Atur PM2 agar Berjalan Saat Server Reboot:**
+    ```bash
+    pm2 startup
+    ```
+    (Salin dan jalankan perintah yang dihasilkan oleh `pm2 startup`).
+    ```bash
+    pm2 save
+    ```
+
+---
+
+## Fase 4: Deploy Kode Frontend
+
+**A. Di Laptop Anda:**
+1.  **Buat/Perbarui file `frontend/.env.production`:** Isi dengan:
+    `VITE_API_BASE_URL=https://domain-anda.com/api`
+    *(Ganti `domain-anda.com` dengan domain Anda).*
+2.  **Build Ulang Frontend:**
+    ```bash
+    # Masuk ke folder frontend di laptop Anda
+    cd path/to/stockwatch-app/frontend
+    rm -rf dist  # Hapus folder dist lama (di macOS/Linux)
+    npm run build
+    ```
+3.  **Unggah folder `dist` baru ke VPS:**
+    ```powershell
+    # Di terminal laptop Anda (CMD/PowerShell)
+    scp -r "C:\path\ke\proyek\anda\frontend\dist" NAMA_USER_BARU@ALAMAT_IP_VPS_ANDA:~/stockwatch-app/frontend/
+    ```
+
+**B. Di VPS Anda:**
+1.  **Setel Izin untuk Folder `dist` yang Baru Diunggah:**
+    ```bash
+    sudo find ~/stockwatch-app/frontend/dist -type d -exec chmod 755 {} \;
+    sudo find ~/stockwatch-app/frontend/dist -type f -exec chmod 644 {} \;
+    ```
+
+---
+
+## Fase 5: Konfigurasi Nginx sebagai Reverse Proxy
+
+*(Semua perintah di fase ini dijalankan di terminal VPS).*
+
+1.  **Buat File Konfigurasi Nginx:**
+    ```bash
+    sudo nano /etc/nginx/sites-available/stockwatchapp
+    ```
+    Isi dengan kode berikut (ganti placeholder `domain-anda.com` dan `NAMA_USER_BARU`):
+    ```nginx
+    server {
+        listen 80;
+        listen [::]:80;
+    
+        server_name domain-anda.com [www.domain-anda.com](https://www.domain-anda.com);
+    
+        root /home/NAMA_USER_BARU/stockwatch-app/frontend/dist;
+        index index.html;
+    
+        location / {
+            try_files $uri /index.html =404;
+        }
+    
+        location /api {
+            proxy_pass http://localhost:5000;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection 'upgrade';
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_cache_bypass $http_upgrade;
+        }
+    }
+    ```
+2.  **Aktifkan Konfigurasi & Restart Nginx:**
+    ```bash
+    sudo ln -s /etc/nginx/sites-available/stockwatchapp /etc/nginx/sites-enabled/
+    sudo rm /etc/nginx/sites-enabled/default
+    sudo nginx -t
+    sudo systemctl restart nginx
+    ```
+
+---
+
+## Fase 6: Mengamankan dengan HTTPS (Let's Encrypt)
+
+*(Semua perintah di fase ini dijalankan di terminal VPS, dan pastikan DNS domain sudah mengarah ke IP VPS).*
+
+1.  **Install Certbot:**
+    ```bash
+    sudo apt install certbot python3-certbot-nginx
+    ```
+2.  **Dapatkan Sertifikat SSL (ganti dengan domain Anda):**
+    ```bash
+    sudo certbot --nginx -d domain-anda.com -d [www.domain-anda.com](https://www.domain-anda.com)
+    ```
+    (Ikuti instruksi di layar, masukkan email, setujui ToS, dan pilih untuk me-redirect HTTP ke HTTPS).
+
+---
+## Fase 7: Verifikasi Akhir
+
+Buka browser Anda dan akses **`https://domain-anda.com`**. Lakukan pengujian menyeluruh pada semua fitur.
+
+---
+## Alur Kerja untuk Update Selanjutnya
+
+Setiap kali Anda ingin mengupdate aplikasi Anda dengan kode baru:
+
+1.  **Di Laptop Anda:**
+    * Lakukan perubahan kode.
+    * `git add .`, `git commit`, `git push origin main`.
+    * Jika ada perubahan di frontend, jalankan `npm run build` di folder `frontend/`.
+
+2.  **Di VPS Anda:**
+    * **Update Backend:**
+      ```bash
+      cd ~/stockwatch-app
+      git pull origin main
+      cd backend
+      npm install # Jika ada dependensi baru
+      pm2 restart StockWatch-API # Gunakan nama proses dari ecosystem file
+      ```
+    * **Update Frontend:**
+      * Hapus `dist` lama di VPS: `rm -rf ~/stockwatch-app/frontend/dist`.
+      * Unggah `dist` baru dari laptop menggunakan `scp`.
+      * Setel ulang izinnya dengan perintah `find` seperti di Fase 4.
+      * Restart Nginx (opsional, tapi disarankan): `sudo systemctl restart nginx`.
 
 ## Tim Pengembang (P2MW Universitas Negeri Makassar)
 * Sukaina Ilham - Product Owner & UX Strategist [cite: 6]

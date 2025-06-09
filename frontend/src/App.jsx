@@ -28,6 +28,8 @@ import DashboardPage from './dashboard/DashboardPage';
 import PengaturanPage from './user/PengaturanPage';
 import RiwayatStokPage from './laporan/RiwayatStokPage';
 import SupplierPage from './supplier/SupplierPage';
+import StockSharePage from './stockshare/StockSharePage'; 
+
 
 import AdminDashboardPage from './admin/pages/AdminDashboardPage';
 import AdminUsersPage from './admin/pages/AdminUsersPage';
@@ -87,6 +89,8 @@ function App() {
           <Route path="/pengaturan" element={<PengaturanPage />} />
           <Route path="/riwayatstok" element={<RiwayatStokPage />} />
           <Route path="/suppliers" element={<SupplierPage />} />
+          <Route path="/stockshare" element={<StockSharePage />} />
+
         </Route>
 
         <Route

@@ -1,8 +1,97 @@
-import axios from 'axios';
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
 import db from '../config/firebase.js';
+import axios from 'axios';
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const META_API_VERSION = 'v19.0';
+
+export const generateEmailTemplate = (title, preheader, content, buttonUrl, buttonText) => {
+  const logoUrl = 'https://i.ibb.co/W4BLtF9Z/Stock-Watch-Logo.jpg'; 
+  const currentYear = new Date().getFullYear();
+
+  return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>${title}</title>
+    </head>
+    <body style="margin: 0; padding: 0; background-color: #f4f6f9; font-family: Arial, sans-serif;">
+      <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+          <td style="padding: 20px 0;">
+            <table align="center" border="0" cellpadding="0" cellspacing="0" width="600" style="border-collapse: collapse; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+              <tr>
+                <td align="center" style="padding: 20px 0; border-bottom: 1px solid #eeeeee;">
+                  <img src="${logoUrl}" alt="StockWatch Logo" width="150" style="display: block;" />
+                </td>
+              </tr>
+              <tr>
+                <td style="padding: 40px 30px;">
+                  <h1 style="color: #333333; margin: 0 0 20px 0; font-size: 24px;">${title}</h1>
+                  <p style="color: #555555; margin: 0 0 15px 0; font-size: 16px; line-height: 1.5;">${preheader}</p>
+                  <div style="color: #555555; font-size: 16px; line-height: 1.5;">
+                    ${content}
+                  </div>
+                </td>
+              </tr>
+              ${buttonUrl && buttonText ? `
+              <tr>
+                <td style="padding: 0 30px 40px 30px;">
+                  <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                    <tr>
+                      <td align="center">
+                        <a href="${buttonUrl}" target="_blank" style="background-color: #007bff; color: #ffffff; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+                          ${buttonText}
+                        </a>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+              ` : ''}
+              <tr>
+                <td align="center" style="padding: 20px 30px; background-color: #ecf0f1; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
+                  <p style="margin: 0; color: #7f8c8d; font-size: 12px;">
+                    &copy; ${currentYear} StockWatch. All Rights Reserved.<br/>
+                    Email Ini Adalah Pesan Otomatis, Mohon Untuk Tidak Membalas.
+                  </p>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>
+    </html>
+  `;
+};
+
+export const sendEmailNotification = async (toEmail, subject, htmlContent) => {
+  const msg = {
+    to: toEmail,
+    from: {
+        name: process.env.EMAIL_SENDER_NAME || 'StockWatch',
+        email: process.env.SENDER_VERIFIED_EMAIL,
+    },
+    subject: subject,
+    html: htmlContent,
+  };
+
+  try {
+    await sgMail.send(msg);
+    console.log(`Email (HTML) berhasil dikirim ke ${toEmail} via SendGrid.`);
+    return true;
+  } catch (error) {
+    console.error(`Gagal mengirim email via SendGrid:`, error);
+    if (error.response) {
+      console.error(error.response.body)
+    }
+    return false;
+  }
+};
 
 const sendMetaWhatsAppMessage = async (to, templateName, languageCode, templateParams) => {
   const phoneNumberId = process.env.META_WA_PHONE_NUMBER_ID;
@@ -53,36 +142,8 @@ const sendMetaWhatsAppMessage = async (to, templateName, languageCode, templateP
   }
 };
 
-export const sendEmailNotification = async (toEmail, subject, htmlBody) => {
-  try {
-    let transporter = nodemailer.createTransport({
-      host: process.env.EMAIL_HOST,
-      port: Number(process.env.EMAIL_PORT),
-      secure: process.env.EMAIL_SECURE === 'true',
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
-    let mailOptions = {
-      from: `"${process.env.EMAIL_SENDER_NAME}" <${process.env.EMAIL_SENDER_ADDRESS || process.env.EMAIL_USER}>`,
-      to: toEmail,
-      subject: subject,
-      html: htmlBody,
-    };
-
-    let info = await transporter.sendMail(mailOptions);
-    console.log(`Email berhasil dikirim ke ${toEmail}. Message ID: ${info.messageId}`);
-    return true;
-  } catch (error) {
-    console.error(`Gagal mengirim email ke ${toEmail}:`, error);
-    return false;
-  }
-};
-
 export const checkStockAndSendNotifications = async () => {
-  console.log('Scheduler berjalan: Memeriksa stok barang (Dinamis WA & Email - Kirim Sekali per Siklus)...');
+  console.log('Scheduler berjalan: Memeriksa stok barang...');
   try {
     const usersRef = db.ref('users'); 
     const usersSnapshot = await usersRef.once('value');
@@ -98,8 +159,7 @@ export const checkStockAndSendNotifications = async () => {
       const userProfile = userData.profile;
       const userStok = userData.stok;
 
-      if (!userProfile || !userStok) {
-        console.log(`Data profil atau stok tidak lengkap untuk User: ${userId}. Skip.`);
+      if (!userProfile || !userStok || userProfile.role === 'admin') {
         continue;
       }
       
@@ -109,15 +169,8 @@ export const checkStockAndSendNotifications = async () => {
       const kirimNotifWhatsApp = userProfile.hasOwnProperty('preferensiNotifikasiWhatsApp') ? userProfile.preferensiNotifikasiWhatsApp : true;
 
       if (!kirimNotifEmail && !kirimNotifWhatsApp) {
-        console.log(`Semua notifikasi dinonaktifkan untuk User: ${userId}. Skip.`);
         continue;
       }
-      
-      if ((!emailPenerima && kirimNotifEmail) && (!nomorWaPenerima && kirimNotifWhatsApp) ) {
-          console.log(`Email dan Nomor WhatsApp tidak disetel (atau channel aktif tapi data kontak kosong) untuk User: ${userId}. Skip notifikasi untuk user ini.`);
-          continue;
-      }
-
 
       for (const itemId in userStok) {
         const item = userStok[itemId];
@@ -130,7 +183,7 @@ export const checkStockAndSendNotifications = async () => {
         if (!isNaN(jumlah) && !isNaN(batasMinimum)) {
           if (jumlah <= batasMinimum) {
             if (!notifikasiSudahTerkirim) {
-              console.log(`STOK RENDAH TERDETEKSI: ${item.namaBarang} (User: ${userId}, Item: ${itemId})`);
+              console.log(`STOK RENDAH TERDETEKSI: ${item.namaBarang} (User: ${userId})`);
               
               const namaBarang = item.namaBarang || 'Barang Tidak Diketahui';
               const sisaStok = jumlah.toString();
@@ -141,61 +194,45 @@ export const checkStockAndSendNotifications = async () => {
               let emailMsgSent = false;
 
               if (nomorWaPenerima && kirimNotifWhatsApp && typeof nomorWaPenerima === 'string' && nomorWaPenerima.trim() !== '') {
-                const templateName = 'notifikasi_stok_stockwatch'; 
-                const languageCode = 'id'; 
-                const templateParamsWA = [
-                  { type: 'text', text: namaBarang },
-                  { type: 'text', text: sisaStok },
-                  { type: 'text', text: satuanBarang },
-                  { type: 'text', text: batasMin },
-                  { type: 'text', text: satuanBarang } 
-                ];
-                
-                waMessageSent = await sendMetaWhatsAppMessage(
-                  nomorWaPenerima,
-                  templateName, 
-                  languageCode, 
-                  templateParamsWA
-                );
-              } else {
-                if (kirimNotifWhatsApp) console.log(`Nomor WhatsApp tidak valid atau tidak diset untuk User: ${userId}. Skip notifikasi WA untuk item ${itemId}.`);
+                // Logika pengiriman WhatsApp bisa ditambahkan kembali di sini jika diperlukan
               }
 
               if (emailPenerima && kirimNotifEmail && typeof emailPenerima === 'string' && emailPenerima.trim() !== '') {
-                const emailSubject = `StockWatch - Peringatan Stok Rendah - ${namaBarang}`;
-                const emailBody = `
-                  <p>Halo Pengguna StockWatch (Toko: ${userProfile.namaToko || 'Anda'}),</p>
+                const emailSubject = `Peringatan Stok Rendah - ${namaBarang}`;
+                const preheader = `Stok untuk ${namaBarang} telah mencapai batas minimum.`;
+                const contentForEmail = `
                   <p>Stok untuk barang <strong>${namaBarang}</strong> hampir habis.</p>
                   <p>Jumlah saat ini : <strong>${sisaStok} ${satuanBarang}</strong>.</p>
                   <p>Batas minimum yang Anda tetapkan adalah <strong>${batasMin} ${satuanBarang}</strong>.</p>
-                  <p>Segera lakukan restock untuk menghindari kehabisan barang.</p>
-                  <p>Terima kasih,<br/>Tim StockWatch</p>
+                  <p>Segera lakukan restock untuk menghindari kehabisan barang!</p>
                 `;
-                emailMsgSent = await sendEmailNotification(emailPenerima, emailSubject, emailBody);
-              } else {
-                 if (kirimNotifEmail) console.log(`Email tidak valid atau tidak diset untuk User: ${userId}. Skip notifikasi Email untuk item ${itemId}.`);
+                const emailHtml = generateEmailTemplate(
+                    'Peringatan Stok Rendah!',
+                    preheader,
+                    contentForEmail,
+                    `${process.env.FRONTEND_URL || 'https://stockwatch.web.id'}/dashboard`,
+                    'Lihat Dashboard'
+                );
+                
+                emailMsgSent = await sendEmailNotification(emailPenerima, emailSubject, emailHtml);
               }
               
               if (waMessageSent || emailMsgSent) {
                 await itemStokUserRef.update({ notifikasiStokRendahSudahTerkirim: true });
-                console.log(`Status notifikasiStokRendahSudahTerkirim untuk ${namaBarang} (User: ${userId}, Item: ${itemId}) diupdate menjadi true.`);
+                console.log(`Status notifikasi untuk ${namaBarang} (User: ${userId}) diupdate menjadi true.`);y
               }
-            } else {
-              console.log(`Notifikasi untuk ${item.namaBarang} (User: ${userId}, Item: ${itemId}) sudah pernah dikirim untuk siklus stok rendah ini. Skip.`);
             }
           } else { 
             if (notifikasiSudahTerkirim) {
               await itemStokUserRef.update({ notifikasiStokRendahSudahTerkirim: null }); 
-              console.log(`Status notifikasi untuk ${item.namaBarang} (User: ${userId}, Item: ${itemId}) direset karena stok sudah aman.`);
+              console.log(`Status notifikasi untuk ${item.namaBarang} (User: ${userId}) direset.`);
             }
           }
-        } else {
-          console.warn(`Data jumlah atau batasMinimum tidak valid (bukan angka) untuk item: ${item.namaBarang} (User: ${userId}, Item: ${itemId})`);
         }
       }
     }
   } catch (error) {
-    console.error('Error saat menjalankan pengecekan stok (Dinamis WA & Email):', error);
+    console.error('Error saat menjalankan pengecekan stok:', error);
   }
-  console.log('Pengecekan stok selesai (Dinamis WA & Email - Kirim Sekali per Siklus).');
+  console.log('Pengecekan stok selesai.');
 };

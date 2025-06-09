@@ -1,0 +1,124 @@
+.list-stok-form.profesional {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+.list-stok-form.profesional .item-info-header {
+  padding: 1rem 1.5rem;
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.list-stok-form.profesional .info-header-label {
+  display: block;
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+}
+
+.list-stok-form.profesional .info-header-value {
+  display: block;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #343a40;
+}
+
+.list-stok-form.profesional .info-header-subtext {
+  display: block;
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-top: 0.25rem;
+}
+
+.list-stok-form.profesional .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.list-stok-form.profesional .form-row.two-columns {
+  flex-direction: row;
+}
+
+.list-stok-form.profesional .form-group-flex {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.3rem;
+}
+
+.list-stok-form.profesional label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.list-stok-form.profesional input[type="number"],
+.list-stok-form.profesional textarea {
+  width: 100%;
+  padding: 0.8rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.list-stok-form.profesional textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.list-stok-form.profesional input:focus,
+.list-stok-form.profesional textarea:focus {
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+  outline: none;
+}
+
+.list-stok-form.profesional .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.list-stok-form.profesional .button-cancel,
+.list-stok-form.profesional .button-submit {
+  padding: 0.7rem 1.4rem;
+  border-radius: 0.25rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.list-stok-form.profesional .button-submit {
+  background-color: #17a2b8;
+  color: white;
+}
+.list-stok-form.profesional .button-submit:hover:not(:disabled) {
+  background-color: #138496;
+}
+.list-stok-form.profesional .button-submit:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.list-stok-form.profesional .button-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+.list-stok-form.profesional .button-cancel:hover {
+  background-color: #5a6268;
+}

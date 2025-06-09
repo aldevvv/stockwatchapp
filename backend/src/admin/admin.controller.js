@@ -1,5 +1,5 @@
 import db from '../config/firebase.js';
-import { sendEmailNotification } from '../services/notification.service.js';
+import { sendEmailNotification, generateEmailTemplate } from '../services/notification.service.js';
 
 export const getAllUsersProfiles = async (req, res) => {
     try {
@@ -79,20 +79,27 @@ export const sendMessageToUser = async (req, res) => {
             return res.status(400).json({ message: `Pengguna dengan ID ${targetUserId} tidak memiliki alamat email terdaftar.` });
         }
         
-        const emailHtmlBody = `
-          <p>Halo ${targetUserProfile.namaLengkap || targetUserProfile.namaToko || 'Pengguna StockWatch'},</p>
-          <p>Anda menerima pesan dari administrator StockWatch:</p>
-          <div style="padding: 10px; border-left: 3px solid #007bff; background-color: #f8f9fa; margin: 10px 0;">
-            <p><strong>Subjek:</strong> ${subject}</p>
-            <p>${messageBody.replace(/\n/g, '<br>')}</p>
-          </div>
-          <p>Salam,<br/>Admin StockWatch (${adminUser.email})</p>
+        const contentForEmail = `
+            <p>Anda menerima pesan dari Administrator StockWatch terkait Akun Anda (Toko : ${targetUserProfile.namaToko || 'N/A'}).</p>
+            <p><strong>Isi Pesan:</strong></p>
+            <p style="padding: 10px; border-left: 3px solid #ccc; background-color: #f8f9fa;">
+                ${messageBody.replace(/\n/g, '<br>')}
+            </p>
+            <p>Jika Anda memiliki pertanyaan, Silahkan balas Email ini atau Hubungi Customer Support Kami.</p>
         `;
+
+        const emailHtml = generateEmailTemplate(
+            subject,
+            `Pesan dari Admin : ${subject}`,
+            contentForEmail,
+            `${process.env.FRONTEND_URL || 'https://stockwatch.web.id'}/dashboard`,
+            'Buka Dashboard'
+        );
 
         const emailSent = await sendEmailNotification(
             targetUserEmail,
             `Pesan dari Admin StockWatch: ${subject}`,
-            emailHtmlBody
+            emailHtml
         );
 
         if (emailSent) {

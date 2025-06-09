@@ -22,10 +22,10 @@
 
 .pengaturan-submenu-nav {
   display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
   margin-bottom: 2rem;
   border-bottom: 2px solid #007bff;
-  padding-bottom: 0px;
 }
 
 .submenu-button {
@@ -34,7 +34,7 @@
   background-color: transparent;
   color: #555;
   font-weight: 500;
-  font-size: 1rem;
+  font-size: 0.95rem;
   cursor: pointer;
   border-radius: 6px 6px 0 0;
   transition: background-color 0.2s ease, color 0.2s ease, border-bottom-color 0.2s ease;
@@ -54,9 +54,14 @@
   border: 2px solid #007bff;
   border-bottom: 2px solid #fff;
 }
-
-.pengaturan-content {
-  margin-top: 0; /* Dihilangkan karena submenu-nav sudah memberi jarak */
+.submenu-button.danger.active {
+  color: #dc3545;
+  border-color: #dc3545;
+  border-bottom-color: #fff;
+}
+.submenu-button.danger:not(.active):hover {
+  color: #dc3545;
+  background-color: #f8d7da;
 }
 
 .pengaturan-card {
@@ -65,6 +70,7 @@
   border-radius: 8px;
   margin-bottom: 2.5rem;
   box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  overflow: hidden;
 }
 
 .pengaturan-card-header {
@@ -82,6 +88,14 @@
     color: #721c24;
 }
 
+.pengaturan-card.danger-zone-card .pengaturan-card-header {
+    background-color: #f8d7da;
+    border-bottom: 1px solid #f5c6cb;
+}
+.pengaturan-card.danger-zone-card .pengaturan-card-header h3 {
+    color: #721c24;
+}
+
 .pengaturan-card-header h3 {
   margin: 0;
   font-size: 1.2rem;
@@ -90,6 +104,35 @@
 
 .pengaturan-card-body {
   padding: 1.5rem;
+}
+
+.profile-picture-section { 
+  text-align: center; 
+  margin-bottom: 2rem; 
+}
+.profile-picture-preview { 
+  width: 120px; 
+  height: 120px; 
+  border-radius: 50%; 
+  object-fit: cover; 
+  border: 3px solid #eee; 
+  margin-bottom: 1rem;
+}
+.profile-picture-actions { 
+  display: flex; 
+  justify-content: center; 
+  gap: 1rem; 
+}
+.file-selected-info { 
+  font-size: 0.8rem; 
+  color: #555; 
+  margin-top: 0.75rem; 
+  font-style: italic;
+}
+.pengaturan-divider { 
+  border: none; 
+  border-top: 1px solid #e0e0e0; 
+  margin: 2rem 0; 
 }
 
 .form-group-pengaturan {
@@ -146,11 +189,11 @@
   border-top: 1px solid #e0e0e0;
   text-align: right;
   background-color: #f8f9fa;
-  border-bottom-left-radius: 7px;
-  border-bottom-right-radius: 7px;
 }
 
-.button-save-profile {
+.button-save-profile,
+.button-change-pic,
+.button-upload-pic {
   padding: 0.75rem 1.5rem;
   border-radius: 4px;
   border: 1px solid transparent;
@@ -159,6 +202,19 @@
   font-weight: 600;
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
+.button-change-pic {
+    background-color: #6c757d;
+    color: white;
+}
+.button-upload-pic {
+    background-color: #007bff;
+    color: white;
+}
+.button-upload-pic:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+}
+
 
 .pengaturan-card:not(.keamanan) .button-save-profile {
   background-color: #007bff;
@@ -201,4 +257,95 @@
     padding: 3rem;
     font-size: 1.2rem;
     color: #555;
+}
+
+.danger-zone-card .pengaturan-card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.danger-action {
+    padding: 1.25rem 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-bottom: 1px solid #f1f2f3;
+}
+.danger-action:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+.danger-action div {
+    flex-grow: 1;
+}
+.danger-action strong {
+    color: #333;
+    font-size: 1.1rem;
+}
+.danger-action p {
+    color: #555;
+    font-size: 0.9rem;
+    margin: 0.25rem 0 0 0;
+    max-width: 450px;
+}
+
+.button-danger {
+    padding: 0.75rem 1.5rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 600;
+    background-color: #dc3545;
+    color: white;
+    flex-shrink: 0;
+    width: 200px; /* Set a fixed width for uniformity */
+    text-align: center; /* Center text within the button */
+}
+.button-danger:hover {
+    background-color: #c82333;
+}
+.button-danger:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.confirm-delete-modal p {
+    line-height: 1.6;
+    color: #333;
+}
+.confirm-delete-modal p strong {
+    color: #dc3545;
+}
+.confirm-delete-modal .form-input-modal {
+    width: 100%;
+    padding: 0.75rem;
+    margin: 1rem 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 1rem;
+}
+.confirm-delete-modal .modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+.confirm-delete-modal .button-cancel {
+    background-color: #6c757d;
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+.confirm-delete-modal .button-cancel:hover {
+    background-color: #5a6268;
 }

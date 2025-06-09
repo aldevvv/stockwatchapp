@@ -7,6 +7,6 @@ console.log('Scheduler diinisialisasi.');
 // Pola cron: (menit jam hari_bulan bulan hari_minggu)
 // '*/2 * * * *' artinya 'jalankan setiap 2 menit'
 // Nanti bisa diubah menjadi '0 * * * *' (setiap jam) atau '0 0 * * *' (setiap tengah malam)
-cron.schedule('*/2 * * * *', () => {
+cron.schedule('*/1 * * * *', () => {
   checkStockAndSendNotifications();
 });

@@ -1,5 +1,4 @@
-// frontend/src/supplier/supplierService.js
-import api from '../services/api.js'; // Instance axios terpusat kita
+import api from '../services/api.js';
 
 export const getAllSuppliers = () => {
   return api.get('/suppliers');
@@ -15,4 +14,10 @@ export const updateSupplier = (supplierId, supplierData) => {
 
 export const deleteSupplier = (supplierId) => {
   return api.delete(`/suppliers/${supplierId}`);
+};
+
+export const deleteAllSuppliers = async (password) => {
+  return api.delete('/suppliers/all', { 
+    data: { password } 
+  });
 };
