@@ -37,8 +37,8 @@ function TestimonialsPage() {
   ];
 
   return (
-    <div className="info-page-container">
-      <div className="info-page-content">
+    <div className="testimonials-page-containerr">
+      <div className="testimonials-page-container">
         <h1>Apa Kata Pengguna StockWatch?</h1>
         <p className="testimonials-intro">
           Dengarkan pengalaman langsung dari para pelaku UMKM yang telah merasakan manfaat StockWatch dalam mengelola inventaris bisnis mereka.

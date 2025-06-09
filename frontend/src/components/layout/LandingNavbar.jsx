@@ -1,20 +1,24 @@
-// frontend/src/components/layout/LandingNavbar.jsx
-import React, { useState, useEffect } from 'react'; // Impor useState dan useEffect
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+// --- [EDIT 1] 'Link' diubah menjadi 'NavLink' ---
+import { NavLink, Link, useNavigate } from 'react-router-dom';
 import './LandingNavbar.css';
 
 function LandingNavbar() {
   const navigate = useNavigate();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State untuk menu mobile
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  // Opsional: Tutup menu mobile jika layar di-resize menjadi lebih besar
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
+  };
+
+  // ... (kode useEffect Anda tidak perlu diubah) ...
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) { // Sesuaikan breakpoint jika perlu
+      if (window.innerWidth > 768) {
         setIsMobileMenuOpen(false);
       }
     };
@@ -22,34 +26,66 @@ function LandingNavbar() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isMobileMenuOpen && !event.target.closest('.landing-navbar')) {
+        setIsMobileMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [isMobileMenuOpen]);
 
   return (
     <nav className="landing-navbar">
       <div className="landing-navbar-container">
-        <Link to="/" className="navbar-logo">StockWatch</Link>
+        {/* Logo tetap menggunakan Link biasa atau bisa juga NavLink jika perlu style aktif */}
+        <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
+          StockWatch
+        </Link>
 
-        {/* Tombol Hamburger untuk Mobile */}
-        <button className="navbar-toggler" onClick={toggleMobileMenu}>
-          {isMobileMenuOpen ? <span>&times;</span> : <span>&#9776;</span>} {/* Ganti ikon X dan Hamburger */}
+        <button 
+          className="navbar-toggler" 
+          onClick={toggleMobileMenu}
+          aria-label="Toggle navigation"
+        >
+          {isMobileMenuOpen ? '✕' : '☰'}
         </button>
 
-        {/* Menu untuk Desktop */}
         <div className={`navbar-links ${isMobileMenuOpen ? 'active' : ''}`}>
           <ul className="navbar-menu">
-            <li><Link to="/" onClick={() => setIsMobileMenuOpen(false)}>Home</Link></li>
-            <li><Link to="/about" onClick={() => setIsMobileMenuOpen(false)}>About Us</Link></li>
-            <li><Link to="/pricing" onClick={() => setIsMobileMenuOpen(false)}>Pricing</Link></li>
-            <li><Link to="/testimonials" onClick={() => setIsMobileMenuOpen(false)}>Testimonials</Link></li>
+            {/* --- [EDIT 2] Semua <Link> di sini diubah menjadi <NavLink> --- */}
+            <li>
+              <NavLink to="/" onClick={closeMobileMenu}>
+                Beranda
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/about" onClick={closeMobileMenu}>
+                Tentang Kami
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/pricing" onClick={closeMobileMenu}>
+                Harga
+              </NavLink>
+            </li>
+            <li>
+              <NavLink to="/testimonials" onClick={closeMobileMenu}>
+                Testimoni
+              </NavLink>
+            </li>
           </ul>
+          
           <div className="navbar-auth-buttons">
             <button 
-              onClick={() => { navigate('/login'); setIsMobileMenuOpen(false); }} 
+              onClick={() => { navigate('/login'); closeMobileMenu(); }} 
               className="btn btn-login"
             >
-              Login
+              Masuk
             </button>
             <button 
-              onClick={() => { navigate('/register'); setIsMobileMenuOpen(false); }} 
+              onClick={() => { navigate('/register'); closeMobileMenu(); }} 
               className="btn btn-register"
             >
               Daftar
