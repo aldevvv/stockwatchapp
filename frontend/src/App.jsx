@@ -5,6 +5,9 @@ import { useAuth } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+// <-- 1. IMPORT KOMPONEN SCROLLTOTOP
+import ScrollToTop from './components/ScrollToTop'; // Pastikan path ini benar
+
 import PublicLayout from './components/layout/PublicLayout';
 import DashboardLayout from './components/layout/DashboardLayout';
 import AdminLayout from './admin/components/layout/AdminLayout';
@@ -43,6 +46,9 @@ function App() {
 
   return (
     <BrowserRouter>
+      {/* <-- 2. TAMBAHKAN KOMPONEN SCROLLTOTOP DI SINI */}
+      <ScrollToTop />
+
       <ToastContainer
         position="top-right"
         autoClose={5000}

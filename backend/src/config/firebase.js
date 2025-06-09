@@ -1,10 +1,12 @@
+// backend/src/config/firebase.js
 import admin from 'firebase-admin';
-import serviceAccount from './firebaseAdminSDK.json' assert { type: 'json' };
+// Ubah baris di bawah ini
+import serviceAccount from './firebaseAdminSDK.json' with { type: 'json' }; 
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: 'https://stockwatch-id-default-rtdb.asia-southeast1.firebasedatabase.app/' 
+  databaseURL: process.env.FIREBASE_DATABASE_URL 
 });
 
 const db = admin.database();
-export default db;
+export default db;

@@ -8,7 +8,7 @@ function PublicLayout() {
   return (
     <>
       <LandingNavbar />
-      <main style={{ paddingTop: '20px', paddingBottom: '20px' }}> 
+      <main style={{ paddingTop: '0px', paddingBottom: '20px' }}> 
         <Outlet /> 
       </main>
     </>

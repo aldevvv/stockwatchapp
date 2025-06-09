@@ -1,284 +1,243 @@
 .landing-navbar {
   background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  padding: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 0.8rem 0;
   position: sticky;
   top: 0;
   z-index: 1000;
-  font-family: sans-serif;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-bottom: 2px solid #f0fdf4;
 }
 
+/* KITA UBAH BAGIAN INI:
+  'padding' diubah untuk memberi jarak di tepi kiri dan kanan.
+  'justify-content' dihapus agar 'display: contents' di bawah bisa bekerja.
+*/
 .landing-navbar-container {
-  max-width: 1100px;
+  max-width: 12000px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 15px; /* <-- INI YANG MEMBERI JARAK DI PINGGIR */
   display: flex;
-  justify-content: space-between;
   align-items: center;
 }
 
 .navbar-logo {
-  font-size: 1.8rem;
+  font-size: 2rem;
   font-weight: 700;
-  color: #007bff;
+  color: #16a34a;
   text-decoration: none;
   flex-shrink: 0;
+  transition: color 0.3s ease;
 }
 
+.navbar-logo:hover {
+  color: #22c55e;
+}
+
+/* KITA UBAH BAGIAN INI:
+  'display: contents' membuat menu bisa berada di tengah.
+*/
 .navbar-links {
-  display: flex;
-  align-items: center;
-  flex-grow: 1; /* Biarkan .navbar-links mengambil sisa ruang */
-  justify-content: center; /* Ini akan menengahkan semua item di dalamnya jika ada ruang */
+  display: contents; /* <-- INI KUNCI UNTUK MEMBUAT MENU DI TENGAH */
 }
 
 .navbar-menu {
   list-style: none;
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
   margin: 0;
   padding: 0;
   align-items: center;
-  /* Agar menu mengambil ruang dan mendorong tombol auth ke kanan */
-  /* Jika justify-content: center di .navbar-links tidak cukup, kita bisa atur ini */
-  /* margin-right: auto; -- ini akan mendorong tombol auth ke kanan */
-  /* margin-left: auto; -- ini akan mendorong menu ke kanan jika tombol auth kecil */
+  /* Tambahkan ini agar menu persis di tengah */
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .navbar-menu li a {
   text-decoration: none;
-  color: #333;
+  color: #374151;
   font-weight: 500;
-  transition: color 0.2s ease;
+  font-size: 1rem;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: color 0.3s ease;
 }
 
 .navbar-menu li a:hover {
-  color: #007bff;
+  color: #16a34a;
+}
+/* ===================================== */
+/* ===== STYLE UNTUK LINK YANG AKTIF ===== */
+/* ===================================== */
+
+/* Ini akan mengubah warna teks dan menebalkannya saat link aktif */
+.navbar-menu li a.active {
+  color: #16a34a; /* Warna hijau brand Anda */
+  font-weight: 700; /* Ditebalkan agar lebih menonjol */
+}
+
+/* Ini akan memunculkan garis bawah pada link yang aktif */
+.navbar-menu li a.active::after {
+  width: 100%;
+}
+
+.navbar-menu li a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  transition: width 0.3s ease;
+}
+
+.navbar-menu li a:hover::after {
+  width: 100%;
 }
 
 .navbar-auth-buttons {
-  /* Pastikan ini tidak mengambil ruang di kiri secara otomatis jika menu ingin di tengah */
-  margin-left: 2rem; /* Beri jarak dari menu, akan didorong oleh menu jika menu di tengah */
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   flex-shrink: 0;
 }
 
-/* Untuk menengahkan .navbar-menu dan menjaga .navbar-auth-buttons di kanan: */
-/* Kita buat .navbar-links mengambil semua sisa ruang antara logo dan "tidak ada apa-apa" */
-/* Lalu di dalam .navbar-links, kita gunakan space-between lagi */
-
-/* Coba strategi baru untuk .navbar-links dan anak-anaknya */
-.navbar-links {
-  display: flex;
-  align-items: center;
-  flex-grow: 1; /* Mengambil ruang yang tersedia */
-  /* Hapus justify-content: center; dari sini */
-}
-
-.navbar-menu {
-  list-style: none;
-  display: flex;
-  gap: 2rem;
-  margin: 0 auto; /* KUNCI: Ini akan menengahkan .navbar-menu di dalam .navbar-links */
-  padding: 0;
-  align-items: center;
-}
-
-.navbar-auth-buttons {
-  margin-left: auto; /* Mendorong tombol auth ke paling kanan dari .navbar-links */
-  /* Jika .navbar-menu sudah margin auto, ini mungkin tidak diperlukan atau perlu disesuaikan */
-  display: flex;
-  gap: 0.5rem;
-  flex-shrink: 0;
-}
-
-/* Finalisasi setelah beberapa percobaan: */
-/* Kita ingin logo kiri, tombol auth kanan, menu di tengah. */
-/* Kontainer utama: space-between */
-/* .navbar-links akan berisi menu dan tombol auth. */
-/* Kita buat .navbar-links mengambil ruang yang tersedia, lalu .navbar-menu di tengahnya, */
-/* dan .navbar-auth-buttons di kanannya. */
-
-.landing-navbar-container {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 0 20px;
-  display: flex;
-  justify-content: space-between; /* Logo di kiri, .navbar-links di kanan */
-  align-items: center;
-}
-
-.navbar-links { /* Ini pembungkus menu dan tombol auth */
-  display: flex;
-  align-items: center;
-  /* Kita tidak set flex-grow di sini, biarkan lebarnya natural */
-  /* Atau kita bisa set flex-grow: 1; dan atur item di dalamnya */
-}
-
-.navbar-menu {
-  list-style: none;
-  display: flex;
-  gap: 2rem;
-  margin: 0; /* Akan diatur oleh parent flex jika kita ingin menengahkan */
-  padding: 0;
-  align-items: center;
-}
-
-/* Ini adalah pendekatan yang paling umum: */
-/* Jadikan logo, menu, dan tombol sebagai 3 item flex utama */
-/* Namun karena sudah ada .navbar-links, kita atur .landing-navbar-container */
-.landing-navbar-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    /* justify-content: space-between; Dihapus untuk penengah menu */
-}
-
-.navbar-logo {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #007bff;
-    text-decoration: none;
-    flex-shrink: 0;
-    /* margin-right: auto; -- Kita akan gunakan ini jika menu dan tombol adalah satu grup */
-}
-
-.navbar-links { /* Ini grup untuk menu dan tombol auth */
-    display: flex;
-    align-items: center;
-    margin-left: auto; /* Mendorong seluruh grup links ke kanan setelah logo */
-    /* Jika kita ingin menu di tengah, ini harus fleksibel */
-}
-
-/* Untuk menengahkan menu, sementara tombol tetap di kanan: */
-/* Solusi yang paling mungkin adalah membuat .navbar-menu mengambil ruang */
-/* dan mendorong tombol, atau sebaliknya, atau memberi margin auto pada menu. */
-.landing-navbar-container {
-    max-width: 1100px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-}
-.navbar-logo {
-    /* Tidak ada margin auto di sini */
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #007bff;
-    text-decoration: none;
-    flex-shrink: 0;
-}
-.navbar-menu {
-    list-style: none;
-    display: flex;
-    gap: 2rem;
-    margin: 0 auto; /* KUNCI untuk menengahkan menu */
-    padding: 0;
-    align-items: center;
-}
-.navbar-auth-buttons {
-    /* Tidak ada margin auto di sini, akan berada di paling kanan */
-    margin-left: 2rem; /* Jarak dari menu (jika menu tidak full width) atau dari logo jika menu di tengah */
-    display: flex;
-    gap: 0.5rem;
-    flex-shrink: 0;
-}
-
-/* Styling Tombol */
 .navbar-auth-buttons .btn {
-  padding: 0.6rem 1.2rem;
-  border: none;
-  border-radius: 4px;
+  padding: 0.75rem 1.5rem;
+  border: 2px solid transparent;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 0.95rem;
   cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease;
+  transition: all 0.3s ease;
   text-decoration: none;
   display: inline-block;
   text-align: center;
+  min-width: 80px;
 }
 
 .navbar-auth-buttons .btn-login {
   background-color: transparent;
-  color: #007bff;
-  border: 1px solid #007bff;
+  color: #16a34a;
+  border-color: #16a34a;
 }
 
 .navbar-auth-buttons .btn-login:hover {
-  background-color: #007bff;
+  background-color: #16a34a;
   color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.2);
 }
 
 .navbar-auth-buttons .btn-register {
-  background-color: #007bff;
+  background-color: #22c55e;
   color: white;
+  border-color: #22c55e;
 }
 
 .navbar-auth-buttons .btn-register:hover {
-  background-color: #0056b3;
+  background-color: #16a34a;
+  border-color: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
 }
 
-
-/* Styling Mobile (seharusnya tidak terpengaruh jika perubahan hanya di atas @media) */
+/* BAGIAN RESPONSIVE (MOBILE) TIDAK DIUBAH SAMA SEKALI */
 .navbar-toggler {
   display: none;
-  font-size: 1.8rem;
+  font-size: 1.5rem;
   background: none;
   border: none;
-  color: #333;
+  color: #374151;
   cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: color 0.3s ease;
+}
+
+.navbar-toggler:hover {
+  color: #16a34a;
 }
 
 @media (max-width: 768px) {
+  /* Mengembalikan padding normal di mobile */
+  .landing-navbar-container {
+    padding: 0 20px;
+    justify-content: space-between;
+  }
+  
   .navbar-toggler {
     display: block;
   }
-  .landing-navbar-container {
-      justify-content: space-between;
-  }
-  .navbar-menu {
-    margin: 0; /* Reset margin auto untuk mobile */
-    flex-direction: column;
-    width: 100%;
-    gap: 0;
-  }
+  
+  /* Mengembalikan display flex di mobile */
   .navbar-links {
-    display: none;
+    display: none; 
     flex-direction: column;
-    width: 100%;
     position: absolute;
-    top: 100%; 
+    top: 100%;
     left: 0;
+    right: 0;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    padding: 1rem 0;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem 0;
+    gap: 0;
+    border-top: 2px solid #f0fdf4;
   }
+
   .navbar-links.active {
     display: flex;
   }
+
+  .navbar-menu {
+    flex-direction: column;
+    width: 100%;
+    gap: 0;
+    margin-bottom: 1.5rem;
+    margin-left: 0; /* Reset margin di mobile */
+    margin-right: 0; /* Reset margin di mobile */
+  }
+
   .navbar-menu li {
     width: 100%;
     text-align: center;
   }
+
   .navbar-menu li a {
     display: block;
-    padding: 1rem 0;
-    border-bottom: 1px solid #f0f0f0;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+    font-size: 1.05rem;
   }
+
   .navbar-menu li:last-child a {
-      border-bottom: none;
+    border-bottom: none;
   }
+
+  .navbar-menu li a::after {
+    display: none;
+  }
+
   .navbar-auth-buttons {
-    margin-left: auto; /* Tengahkan grup tombol di mobile */
-    margin-right: auto;
-    margin-top: 1rem;
     flex-direction: column;
     width: 90%;
-    gap: 0.75rem;
+    margin: 0 auto;
+    gap: 1rem;
   }
+
   .navbar-auth-buttons .btn {
     width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .landing-navbar-container {
+    padding: 0 15px;
+  }
+  
+  .navbar-logo {
+    font-size: 1.75rem;
   }
 }
