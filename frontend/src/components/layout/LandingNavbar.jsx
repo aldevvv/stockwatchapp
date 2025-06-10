@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-// --- [EDIT 1] 'Link' diubah menjadi 'NavLink' ---
 import { NavLink, Link, useNavigate } from 'react-router-dom';
 import './LandingNavbar.css';
 
@@ -15,7 +14,6 @@ function LandingNavbar() {
     setIsMobileMenuOpen(false);
   };
 
-  // ... (kode useEffect Anda tidak perlu diubah) ...
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768) {
@@ -39,10 +37,9 @@ function LandingNavbar() {
   return (
     <nav className="landing-navbar">
       <div className="landing-navbar-container">
-        {/* Logo tetap menggunakan Link biasa atau bisa juga NavLink jika perlu style aktif */}
-        <Link to="/" className="navbar-logo" onClick={closeMobileMenu}>
-          StockWatch
-        </Link>
+        <Link to="/" className="navbar-logo">
+  <img src="/Logo.png" alt="StockWatch Logo" className="navbar-logo-img" />
+</Link>
 
         <button 
           className="navbar-toggler" 
@@ -54,7 +51,6 @@ function LandingNavbar() {
 
         <div className={`navbar-links ${isMobileMenuOpen ? 'active' : ''}`}>
           <ul className="navbar-menu">
-            {/* --- [EDIT 2] Semua <Link> di sini diubah menjadi <NavLink> --- */}
             <li>
               <NavLink to="/" onClick={closeMobileMenu}>
                 Beranda
@@ -73,6 +69,11 @@ function LandingNavbar() {
             <li>
               <NavLink to="/testimonials" onClick={closeMobileMenu}>
                 Testimoni
+              </NavLink>
+            </li>
+                        <li>
+              <NavLink to="/contactus" onClick={closeMobileMenu}>
+                Hubungi Kami
               </NavLink>
             </li>
           </ul>

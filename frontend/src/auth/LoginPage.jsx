@@ -20,7 +20,7 @@ function LoginPage() {
       loginContextAction(authData); 
 
       if (authData.user && authData.user.role === 'admin') {
-        navigate('/admin/users'); 
+        navigate('/admin/dashboard'); 
       } else {
         navigate('/dashboard');
       }
@@ -32,42 +32,58 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <h2>Login StockWatch</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+    <div className="auth-page-container">
+      <div className="auth-branding-side">
+        <div className="branding-content">
+          <h1 className="branding-title">Manajemen Stok Cerdas untuk Bisnis Anda</h1>
+          <p className="branding-subtitle">Fokus pada pertumbuhan, biarkan kami yang mengurus detail inventaris Anda.</p>
+        </div>
+      </div>
+      <div className="auth-form-side">
+        <div className="auth-form-wrapper">
+          <Link to="/">
+            <img src="/Logo.png" alt="StockWatch Logo" className="auth-form-logo" />
+          </Link>
+          <div className="form-header">
+            <h2>Selamat Datang Kembali!</h2>
+            <p>Silakan masuk untuk melanjutkan ke dashboard Anda.</p>
           </div>
-          <div className="input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="login-button" disabled={isLoading}>
-            {isLoading ? 'Loading...' : 'Login'}
-          </button>
-        </form>
-        <p style={{ textAlign: 'right', marginTop: '10px', fontSize: '0.9em' }}>
-          <Link to="/request-password-reset">Lupa Password?</Link>
-        </p>
-        <p className="register-link" style={{textAlign: 'center', marginTop: '20px'}}>
-          Belum punya akun? <Link to="/register">Daftar di sini</Link>
-        </p>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="input-group">
+              <label htmlFor="email">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="password">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="form-options">
+                <Link to="/request-password-reset" className="forgot-password-link">Lupa Password?</Link>
+            </div>
+            <button type="submit" className="auth-button" disabled={isLoading}>
+              {isLoading ? 'Loading...' : 'Login'}
+            </button>
+          </form>
+          <p className="auth-switch-link">
+            Belum punya akun? <Link to="/register">Daftar di sini</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

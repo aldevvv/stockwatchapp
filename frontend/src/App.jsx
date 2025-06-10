@@ -17,6 +17,7 @@ import AboutPage from './pages/AboutPage';
 import PricingPage from './pages/PricingPage';
 import TestimonialsPage from './pages/TestimonialsPage';
 import PricingInfoPage from './pages/PricingInfoPage';
+import ContactPage from './pages/ContactPage'
 
 import LoginPage from './auth/LoginPage';
 import RegisterPage from './auth/RegisterPage';
@@ -70,6 +71,8 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/pricing-info" element={<PricingInfoPage />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/contactus" element={<ContactPage />} />
+
           
           <Route path="/login" element={token && user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : (token && user?.role !== 'admin' ? <Navigate to="/dashboard" replace /> : <LoginPage />)} />
           <Route path="/register" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dashboard" replace />) : <RegisterPage />} />

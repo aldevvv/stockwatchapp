@@ -1,19 +1,17 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './InfoPage.css'; // Kita tetap gunakan dasar dari InfoPage.css
-import './AboutPage.css'; // CSS spesifik yang sudah diupdate
+import './InfoPage.css'; 
+import './AboutPage.css'; 
 
 function AboutPage() {
   const teamMembers = [
-    { name: "Sukaina Ilham", role: "Pemilik Produk & Strategi", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
-    { name: "Muh Alif", role: "Pengembang Web", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
-    { name: "Rejekki Manalu", role: "Desainer Aplikasi", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
-    { name: "Ilfa El Zahra", role: "Pemasaran & Edukasi", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
-    { name: "Fathir Anugrah", role: "Jualan", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
+    { name: "Sukaina Ilham", role: "Project Lead", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
+    { name: "Muh Alif", role: "Web Developer", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
+    { name: "Rejekki Manalu", role: "Graphic Designer", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
+    { name: "Ilfa El Zahra", role: "Education & Marketing", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
+    { name: "Fathir Anugrah", role: "Marketing", img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3jIVWlH-B_YLL3UnQCN2AHr819XZJFTXB-w&s" },
   ];
   
-
-  // Nilai-nilai yang lebih fokus dan relevan (dikurangi jadi 3)
   const coreValues = [
     {
       icon: "🎯",
@@ -120,7 +118,7 @@ function AboutPage() {
 
           {/* Team Culture */}
           <div className="team-culture-new">
-            <h3>Prinsip Kerja Kami</h3>
+            <h3>Prinsip Kami</h3>
             <div className="team-culture-quotes-new">
               <div className="culture-quote-new">
                 <span className="quote-icon">💡</span>
@@ -128,7 +126,7 @@ function AboutPage() {
               </div>
               <div className="culture-quote-new">
                 <span className="quote-icon">🤝</span>
-                <p>"Mendengarkan pengguna adalah prioritas utama"</p>
+                <p>"Mendengarkan keluhan pengguna adalah prioritas utama"</p>
               </div>
               <div className="culture-quote-new">
                 <span className="quote-icon">🚀</span>

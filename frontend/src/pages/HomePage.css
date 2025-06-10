@@ -23,7 +23,7 @@
   background-attachment: fixed;
   color: white;
   text-align: center;
-  padding: 120px 20px 100px;
+  padding: 30px 20px 50px;
   min-height: 100vh; /* Ensures hero section takes full viewport height */
   display: flex;
   flex-direction: column;
@@ -180,6 +180,7 @@
   background: linear-gradient(135deg, #f8fafc, #f1f5f9);
   width: 100%;
   margin: 0;
+  padding: 20px 20px 50px;
 }
 
 .problem-points {
@@ -235,6 +236,7 @@
   background: white;
   width: 100%;
   margin: 0;
+  padding: 20px 20px 50px;
 }
 
 .two-column-layout {
@@ -309,6 +311,7 @@
   background: linear-gradient(135deg, #f0fdf4, #dcfce7);
   width: 100%;
   margin: 0;
+  padding: 20px 20px 50px;
 }
 
 .features-grid-home {

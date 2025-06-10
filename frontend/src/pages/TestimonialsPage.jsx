@@ -1,53 +1,61 @@
 import React from 'react';
-import './InfoPage.css'; 
-import './TestimonialsPage.css'; 
+import './TestimonialsPage.css';
 
 function TestimonialsPage() {
   const testimonials = [
     {
-      quote: "StockWatch mengubah cara saya mengelola stok kopi dan bahan baku. Notifikasi WhatsApp-nya sangat membantu, tidak ada lagi drama kehabisan stok di akhir pekan! UI-nya juga ramah pengguna.",
-      name: "Andi",
-      company: "Pemilik Kopi Senja"
+      quote: "StockWatch benar-benar mengubah cara saya mengelola stok di cafe. Notifikasi WhatsApp-nya sangat membantu, saya tidak pernah kehabisan biji kopi lagi!",
+      name: "Budi Santoso",
+      role: "Pemilik Cafe Senja",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrWl3NFJnWwwjlBSSbNxJcQ2EpYbFhtX4M0Q&s",
     },
     {
-      quote: "Dulu pusing catat stok manual, sekarang semua terdata rapi di StockWatch. Fitur batas minimumnya cerdas, jadi saya tahu kapan harus order barang lagi. Sangat direkomendasikan untuk toko seperti saya.",
-      name: "Ibu Siti",
-      company: "Toko Amanah Jaya"
+      quote: "Sebagai pemilik toko kelontong kecil, aplikasi ini sangat mudah digunakan. Saya bisa tahu barang mana yang paling laku dan kapan harus restock. Sangat direkomendasikan!",
+      name: "Siti Aminah",
+      role: "Pemilik Toko Berkah Jaya",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrWl3NFJnWwwjlBSSbNxJcQ2EpYbFhtX4M0Q&s",
     },
     {
-      quote: "Sebagai penjual online, kecepatan update stok sangat krusial. Dashboard real-time StockWatch membuat saya selalu tahu sisa stok setiap varian produk. Jadi tidak ada lagi salah order dari pelanggan.",
-      name: "Rina",
-      company: "Owner GayaKita Store"
+      quote: "Fitur laporannya sederhana tapi sangat berguna untuk rekap bulanan. Saya jadi bisa mengontrol modal dengan lebih baik. Terima kasih StockWatch!",
+      name: "Rahmat Hidayat",
+      role: "Manajer Distro Kreatif",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrWl3NFJnWwwjlBSSbNxJcQ2EpYbFhtX4M0Q&s",
     },
     {
-      quote: "Dengan StockWatch, saya bisa memantau stok bahan makanan dengan mudah, bahkan dari rumah. Ini membantu mengurangi pemborosan bahan dan memastikan menu selalu tersedia. Harganya juga sangat terjangkau untuk UMKM.",
-      name: "Pak Budi",
-      company: "Warung Makan Nikmat"
+      quote: "Awalnya saya ragu, tapi ternyata aplikasinya ringan dan tidak ribet. Sangat cocok untuk saya yang tidak terlalu paham teknologi. Stok jadi lebih teratur.",
+      name: "Dewi Lestari",
+      role: "Pemilik Katering Dapur Ibu",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrWl3NFJnWwwjlBSSbNxJcQ2EpYbFhtX4M0Q&s",
     },
     {
-      quote: "Saya mengelola banyak item dari berbagai supplier. StockWatch memudahkan saya melacak semua pergerakan barang. Fitur laporannya (meskipun dasar) cukup membantu untuk evaluasi bulanan.",
-      name: "Ahmad",
-      company: "Distribusi Berkah"
-    },
-    {
-      quote: "Notifikasi email dan WhatsApp sangat membantu di tengah kesibukan dapur. Saya tidak perlu khawatir lagi kehabisan bahan penting untuk pesanan katering. Aplikasi yang wajib punya!",
-      name: "Ibu Linda",
-      company: "Linda Katering"
+      quote: "StockShare adalah ide brilian! Saya bisa menjual kelebihan stok bahan kue ke sesama UMKM. Ini sangat membantu perputaran uang di bisnis saya.",
+      name: "Agus Wijaya",
+      role: "Pemilik Bakery Maju",
+      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSrWl3NFJnWwwjlBSSbNxJcQ2EpYbFhtX4M0Q&s",
     }
   ];
 
   return (
-    <div className="testimonials-page-containerr">
-      <div className="testimonials-page-container">
-        <h1>Apa Kata Pengguna StockWatch?</h1>
-        <p className="testimonials-intro">
-          Dengarkan pengalaman langsung dari para pelaku UMKM yang telah merasakan manfaat StockWatch dalam mengelola inventaris bisnis mereka.
-        </p>
-        <div className="testimonials-grid">
-          {testimonials.map((testimonial, index) => (
+    <div className="testimonials-page-container">
+      <div className="testimonials-header">
+        <h1>Apa Kata Mereka Tentang StockWatch?</h1>
+        <p>Ulasan nyata dari para pemilik UMKM yang telah merasakan manfaat aplikasi kami.</p>
+      </div>
+
+      <div className="testimonials-marquee-container">
+        <div className="testimonials-track">
+          {[...testimonials, ...testimonials].map((testimonial, index) => (
             <div key={index} className="testimonial-card">
-              <p className="testimonial-quote">"{testimonial.quote}"</p>
-              <p className="testimonial-author">- {testimonial.name}, {testimonial.company}</p>
+              <blockquote className="testimonial-quote">
+                “{testimonial.quote}”
+              </blockquote>
+              <div className="testimonial-author">
+                <img src={testimonial.img} alt={testimonial.name} className="author-img" />
+                <div className="author-info">
+                  <cite className="author-name">{testimonial.name}</cite>
+                  <span className="author-role">{testimonial.role}</span>
+                </div>
+              </div>
             </div>
           ))}
         </div>

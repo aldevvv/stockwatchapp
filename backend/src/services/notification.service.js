@@ -55,8 +55,8 @@ export const generateEmailTemplate = (title, preheader, content, buttonUrl, butt
               <tr>
                 <td align="center" style="padding: 20px 30px; background-color: #ecf0f1; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px;">
                   <p style="margin: 0; color: #7f8c8d; font-size: 12px;">
-                    &copy; ${currentYear} StockWatch. All Rights Reserved.<br/>
-                    Email Ini Adalah Pesan Otomatis, Mohon Untuk Tidak Membalas.
+                    &copy; ${currentYear} StockWatch. All rights reserved.<br/>
+                    Ini adalah email otomatis, mohon untuk tidak membalas.
                   </p>
                 </td>
               </tr>
@@ -69,7 +69,7 @@ export const generateEmailTemplate = (title, preheader, content, buttonUrl, butt
   `;
 };
 
-export const sendEmailNotification = async (toEmail, subject, htmlContent) => {
+export const sendEmailNotification = async (toEmail, subject, htmlContent, replyTo = null) => {
   const msg = {
     to: toEmail,
     from: {
@@ -80,9 +80,13 @@ export const sendEmailNotification = async (toEmail, subject, htmlContent) => {
     html: htmlContent,
   };
 
+  if (replyTo) {
+    msg.reply_to = { email: replyTo };
+  }
+
   try {
     await sgMail.send(msg);
-    console.log(`Email (HTML) berhasil dikirim ke ${toEmail} via SendGrid.`);
+    console.log(`Email berhasil dikirim ke ${toEmail} via SendGrid.`);
     return true;
   } catch (error) {
     console.error(`Gagal mengirim email via SendGrid:`, error);
@@ -150,7 +154,6 @@ export const checkStockAndSendNotifications = async () => {
     const allUsersData = usersSnapshot.val();
 
     if (!allUsersData) {
-      console.log('Tidak ada data pengguna untuk diperiksa.');
       return;
     }
 
@@ -183,8 +186,6 @@ export const checkStockAndSendNotifications = async () => {
         if (!isNaN(jumlah) && !isNaN(batasMinimum)) {
           if (jumlah <= batasMinimum) {
             if (!notifikasiSudahTerkirim) {
-              console.log(`STOK RENDAH TERDETEKSI: ${item.namaBarang} (User: ${userId})`);
-              
               const namaBarang = item.namaBarang || 'Barang Tidak Diketahui';
               const sisaStok = jumlah.toString();
               const satuanBarang = item.satuan || 'unit';
@@ -193,16 +194,12 @@ export const checkStockAndSendNotifications = async () => {
               let waMessageSent = false;
               let emailMsgSent = false;
 
-              if (nomorWaPenerima && kirimNotifWhatsApp && typeof nomorWaPenerima === 'string' && nomorWaPenerima.trim() !== '') {
-                // Logika pengiriman WhatsApp bisa ditambahkan kembali di sini jika diperlukan
-              }
-
               if (emailPenerima && kirimNotifEmail && typeof emailPenerima === 'string' && emailPenerima.trim() !== '') {
                 const emailSubject = `Peringatan Stok Rendah - ${namaBarang}`;
                 const preheader = `Stok untuk ${namaBarang} telah mencapai batas minimum.`;
                 const contentForEmail = `
                   <p>Stok untuk barang <strong>${namaBarang}</strong> hampir habis.</p>
-                  <p>Jumlah saat ini : <strong>${sisaStok} ${satuanBarang}</strong>.</p>
+                  <p>Jumlah saat ini: <strong>${sisaStok} ${satuanBarang}</strong>.</p>
                   <p>Batas minimum yang Anda tetapkan adalah <strong>${batasMin} ${satuanBarang}</strong>.</p>
                   <p>Segera lakukan restock untuk menghindari kehabisan barang!</p>
                 `;
@@ -219,13 +216,11 @@ export const checkStockAndSendNotifications = async () => {
               
               if (waMessageSent || emailMsgSent) {
                 await itemStokUserRef.update({ notifikasiStokRendahSudahTerkirim: true });
-                console.log(`Status notifikasi untuk ${namaBarang} (User: ${userId}) diupdate menjadi true.`);y
               }
             }
           } else { 
             if (notifikasiSudahTerkirim) {
               await itemStokUserRef.update({ notifikasiStokRendahSudahTerkirim: null }); 
-              console.log(`Status notifikasi untuk ${item.namaBarang} (User: ${userId}) direset.`);
             }
           }
         }
@@ -234,5 +229,4 @@ export const checkStockAndSendNotifications = async () => {
   } catch (error) {
     console.error('Error saat menjalankan pengecekan stok:', error);
   }
-  console.log('Pengecekan stok selesai.');
 };

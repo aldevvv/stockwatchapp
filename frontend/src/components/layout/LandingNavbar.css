@@ -9,36 +9,29 @@
   border-bottom: 2px solid #f0fdf4;
 }
 
-/* KITA UBAH BAGIAN INI:
-  'padding' diubah untuk memberi jarak di tepi kiri dan kanan.
-  'justify-content' dihapus agar 'display: contents' di bawah bisa bekerja.
-*/
 .landing-navbar-container {
   max-width: 12000px;
   margin: 0 auto;
-  padding: 0 15px; /* <-- INI YANG MEMBERI JARAK DI PINGGIR */
+  padding: 0 15px; 
   display: flex;
   align-items: center;
 }
 
+/* Tambahkan styling ini di LandingNavbar.css */
+
 .navbar-logo {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #16a34a;
-  text-decoration: none;
-  flex-shrink: 0;
-  transition: color 0.3s ease;
+    /* Pastikan link pembungkusnya bisa align dengan baik */
+    display: flex;
+    align-items: center;
 }
 
-.navbar-logo:hover {
-  color: #22c55e;
+.navbar-logo-img {
+  height: 60px; /* Anda bisa sesuaikan tingginya di sini (misal: 35px, 45px) */
+  width: auto;  /* Lebar akan menyesuaikan secara otomatis */
 }
 
-/* KITA UBAH BAGIAN INI:
-  'display: contents' membuat menu bisa berada di tengah.
-*/
 .navbar-links {
-  display: contents; /* <-- INI KUNCI UNTUK MEMBUAT MENU DI TENGAH */
+  display: contents; 
 }
 
 .navbar-menu {
@@ -48,7 +41,6 @@
   margin: 0;
   padding: 0;
   align-items: center;
-  /* Tambahkan ini agar menu persis di tengah */
   margin-left: auto;
   margin-right: auto;
 }
@@ -163,11 +155,27 @@
   /* Mengembalikan padding normal di mobile */
   .landing-navbar-container {
     padding: 0 20px;
-    justify-content: space-between;
+    justify-content: center;
+    position: relative;
   }
   
-  .navbar-toggler {
+.navbar-toggler {
     display: block;
+    font-size: 1.5rem;
+    background: none;
+    border: none;
+    color: #374151;
+    cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 4px;
+    transition: color 0.3s ease;
+    
+    /* --- TAMBAHKAN BLOK INI --- */
+    position: absolute; /* Posisikan tombol secara absolut */
+    right: 15px; /* Jarak dari ujung kanan */
+    top: 50%;
+    transform: translateY(-50%); /* Trik untuk menengahkan secara vertikal */
+    /* -------------------------- */
   }
   
   /* Mengembalikan display flex di mobile */
@@ -194,8 +202,8 @@
     width: 100%;
     gap: 0;
     margin-bottom: 1.5rem;
-    margin-left: 0; /* Reset margin di mobile */
-    margin-right: 0; /* Reset margin di mobile */
+    margin: 0 0 1rem 0; /* Atur margin agar ada jarak ke tombol di bawahnya */
+
   }
 
   .navbar-menu li {
@@ -239,5 +247,6 @@
   
   .navbar-logo {
     font-size: 1.75rem;
+    
   }
 }

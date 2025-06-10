@@ -7,6 +7,7 @@ import './VerifyEmailPage.css';
 function VerifyEmailPage() {
   const { token } = useParams();
   const [message, setMessage] = useState('Sedang memverifikasi email Anda...');
+  const [status, setStatus] = useState('loading'); // 'loading', 'success', 'error'
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -16,6 +17,7 @@ function VerifyEmailPage() {
         try {
           const response = await verifyEmailToken(token);
           setMessage(response.data.message);
+          setStatus('success');
           showSuccessToast(response.data.message + ' Anda akan diarahkan ke halaman login.');
           
           setTimeout(() => {
@@ -25,6 +27,7 @@ function VerifyEmailPage() {
         } catch (err) {
           const errorMsg = err.response?.data?.message || 'Verifikasi gagal. Token mungkin tidak valid atau sudah kedaluwarsa.';
           setMessage(errorMsg);
+          setStatus('error');
           showErrorToast(errorMsg);
         }
       };
@@ -32,21 +35,35 @@ function VerifyEmailPage() {
     } else {
       const errorMsg = 'Token verifikasi tidak ditemukan.';
       setMessage(errorMsg);
+      setStatus('error');
       showErrorToast(errorMsg);
     }
   }, [token, navigate]);
 
   return (
-    <div className="verify-email-container">
-      <div className="verify-email-box">
-        <h1>Status Verifikasi Email</h1>
-        <p className={`status-message ${message.includes('berhasil') ? 'status-success-inline' : message.includes('gagal') || message.includes('tidak valid') || message.includes('kedaluwarsa') || message.includes('tidak ditemukan') ? 'status-error-inline' : 'status-loading-inline'}`}>
-            {message}
-        </p>
-        
-        {(!message.includes('Sedang memverifikasi')) && (
-          <Link to="/login" className="login-button-verify">Ke Halaman Login</Link>
-        )}
+    <div className="auth-page-container">
+      <div className="auth-branding-side">
+        <div className="branding-content">
+          <h1 className="branding-title">Satu Langkah Terakhir</h1>
+          <p className="branding-subtitle">Terima kasih telah bergabung. Kami sedang memverifikasi akun Anda untuk memastikan keamanan.</p>
+        </div>
+      </div>
+      <div className="auth-form-side">
+        <div className="auth-form-wrapper">
+          <Link to="/">
+            <img src="/Logo.png" alt="StockWatch Logo" className="auth-form-logo" />
+          </Link>
+          <div className="verify-email-box">
+            <h1>Status Verifikasi Email</h1>
+            <p className={`status-message status-${status}`}>
+                {message}
+            </p>
+            
+            {status !== 'loading' && (
+              <Link to="/login" className="auth-button">Ke Halaman Login</Link>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

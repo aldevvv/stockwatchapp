@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { resetPassword } from './authService';
+import { resetPassword as resetPasswordService } from './authService';
 import { showSuccessToast, showErrorToast } from '../utils/toastHelper';
-import './LoginPage.css';
+import './ResetPasswordPage.css';
 
 function ResetPasswordPage() {
   const { token } = useParams();
@@ -25,7 +25,7 @@ function ResetPasswordPage() {
 
     setIsLoading(true);
     try {
-      const response = await resetPassword(token, password, confirmPassword);
+      const response = await resetPasswordService(token, password, confirmPassword);
       showSuccessToast(response.message + ' Anda akan diarahkan ke halaman login.');
       setTimeout(() => {
         navigate('/login');
@@ -38,36 +38,55 @@ function ResetPasswordPage() {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-form">
-        <h2>Reset Password Anda</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="input-group">
-            <label htmlFor="password">Password Baru</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+    <div className="auth-page-container">
+      <div className="auth-branding-side">
+        <div className="branding-content">
+          <h1 className="branding-title">Atur Ulang Password Anda</h1>
+          <p className="branding-subtitle">Satu langkah terakhir untuk mengamankan kembali akses ke akun Anda.</p>
+        </div>
+      </div>
+      <div className="auth-form-side">
+        <div className="auth-form-wrapper">
+          <Link to="/">
+            <img src="/Logo.png" alt="StockWatch Logo" className="auth-form-logo" />
+          </Link>
+          <div className="form-header">
+            <h2>Buat Password Baru</h2>
+            <p>Masukkan password baru Anda di bawah ini.</p>
           </div>
-          <div className="input-group">
-            <label htmlFor="confirmPassword">Konfirmasi Password Baru</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-            />
-          </div>
-          <button type="submit" className="login-button" disabled={isLoading}>
-            {isLoading ? 'Menyimpan...' : 'Reset Password'}
-          </button>
-        </form>
+          <form onSubmit={handleSubmit} className="auth-form">
+            <div className="input-group">
+              <label htmlFor="password">Password Baru</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                autoComplete="new-password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+            </div>
+            <div className="input-group">
+              <label htmlFor="confirmPassword">Konfirmasi Password Baru</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                autoComplete="new-password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                required
+              />
+            </div>
+            <button type="submit" className="auth-button" disabled={isLoading}>
+              {isLoading ? 'Menyimpan...' : 'Reset Password'}
+            </button>
+          </form>
+          <p className="auth-switch-link">
+            Ingat password Anda? <Link to="/login">Kembali ke Login</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

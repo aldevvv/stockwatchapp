@@ -8,6 +8,8 @@ import laporanRoutes from './laporan/laporan.routes.js';
 import supplierRoutes from './supplier/supplier.routes.js'; 
 import adminRoutes from './admin/admin.routes.js'; 
 import stockshareRoutes from './stockshare/stockshare.routes.js';
+import contactRoutes from './contact/contact.routes.js';
+
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -22,6 +24,8 @@ app.use('/api/laporan', laporanRoutes);
 app.use('/api/suppliers', supplierRoutes); 
 app.use('/api/admin', adminRoutes); 
 app.use('/api/stockshare', stockshareRoutes);
+app.use('/api/contact', contactRoutes);
+
 
 app.get('/', (req, res) => {
   res.status(200).json({ message: 'API StockWatch Aktif!' });

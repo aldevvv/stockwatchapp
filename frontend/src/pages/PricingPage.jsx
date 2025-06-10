@@ -1,132 +1,111 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import './PricingPage.css';
 
 function PricingPage() {
-  const navigate = useNavigate();
-
-  // Data paket didefinisikan dalam satu array agar mudah dikelola
-  const pricingPlans = [
+  const plans = [
     {
-      type: 'Starter',
-      badge: 'Coba Gratis',
-      price: 'Gratis',
-      period: 'Untuk memulai',
+      name: 'Free',
+      price: 'Rp 0',
+      period: '/ selamanya',
+      description: 'Cocok untuk memulai dan mencoba fitur dasar StockWatch.',
       features: [
-        'Kelola hingga 10 produk',
-        '1 akun pengguna',
-        'Dashboard monitoring dasar',
-        'Notifikasi email stok menipis',
-        'Dukungan komunitas',
+        'Maksimal 10 Produk',
+        '1 Pengguna',
+        'Laporan Stok Terbatas',
+        'Notifikasi Email',
       ],
-      buttonText: 'Mulai Gratis Sekarang',
-      buttonClass: 'btn-outline',
-      action: () => navigate('/register'),
+      ctaText: 'Mulai Gratis',
+      ctaLink: '/register',
+      isPopular: false,
     },
     {
-      type: 'UMKM Basic',
-      badge: 'Hemat 40%',
-      price: 'Rp 15.000',
-      period: '/bulan',
+      name: 'Basic',
+      price: 'Rp 10.000',
+      period: '/ bulan',
+      description: 'Untuk UMKM yang mulai berkembang dan butuh kontrol lebih.',
       features: [
-        'Kelola hingga 50 produk',
-        'Dashboard lengkap real-time',
-        'Notifikasi Email & WhatsApp',
-        'Laporan stok harian',
-        '3 akun pengguna',
-        'Dukungan chat prioritas',
+        'Maksimal 50 Produk',
+        'Notifikasi WhatsApp & Email',
+        'Dashboard Analitik Penuh',
+        'Riwayat Stok Lengkap',
+        'Dukungan Komunitas',
       ],
-      buttonText: 'Pilih Paket Terpopuler',
-      buttonClass: 'btn-popular',
-      isPopular: true,
-      action: () => navigate('/pricing-info'),
+      ctaText: 'Pilih Paket Basic',
+      ctaLink: '/register',
+      isPopular: false,
     },
     {
-      type: 'UMKM Pro',
-      badge: 'Terlengkap',
+      name: 'Pro',
       price: 'Rp 25.000',
-      period: '/bulan',
+      period: '/ bulan',
+      description: 'Solusi lengkap untuk efisiensi maksimal dan pertumbuhan bisnis.',
       features: [
-        'Produk TANPA BATAS',
-        'Semua fitur UMKM Basic',
-        'Laporan PDF otomatis',
-        'Integrasi dengan toko online',
-        '5 akun pengguna',
-        'Analisis tren penjualan',
-        'Backup data otomatis',
+        'Semua di Paket Basic',
+        'Produk & Supplier Tanpa Batas',
+        '3 Pengguna (Multi-Akun)',
+        'Ekspor Laporan PDF & CSV',
+        'Fitur StockShare Marketplace',
+        'Dukungan Prioritas',
       ],
-      buttonText: 'Upgrade ke Pro',
-      buttonClass: '',
-      action: () => navigate('/pricing-info'),
+      ctaText: 'Pilih Paket Pro',
+      ctaLink: '/register',
+      isPopular: true,
     },
     {
-      type: 'Enterprise',
-      badge: 'Eksklusif',
-      price: 'Konsultasi Gratis',
-      period: 'Disesuaikan kebutuhan',
+      name: 'Enterprise',
+      price: 'Kustom',
+      period: '',
+      description: 'Untuk bisnis skala besar dengan kebutuhan spesifik dan kustom.',
       features: [
-        'Fitur khusus sesuai bisnis Anda',
-        'Pengguna unlimited',
-        'Dukungan 24/7 dedicated',
-        'Pelatihan tim gratis',
-        'Integrasi sistem existing',
-        'Custom report & dashboard',
+        'Semua di Paket Pro',
+        'Pengguna Tanpa Batas',
+        'Integrasi API Kustom',
+        'Analitik Prediktif',
+        'Manajer Akun Khusus',
+        'Dukungan SLA',
       ],
-      buttonText: 'Hubungi Kami',
-      buttonClass: 'btn-outline',
-      action: () => navigate('/contact'),
+      ctaText: 'Hubungi Kami',
+      ctaLink: '/contact',
+      isPopular: false,
     },
   ];
 
   return (
-    <div className="pricing-page-wrapper">
-      {/* Floating decorative circles */}
-      <div className="pricing-floating-circles">
-        <div className="pricing-circle"></div>
-        <div className="pricing-circle"></div>
-        <div className="pricing-circle"></div>
-        <div className="pricing-circle"></div>
-        <div className="pricing-circle"></div>
+    <div className="pricing-page-container">
+      <div className="pricing-header">
+        <h1>Paket Harga yang Fleksibel</h1>
+        <p>Pilih paket yang paling sesuai dengan skala dan kebutuhan bisnis Anda. Mulai gratis, upgrade kapan saja.</p>
       </div>
-      
-      <div className="pricing-page-content">
-        <h1>Pilih Paket StockWatch yang Tepat</h1>
-        <div className="pricing-intro">
-          <p>
-            Mulai kelola stok bisnis Anda dengan mudah dan profesional. 
-            Pilih paket yang sesuai dengan kebutuhan dan budget UMKM Anda.
-          </p>
-          <span className="highlight-text">
-            ✨ Tanpa biaya tersembunyi • Tanpa kontrak jangka panjang • Garansi 30 hari
-          </span>
-        </div>
-        
-        <div className="pricing-grid">
-          {/* Loop melalui data paket dan render setiap kartu secara otomatis */}
-          {pricingPlans.map((plan, index) => (
-            <div key={index} className={`pricing-card ${plan.isPopular ? 'popular' : ''}`}>
-              <div className="value-badge">{plan.badge}</div>
-              <h3>{plan.type}</h3>
-              <p className="price">{plan.price}</p>
-              <span className="price-period">{plan.period}</span>
-              <ul>
-                {plan.features.map((feature, i) => (
-                  <li key={i}>{feature}</li>
+
+      <div className="pricing-grid">
+        {plans.map((plan, index) => (
+          <div key={index} className={`pricing-card ${plan.isPopular ? 'popular' : ''}`}>
+            {plan.isPopular && <div className="badge-popular">Paling Populer</div>}
+            <div className="card-header">
+              <h3 className="plan-name">{plan.name}</h3>
+              <div className="plan-price">
+                {plan.price}
+                {plan.period && <span className="plan-period">{plan.period}</span>}
+              </div>
+              <p className="plan-description">{plan.description}</p>
+            </div>
+            <div className="card-body">
+              <ul className="feature-list">
+                {plan.features.map((feature, fIndex) => (
+                  <li key={fIndex} className="feature-item">
+                    {feature}
+                  </li>
                 ))}
               </ul>
-              <button className={`btn-pricing ${plan.buttonClass}`} onClick={plan.action}>
-                {plan.buttonText}
-              </button>
             </div>
-          ))}
-        </div>
-        
-        {/* Trust indicators dengan styling yang lebih menarik */}
-        <div className="trust-indicators">
-          <p><span>🛡️</span> <strong>Garansi 30 hari uang kembali</strong></p>
-          <p><span>🔐</span> <strong>Data aman & terenkripsi</strong></p>
-          <p><span>💬</span> <strong>Dukungan pelanggan Indonesia</strong></p>
-        </div>
+            <div className="card-footer">
+              <Link to={plan.ctaLink} className="btn-cta">
+                {plan.ctaText}
+              </Link>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
