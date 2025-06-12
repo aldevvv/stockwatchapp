@@ -49,38 +49,148 @@ Proyek ini dikembangkan sebagai bagian dari Program Pembinaan Mahasiswa Wirausah
 * **VSCode:** Editor kode.
 
 ## Struktur Proyek (Monorepo)
-```stockwatch-app/
-├── backend/                # Proyek Backend (Node.js/Express)
-│   ├── .env.example        # Contoh variabel lingkungan backend
+```
+stockwatch-app/
+├── .gitignore
+├── README.md
+├── backend/
+│   ├── node_modules/
+│   ├── src/
+│   │   ├── admin/
+│   │   │   ├── admin.controller.js
+│   │   │   └── admin.routes.js
+│   │   ├── auth/
+│   │   │   ├── auth.controller.js
+│   │   │   └── auth.routes.js
+│   │   ├── config/
+│   │   │   ├── firebase.js
+│   │   │   └── firebaseAdminSDK.json  (RAHASIA - Tidak di-commit)
+│   │   ├── contact/
+│   │   │   ├── contact.controller.js
+│   │   │   └── contact.routes.js
+│   │   ├── history/
+│   │   │   ├── history.controller.js
+│   │   │   └── history.routes.js
+│   │   ├── middleware/
+│   │   │   ├── adminAuthMiddleware.js
+│   │   │   └── auth.middleware.js
+│   │   ├── penjualan/
+│   │   │   ├── penjualan.controller.js
+│   │   │   └── penjualan.routes.js
+│   │   ├── produk/
+│   │   │   ├── produk.controller.js
+│   │   │   └── produk.routes.js
+│   │   ├── scheduler/
+│   │   │   └── index.js
+│   │   ├── services/
+│   │   │   └── notification.service.js
+│   │   ├── stockshare/
+│   │   │   ├── stockshare.controller.js
+│   │   │   └── stockshare.routes.js
+│   │   ├── stok/
+│   │   │   ├── stok.controller.js
+│   │   │   └── stok.routes.js
+│   │   ├── supplier/
+│   │   │   ├── supplier.controller.js
+│   │   │   └── supplier.routes.js
+│   │   └── user/
+│   │       ├── user.controller.js
+│   │       └── user.routes.js
+│   ├── .env                       (RAHASIA - Tidak di-commit)
+│   ├── .gitignore
 │   ├── package.json
-│   └── src/
-│       ├── auth/           # Modul autentikasi (controller, routes)
-│       ├── config/         # Konfigurasi (Firebase)
-│       ├── middleware/     # Middleware (authMiddleware)
-│       ├── services/       # Layanan (notifikasi, email)
-│       ├── stok/           # Modul manajemen stok (controller, routes)
-│       ├── user/           # Modul manajemen profil user (controller, routes)
-│       ├── scheduler/      # Logika penjadwalan notifikasi
-│       └── index.js        # Entry point server backend
+│   └── package-lock.json
 │
-├── frontend/               # Proyek Frontend (React/Vite)
-│   ├── package.json
-│   ├── index.html
-│   └── src/
-│       ├── assets/         # Gambar, ikon, dll.
-│       ├── components/     # Komponen UI reusable (Modal, Layout, dll.)
-│       ├── context/        # React Context (AuthContext)
-│       ├── services/       # Layanan API terpusat (api.js)
-│       ├── pages/          # Komponen halaman landing page (HomePage, AboutPage, dll.)
-│       ├── auth/           # Halaman & logika autentikasi (LoginPage, RegisterPage, dll.)
-│       ├── dashboard/      # Halaman & komponen dashboard (DashboardPage, StokBarChart)
-│       ├── stok/           # Komponen terkait stok (StokForm, stokService.js)
-│       ├── user/           # Halaman & logika profil user (ProfilePage, userService.js)
-│       ├── App.jsx         # Konfigurasi routing utama
-│       └── main.jsx        # Entry point aplikasi React
-│
-├── .gitignore              # File dan folder yang diabaikan Git
-└── README.md               # Informasi proyek ini
+└── frontend/
+    ├── node_modules/
+    ├── public/
+    │   ├── Logo.png
+    │   ├── favicon.png
+    │   └── StockWatchLogo.svg
+    └── src/
+        ├── assets/
+        ├── auth/
+        │   ├── LoginPage.jsx & .css
+        │   ├── RegisterPage.jsx & .css
+        │   ├── RequestPasswordResetPage.jsx & .css
+        │   ├── ResetPasswordPage.jsx & .css
+        │   ├── VerifyEmailPage.jsx & .css
+        │   └── authService.js
+        ├── components/
+        │   ├── common/
+        │   │   └── AccordionItem.jsx
+        │   └── layout/
+        │       ├── AdminLayout.jsx, AdminSidebar.jsx, AdminNavbar.jsx, ...
+        │       ├── DashboardLayout.jsx & .css
+        │       ├── DashboardNavbar.jsx & .css
+        │       ├── LandingFooter.jsx & .css
+        │       ├── LandingNavbar.jsx & .css
+        │       ├── ProfileDropdown.jsx
+        │       ├── PublicLayout.jsx
+        │       └── Sidebar.jsx & .css
+        │   └── Modal.jsx & .css
+        ├── contact/
+        │   └── contactService.js
+        ├── context/
+        │   └── AuthContext.js
+        ├── dashboard/
+        │   ├── ItemValueChart.jsx
+        │   └── StockDashboardPage.jsx & .css
+        ├── history/
+        │   ├── StockHistoryPage.jsx
+        │   └── historyService.js
+        ├── pages/
+        │   ├── AboutPage.jsx & .css
+        │   ├── ContactPage.jsx & .css
+        │   ├── FAQPage.jsx & .css
+        │   ├── HomePage.jsx & .css
+        │   ├── LegalPage.css
+        │   ├── PricingPage.jsx & .css
+        │   ├── PrivacyPolicyPage.jsx
+        │   ├── TermsPage.jsx
+        │   └── TestimonialsPage.jsx & .css
+        ├── penjualan/
+        │   ├── LaporanPenjualanPage.css
+        │   ├── PenjualanHariIniPage.jsx & .css
+        │   ├── PosPage.jsx & .css
+        │   ├── RiwayatPenjualanPage.jsx & .css
+        │   └── penjualanService.js
+        ├── produk/
+        │   ├── ProdukForm.jsx & .css
+        │   ├── ProdukPage.jsx
+        │   └── produkService.js
+        ├── services/
+        │   └── api.js
+        ├── stockshare/
+        │   ├── ListStokForm.jsx & .css
+        │   ├── ListingCard.jsx
+        │   ├── StockSharePage.jsx & .css
+        │   └── stockshareService.js
+        ├── stok/
+        │   ├── StockListPage.jsx & .css
+        │   ├── StokForm.jsx & .css
+        │   └── stokService.js
+        ├── styles/
+        │   └── DashboardPages.css
+        ├── supplier/
+        │   ├── SupplierForm.jsx & .css
+        │   ├── SupplierListPage.jsx & .css
+        │   └── supplierService.js
+        ├── user/
+        │   ├── PengaturanPage.jsx & .css
+        │   └── userService.js
+        ├── utils/
+        │   ├── toastHelper.js
+        │   └── unitOptions.js
+        ├── App.jsx
+        ├── index.css
+        └── main.jsx
+    ├── .gitignore
+    ├── index.html
+    ├── package.json
+    ├── package-lock.json
+    └── vite.config.js
+
 ```
 
 ---
