@@ -1,4 +1,4 @@
-import api from '../services/api';
+import api from '../services/api.js';
 
 export const createListing = (listingData) => {
   return api.post('/stockshare/list', listingData);

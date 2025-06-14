@@ -1,0 +1,139 @@
+.semua-plan-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+  max-width: 900px;
+  margin: 2rem auto 0 auto;
+}
+
+.pricing-card {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.pricing-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.pricing-card.current {
+    border-color: #6b7280;
+}
+.pricing-card.popular {
+  border-color: #ef4444;
+}
+
+.badge-popular {
+  position: absolute;
+  top: 1.75rem;
+  right: -50px;
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 4rem;
+  transform: rotate(45deg);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  z-index: 10;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.pricing-card-header {
+    padding: 2rem;
+    text-align: center;
+}
+.pricing-card h3 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  color: #1f2937;
+}
+.plan-price {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #111827;
+  text-align: center;
+display: flex;
+  justify-content: center;
+  align-items: baseline;
+}
+.plan-period {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #6b7280;
+}
+.plan-description {
+    font-size: 0.9rem;
+    color: #6b7280;
+    min-height: 40px;
+    margin-top: 0.5rem;
+}
+
+.pricing-card-body {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid #e5e7eb;
+  flex-grow: 1;
+}
+.feature-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+.feature-list li {
+  margin-bottom: 0.85rem;
+  color: #4b5563;
+  padding-left: 1.75rem;
+  position: relative;
+  font-size: 0.95rem;
+}
+.feature-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 1px;
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.pricing-card-footer {
+  padding: 1.5rem 2rem;
+  margin-top: auto;
+  background-color: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+}
+.button-upgrade-plan {
+    display: block;
+    width: 100%;
+    padding: 0.8rem;
+    text-align: center;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    background-color: #16a34a;
+    color: white;
+    border: 2px solid transparent;
+}
+.button-upgrade-plan:not(.disabled-btn):hover {
+    background-color: #15803d;
+    transform: translateY(-2px);
+}
+.button-upgrade-plan.disabled-btn {
+    background-color: #6b7280;
+    color: #ffffff;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .semua-plan-grid {
+        grid-template-columns: 1fr;
+    }
+}

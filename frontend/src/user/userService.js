@@ -16,6 +16,10 @@ export const deleteUserAccount = async (password) => {
     return api.delete('/users/me', { data: { password } });
 };
 
+export const deactivateAccount = async (password) => {
+    return api.post('/users/deactivate', { password });
+};
+
 export const uploadProfilePicture = (file) => {
     const formData = new FormData();
     formData.append('profilePicture', file); 

@@ -1,12 +1,19 @@
 import cron from 'node-cron';
 import { checkStockAndSendNotifications } from '../services/notification.service.js';
+import { checkAndDowngradePlans } from '../billing/billing.controller.js';
 
-console.log('Scheduler diinisialisasi.');
+const initializeSchedulers = () => {
+  cron.schedule('*/5 * * * *', () => {
+    console.log('Menjalankan scheduler notifikasi stok...');
+    checkStockAndSendNotifications();
+  });
 
-// Menjadwalkan tugas untuk berjalan setiap 2 menit untuk tujuan tes.
-// Pola cron: (menit jam hari_bulan bulan hari_minggu)
-// '*/2 * * * *' artinya 'jalankan setiap 2 menit'
-// Nanti bisa diubah menjadi '0 * * * *' (setiap jam) atau '0 0 * * *' (setiap tengah malam)
-cron.schedule('*/1 * * * *', () => {
-  checkStockAndSendNotifications();
-});
+  cron.schedule('0 * * * *', () => {
+    console.log('Menjalankan scheduler downgrade paket...');
+    checkAndDowngradePlans();
+  });
+
+  console.log('Semua scheduler telah diinisialisasi.');
+};
+
+export default initializeSchedulers;

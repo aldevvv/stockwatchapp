@@ -1,22 +1,26 @@
-// frontend/src/admin/components/layout/AdminLayout.jsx
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
-import './AdminLayout.css'; // Kita akan buat file CSS ini
+import AdminNavbar from './AdminNavbar';
+import './AdminLayout.css';
 
 function AdminLayout() {
-  const [isAdminSidebarOpen, setIsAdminSidebarOpen] = useState(true);
+  const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const toggleAdminSidebar = () => {
-    setIsAdminSidebarOpen(!isAdminSidebarOpen);
+  const toggleMobileSidebar = () => {
+    setMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
   return (
-    <div className={`admin-layout ${isAdminSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-      <AdminSidebar isOpen={isAdminSidebarOpen} toggleSidebar={toggleAdminSidebar} />
-      <main className="admin-main-content">
-        <Outlet /> {/* Konten halaman admin akan dirender di sini */}
-      </main>
+    <div className="admin-layout">
+      {isMobileSidebarOpen && <div className="admin-sidebar-overlay" onClick={toggleMobileSidebar}></div>}
+      <AdminSidebar isOpen={isMobileSidebarOpen} toggleSidebar={toggleMobileSidebar} />
+      <div className="admin-content-wrapper">
+        <AdminNavbar toggleSidebar={toggleMobileSidebar} />
+        <main className="admin-main-content">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

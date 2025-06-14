@@ -1,0 +1,132 @@
+.upgrade-page-bg {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 60px - 3rem);
+    background-color: transparent;
+}
+
+.upgrade-card {
+    width: 100%;
+    max-width: 550px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: slide-up 0.4s ease-out;
+}
+
+@keyframes slide-up {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.upgrade-card-header {
+    padding: 2rem;
+    text-align: center;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+}
+.upgrade-card-header h3 {
+    font-size: 1.8rem;
+    color: #1f2937;
+    margin: 0 0 0.5rem 0;
+}
+.upgrade-card-header p {
+    font-size: 1rem;
+    color: #4b5563;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.upgrade-card-body {
+    padding: 2rem;
+}
+
+.summary-details hr {
+    border: none;
+    border-top: 1px dashed #d1d5db;
+    margin: 1rem 0;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    font-size: 1rem;
+}
+.summary-item span:first-child {
+    color: #6b7280;
+}
+.summary-item span:last-child {
+    font-weight: 600;
+    color: #111827;
+}
+.summary-item.final-amount {
+    padding-top: 1rem;
+}
+.summary-item.final-amount span {
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+.summary-item.insufficient span:last-child {
+    color: #ef4444;
+}
+
+.insufficient-note {
+    text-align: center;
+    color: #b91c1c;
+    background-color: #fee2e2;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+.insufficient-note p {
+    margin: 0;
+}
+
+.upgrade-card-footer {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background-color: #f9fafb;
+    border-top: 1px solid #e5e7eb;
+}
+
+.button-cancel, .button-confirm-upgrade {
+    flex: 1;
+    padding: 0.9rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.button-cancel {
+    background-color: #fff;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+.button-cancel:hover {
+    background-color: #f3f4f6;
+}
+.button-confirm-upgrade {
+    background-color: #16a34a;
+    color: #fff;
+}
+.button-confirm-upgrade:hover:not(:disabled) {
+    background-color: #15803d;
+}
+.button-confirm-upgrade:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}

@@ -5,8 +5,7 @@ import { useAuth } from './context/AuthContext';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// <-- 1. IMPORT KOMPONEN SCROLLTOTOP
-import ScrollToTop from './components/ScrollToTop'; // Pastikan path ini benar
+import ScrollToTop from './components/ScrollToTop'; 
 
 import PublicLayout from './components/layout/PublicLayout';
 import DashboardLayout from './components/layout/DashboardLayout';
@@ -17,7 +16,16 @@ import AboutPage from './pages/AboutPage';
 import PricingPage from './pages/PricingPage';
 import TestimonialsPage from './pages/TestimonialsPage';
 import PricingInfoPage from './pages/PricingInfoPage';
-import ContactPage from './pages/ContactPage'
+import FAQPage from './pages/FAQPage';
+import ContactPage from './pages/ContactPage';
+import TermsPage from './pages/TermsPage';
+import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
+import BillingPage from './billing/BillingPage'; 
+import RedeemKodePage from './billing/RedeemKodePage';
+import SemuaPlanPage from './billing/SemuaPlanPage';
+import UpgradePlanPage from './billing/UpgradePlanPage';
+
+
 
 import LoginPage from './auth/LoginPage';
 import RegisterPage from './auth/RegisterPage';
@@ -25,17 +33,28 @@ import VerifyEmailPage from './auth/VerifyEmailPage';
 import RequestPasswordResetPage from './auth/RequestPasswordResetPage';
 import ResetPasswordPage from './auth/ResetPasswordPage';
 
-import DashboardPage from './dashboard/DashboardPage';
-import PengaturanPage from './user/PengaturanPage';
-import RiwayatStokPage from './laporan/RiwayatStokPage';
-import SupplierPage from './supplier/SupplierPage';
-import StockSharePage from './stockshare/StockSharePage'; 
+import StockListPage from './stok/StockListPage';
+import StockHistoryPage from './history/StockHistoryPage';
+import SupplierListPage from './supplier/SupplierListPage';
+import StockDashboardPage from './dashboard/StockDashboardPage';
+import ProdukPage from './produk/ProdukPage'; // Impor baru
+import PosPage from './penjualan/PosPage';
+import PenjualanHariIniPage from './penjualan/PenjualanHariIniPage';
+import RiwayatPenjualanPage from './penjualan/RiwayatPenjualanPage';
+import StockMarketPage from './stockshare/StockMarketPage';
+import DaftarListingPage from './stockshare/DaftarListingPage';
+import UpgradeSuccessPage from './billing/UpgradeSuccessPage';
 
 
-import AdminDashboardPage from './admin/pages/AdminDashboardPage';
-import AdminUsersPage from './admin/pages/AdminUsersPage';
-import AdminUserStockPage from './admin/pages/AdminUserStockPage';
-import AdminSendMessagePage from './admin/pages/AdminSendMessagePage';
+import PengaturanAkunPage from './user/PengaturanAkunPage';
+import NotifikasiPage from './user/NotifikasiPage';
+import DeaktivasiPage from './user/DeaktivasiPage';
+
+
+import AdminDashboardPage from './admin/AdminDashboardPage';
+import AdminManajemenPengguna from './admin/AdminManajemenPengguna';
+import AdminManajemenKodePage from './admin/AdminManajemenKodePage';
+import AdminTambahSaldoPage from './admin/AdminTambahSaldoPage';
 
 import ProtectedRoute from './components/ProtectedRoute';
 import AdminProtectedRoute from './admin/components/AdminProtectedRoute';
@@ -49,7 +68,6 @@ function App() {
 
   return (
     <BrowserRouter>
-      {/* <-- 2. TAMBAHKAN KOMPONEN SCROLLTOTOP DI SINI */}
       <ScrollToTop />
 
       <ToastContainer
@@ -71,14 +89,18 @@ function App() {
           <Route path="/pricing" element={<PricingPage />} />
           <Route path="/pricing-info" element={<PricingInfoPage />} />
           <Route path="/testimonials" element={<TestimonialsPage />} />
+          <Route path="/faq" element={<FAQPage />} />
           <Route path="/contactus" element={<ContactPage />} />
+          <Route path="/terms" element={<TermsPage />} />
+          <Route path="/privacypolicy" element={<PrivacyPolicyPage />} />
+
 
           
-          <Route path="/login" element={token && user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : (token && user?.role !== 'admin' ? <Navigate to="/dashboard" replace /> : <LoginPage />)} />
-          <Route path="/register" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dashboard" replace />) : <RegisterPage />} />
+          <Route path="/login" element={token && user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : (token && user?.role !== 'admin' ? <Navigate to="/stock-dashboard" replace /> : <LoginPage />)} />
+          <Route path="/register" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/stock-dashboard" replace />) : <RegisterPage />} />
           <Route path="/verify-email/:token" element={<VerifyEmailPage />} />
-          <Route path="/request-password-reset" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dashboard" replace />) : <RequestPasswordResetPage />} />
-          <Route path="/reset-password/:token" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/dashboard" replace />) : <ResetPasswordPage />} />
+          <Route path="/request-password-reset" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/stock-dashboard" replace />) : <RequestPasswordResetPage />} />
+          <Route path="/reset-password/:token" element={token ? (user?.role === 'admin' ? <Navigate to="/admin/dashboard" replace /> : <Navigate to="/stock-dashboard" replace />) : <ResetPasswordPage />} />
         </Route>
             
         <Route 
@@ -88,13 +110,29 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/pengaturan" element={<PengaturanPage />} />
-          <Route path="/riwayatstok" element={<RiwayatStokPage />} />
-          <Route path="/suppliers" element={<SupplierPage />} />
-          <Route path="/stockshare" element={<StockSharePage />} />
+          <Route path="/stock-dashboard" element={<StockDashboardPage />} />
+          <Route path="/stock-list" element={<StockListPage />} />
+          <Route path="/stock-history" element={<StockHistoryPage />} />
+          <Route path="/supplier-list" element={<SupplierListPage />} />
+          <Route path="/produk" element={<ProdukPage />} />
+          <Route path="/kasir" element={<PosPage />} />
+          <Route path="/penjualan/hari-ini" element={<PenjualanHariIniPage />} />
+          <Route path="/penjualan/riwayat" element={<RiwayatPenjualanPage />} />
+          <Route path="/akun" element={<PengaturanAkunPage />} />
+          <Route path="/notifikasi" element={<NotifikasiPage />} />
+          <Route path="/deaktivasi" element={<DeaktivasiPage />} />
+          <Route path="/stock-market" element={<StockMarketPage />} />
+          <Route path="/daftar-listing" element={<DaftarListingPage />} />
+          <Route path="/billing" element={<BillingPage />} />
+          <Route path="/semua-plan" element={<SemuaPlanPage />} />
+          <Route path="/redeem-kode" element={<RedeemKodePage />} />
+          <Route path="/upgrade-plan/:planName" element={<UpgradePlanPage />} />
+          <Route path="/upgrade-sukses" element={<UpgradeSuccessPage />} />
 
         </Route>
+
+
+
 
         <Route
           element={
@@ -103,10 +141,11 @@ function App() {
             </AdminProtectedRoute>
           }
         >
-          <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-          <Route path="/admin/users" element={<AdminUsersPage />} />
-          <Route path="/admin/users/:targetUserId/stok" element={<AdminUserStockPage />} />
-          <Route path="/admin/messages/send" element={<AdminSendMessagePage />} />
+            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+            <Route path="/admin/manajemen-pengguna" element={<AdminManajemenPengguna />} />
+            <Route path="/admin/kode-redeem" element={<AdminManajemenKodePage />} />
+            <Route path="/admin/tambah-saldo" element={<AdminTambahSaldoPage />} />
+
         </Route>
 
         <Route path="*" element={<Navigate to={token ? (user?.role === 'admin' ? "/admin/dashboard" : "/dashboard") : "/"} replace />} />

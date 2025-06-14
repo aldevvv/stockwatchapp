@@ -1,116 +1,149 @@
-import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import React, { useState, useEffect } from 'react';
+import { NavLink, Link, useLocation } from 'react-router-dom';
 import './Sidebar.css';
 
-const DashboardIconSvg = ({ fill = "#ecf0f1" }) => (
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={fill} width="24px" height="24px">
-    <path d="M0 0h24v24H0z" fill="none"/><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/>
+const BoxIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+    <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+    <line x1="12" y1="22.08" x2="12" y2="12" />
   </svg>
 );
 
-const ReportIcon = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/>
-    </svg>
+const ShoppingCartIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="9" cy="21" r="1" />
+    <circle cx="20" cy="21" r="1" />
+    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+  </svg>
 );
 
-const SupplierIcon = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-      <path d="M0 0h24v24H0z" fill="none"/>
-      <path d="M20 6H4V4h16v2zm-2-4H6v2h12V2zm4 8H2v12h20V10zm-4 2h-2v2h2v-2zm-4 0h-2v2h2v-2zm-4 0H8v2h2v-2zm-4 0H4v2h2v-2z"/>
-    </svg>
+const ShareIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="18" cy="5" r="3" />
+    <circle cx="6" cy="12" r="3" />
+    <circle cx="18" cy="19" r="3" />
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
+    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+  </svg>
 );
 
-const StockShareIcon = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 8.81C7.5 8.31 6.79 8 6 8c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3s3-1.34 3-3-1.34-3-3-3z"/>
-    </svg>
+const BillingIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect><line x1="1" y1="10" x2="23" y2="10"></line></svg>;
+const GiftIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>;
+
+const SettingsIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="12" cy="12" r="3" />
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+  </svg>
 );
 
-const SettingsIcon = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61-.25-1.17.59-1.69-.98l-2.49-1c-.23-.08-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.08.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/>
-    </svg>
+const ChevronRightIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <polyline points="9 18 15 12 9 6" />
+  </svg>
 );
 
-const LogoutIconSvg = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-    </svg>
+const CloseIcon = () => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
 );
 
 function Sidebar({ isOpen, toggleSidebar }) {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const [openMenu, setOpenMenu] = useState(null);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const menuGroups = [
+    {
+      name: 'Manajemen Stok',
+      icon: <BoxIcon />,
+      subMenus: [
+        { name: 'Dashboard', path: '/stock-dashboard' },
+        { name: 'Daftar Stok', path: '/stock-list' },
+        { name: 'Daftar Supplier', path: '/supplier-list' },
+        { name: 'Riwayat Stok', path: '/stock-history' }
+      ]
+    },
 
-  const menuItems = [
-    { path: '/dashboard', name: 'Dashboard', iconComponent: DashboardIconSvg },
-    { path: '/riwayatstok', name: 'Riwayat Stok', iconComponent: ReportIcon },
-    { path: '/suppliers', name: 'Manajemen Supplier', iconComponent: SupplierIcon },
-    { path: '/stockshare', name: 'StockShare', iconComponent: StockShareIcon },
-    { path: '/pengaturan', name: 'Pengaturan', iconComponent: SettingsIcon },
+    { name: 'Penjualan', icon: <ShoppingCartIcon />, subMenus: [
+        { name: 'Daftar Produk', path: '/produk' },
+        { name: 'Halaman Kasir', path: '/kasir' },
+        { name: 'Penjualan Hari Ini', path: '/penjualan/hari-ini' },
+        { name: 'Riwayat Penjualan', path: '/penjualan/riwayat'}]},
+        
+    { name: 'StockShare', icon: <ShareIcon />, subMenus: [
+      { name: 'StockMarket', path: '/stock-market' },
+      { name: 'Daftar Listing', path: '/daftar-listing' }]},
+
+    { name: 'Billing', icon: <BillingIcon />, subMenus: [
+      { name: 'Langganan & Saldo', path: '/billing' },
+      { name: 'Semua Paket', path: '/semua-plan' }]},
+
+    { name: 'Redeem Kode', icon: <GiftIcon />, subMenus: [
+      { name: 'Redeem Kode', path: '/redeem-kode' }]},
+
+
+    { name: 'Pengaturan', icon: <SettingsIcon />, subMenus: [
+       { name: 'Pengaturan Akun', path: '/akun' },
+       { name: 'Notifikasi', path: '/notifikasi' },
+       { name: 'Deaktivasi Akun', path: '/deaktivasi'}]},
   ];
 
+  useEffect(() => {
+    const activeGroup = menuGroups.find(group =>
+      group.subMenus?.some(sub => location.pathname.startsWith(sub.path))
+    );
+    setOpenMenu(activeGroup ? activeGroup.name : null);
+  }, [location.pathname]);
+
+  const handleMenuClick = (menuName) => {
+    setOpenMenu(openMenu === menuName ? null : menuName);
+  };
+
   return (
-    <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
+    <nav className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header">
-        {isOpen && <Link to="/dashboard" className="sidebar-logo">StockWatch</Link>}
-        <button onClick={toggleSidebar} className="sidebar-toggle-button">
-          {isOpen ? <span>&times;</span> : <span>&#9776;</span>}
+        <Link to="/stock-dashboard" className="sidebar-logo-link">
+          <img src="/Logo.png" alt="StockWatch Logo" className="sidebar-logo-img" />
+        </Link>
+        <button onClick={toggleSidebar} className="sidebar-mobile-close-btn">
+          <CloseIcon />
         </button>
       </div>
-      
-      {isOpen && user && (
-        <div className="sidebar-profile">
-          <img 
-            src={user.fotoProfilUrl || 'https://i.ibb.co/hK3aT2v/default-avatar.png'} 
-            alt="Profil" 
-            className="sidebar-profile-picture"
-          />
-          <p className="profile-name">{user.namaLengkap || user.email}</p>
-          {user.namaToko && <p className="store-name">{user.namaToko}</p>}
-        </div>
-      )}
-      
       <ul className="sidebar-menu">
-        {menuItems.map(item => {
-          const IconComponent = item.iconComponent;
-          const isActive = location.pathname.startsWith(item.path); 
-          return (
-            <li key={item.path} title={!isOpen ? item.name : ''}>
-              <Link to={item.path} className={isActive ? 'active' : ''}>
-                <span className="menu-icon">
-                  <IconComponent fill={ (isOpen && isActive) || !isOpen ? '#FFFFFF' : '#e0e7ee'} />
-                </span>
-                {isOpen && <span className="menu-text">{item.name}</span>}
-              </Link>
-            </li>
-          );
-        })}
+        {menuGroups.map(group => (
+          <li key={group.name} className={`menu-item ${group.subMenus ? 'has-submenu' : ''} ${openMenu === group.name ? 'submenu-open' : ''}`}>
+            {group.subMenus ? (
+              <button onClick={() => handleMenuClick(group.name)}>
+                <span className="menu-icon">{group.icon}</span>
+                <span className="menu-text">{group.name}</span>
+                <span className="submenu-arrow"><ChevronRightIcon /></span>
+              </button>
+            ) : (
+              <NavLink to={group.path}>
+                <span className="menu-icon">{group.icon}</span>
+                <span className="menu-text">{group.name}</span>
+              </NavLink>
+            )}
+            {group.subMenus && (
+              <div className="submenu-container-wrapper">
+                <ul className="submenu-container">
+                  {group.subMenus.map(sub => (
+                    <li key={sub.name} className="submenu-item">
+                      <NavLink to={sub.path}>
+                        {sub.name}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </li>
+        ))}
       </ul>
-
-      {isOpen && (
-        <div className="sidebar-footer">
-          <button onClick={handleLogout} className="logout-button-sidebar">
-            Logout
-          </button>
-        </div>
-      )}
-      {!isOpen && (
-         <div className="sidebar-footer-collapsed">
-            <button onClick={handleLogout} className="logout-button-sidebar-collapsed" title="Logout">
-                <LogoutIconSvg />
-            </button>
-         </div>
-      )}
-    </div>
+    </nav>
   );
 }
 

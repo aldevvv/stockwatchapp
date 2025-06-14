@@ -1,0 +1,77 @@
+.produk-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 0.5rem;
+  min-width: 450px;
+}
+
+.produk-form .form-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.produk-form .form-group {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 150px;
+  gap: 0.5rem;
+}
+
+.produk-form label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #374151;
+}
+
+.produk-form input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-size: 1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: border-color .2s ease-in-out,box-shadow .2s ease-in-out;
+}
+
+.produk-form input:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+  outline: none;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.button-cancel,
+.button-submit {
+  padding: 0.7rem 1.4rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.button-submit {
+  background-color: #16a34a;
+  color: white;
+}
+.button-submit:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.button-cancel {
+  background-color: #6c757d;
+  color: white;
+}

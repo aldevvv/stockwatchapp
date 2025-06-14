@@ -2,24 +2,20 @@ import express from 'express';
 import { 
     tambahStokItem, 
     getAllStok, 
-    updateJumlahStok, 
-    updateDetailStokItem, 
-    hapusStokItem,
+    updateStok, 
+    deleteStok, 
     deleteAllStok 
 } from './stok.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
+import { checkLimit } from '../middleware/checkLimit.middleware.js';
 
 const router = express.Router();
 
 router.use(authMiddleware);
-
-router.post('/', tambahStokItem);
 router.get('/', getAllStok);
-
-router.delete('/all', authMiddleware, deleteAllStok);
-router.put('/:itemId/jumlah', updateJumlahStok); // Khusus update jumlah
-router.put('/:itemId/detail', updateDetailStokItem); // Khusus update detail non-jumlah
-router.delete('/:itemId', hapusStokItem);
-
+router.post('/', authMiddleware, checkLimit('stok'), tambahStokItem);
+router.delete('/all', deleteAllStok);
+router.put('/:itemId', updateStok);
+router.delete('/:itemId', deleteStok);
 
 export default router;

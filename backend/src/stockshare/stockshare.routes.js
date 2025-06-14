@@ -8,9 +8,8 @@ router.use(authMiddleware);
 
 router.post('/list', createListing);
 router.get('/listings', getAllListings);
-router.get('/my-listings', getMyListings); 
-router.put('/listings/:listingId', updateMyListing); 
-router.delete('/listings/:listingId', deleteMyListing); 
-
+router.get('/my-listings', getMyListings);
+router.put('/listings/:listingId', updateMyListing);
+router.delete('/listings/:listingId', deleteMyListing);
 
 export default router;

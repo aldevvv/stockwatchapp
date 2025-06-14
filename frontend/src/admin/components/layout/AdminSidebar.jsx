@@ -1,96 +1,72 @@
-import React from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../../context/AuthContext';
+import React, { useState, useEffect, useMemo } from 'react';
+import { NavLink, useLocation, Link } from 'react-router-dom';
 import './AdminSidebar.css';
 
-const AdminDashboardIcon = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill={fill} width="24px" height="24px">
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M13 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V9l-6-6zm5 16H6V5h7v5h5v9z"/>
-    </svg>
-);
-const UsersAdminIcon = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/>
-    </svg>
-);
-const MessageAdminIcon = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8l8 5 8-5v10zm-8-7L4 6h16l-8 5z"/>
-    </svg>
-);
-const LogoutIconSvg = ({ fill = "#ecf0f1" }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 0 24 24" width="24px" fill={fill}>
-        <path d="M0 0h24v24H0z" fill="none"/><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
-    </svg>
-);
+const DashboardIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>;
+const UsersIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>;
+const RedeemIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 12 20 22 4 22 4 12"></polyline><rect x="2" y="7" width="20" height="5"></rect><line x1="12" y1="22" x2="12" y2="7"></line><path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"></path><path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"></path></svg>;
+const ChevronRightIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>;
+const CloseIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>;
 
 function AdminSidebar({ isOpen, toggleSidebar }) {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
   const location = useLocation();
+  const [openMenu, setOpenMenu] = useState(null);
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const menuGroups = useMemo(() => [
+    { name: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
+    { name: 'Kelola Pengguna', icon: <UsersIcon />, subMenus: [ { name: 'Daftar Pengguna', path: '/admin/manajemen-pengguna' }, { name: 'Tambah Saldo', path: '/admin/tambah-saldo' } ] },
+    { name: 'Kelola Hadiah', icon: <RedeemIcon />, subMenus: [ { name: 'Redeem Kode', path: '/admin/kode-redeem' } ] },
+  ], []);
 
-  const menuItems = [
-    { path: '/admin/dashboard', name: 'Dashboard Admin', iconComponent: AdminDashboardIcon },
-    { path: '/admin/users', name: 'Manajemen Pengguna', iconComponent: UsersAdminIcon },
-    { path: '/admin/messages/send', name: 'Kirim Pesan Pengguna', iconComponent: MessageAdminIcon },
-  ];
+  useEffect(() => {
+    const activeGroup = menuGroups.find(group => 
+      group.subMenus?.some(submenu => location.pathname === submenu.path)
+    );
+    setOpenMenu(activeGroup?.name || null);
+  }, [location.pathname, menuGroups]);
 
   return (
-    <div className={`admin-sidebar ${isOpen ? 'open' : 'closed'}`}>
+    <nav className={`admin-sidebar ${isOpen ? 'mobile-open' : ''}`}>
       <div className="admin-sidebar-header">
-        {isOpen && <Link to="/admin/dashboard" className="admin-sidebar-logo">StockWatch</Link>}
-        <button onClick={toggleSidebar} className="admin-sidebar-toggle-button">
-          {isOpen ? <span>&times;</span> : <span>&#9776;</span>}
+        <Link to="/admin/dashboard" className="admin-logo-link">
+            <img src="/Logo.png" alt="StockWatch Logo" className="admin-sidebar-logo" />
+        </Link>
+        <button onClick={toggleSidebar} className="sidebar-mobile-close-btn">
+            <CloseIcon />
         </button>
       </div>
-      
-      {isOpen && user && (
-        <div className="admin-sidebar-profile">
-          <div className="admin-profile-icon-container">
-            <UsersAdminIcon fill="#bdc3c7"/>
-          </div>
-          <p className="admin-profile-name">{user.namaLengkap || user.email}</p>
-          <p className="admin-role-badge">Administrator</p>
-        </div>
-      )}
-      
       <ul className="admin-sidebar-menu">
-        {menuItems.map(item => {
-          const IconComponent = item.iconComponent;
-          const isActive = item.path === '/admin/dashboard' ? location.pathname === item.path : location.pathname.startsWith(item.path);
-          return (
-            <li key={item.path} title={!isOpen ? item.name : ''}>
-              <Link to={item.path} className={isActive ? 'active' : ''}>
-                <span className="admin-menu-icon">
-                  <IconComponent fill={ (isOpen && isActive) || !isOpen ? '#FFFFFF' : '#e0e7ee'} />
-                </span>
-                {isOpen && <span className="admin-menu-text">{item.name}</span>}
-              </Link>
-            </li>
-          );
-        })}
+        {menuGroups.map(group => (
+          <li key={group.name} className={`menu-item ${group.subMenus ? 'has-submenu' : ''} ${openMenu === group.name ? 'submenu-open' : ''}`}>
+            {group.subMenus ? (
+              <button onClick={() => setOpenMenu(openMenu === group.name ? null : group.name)}>
+                <span className="menu-icon">{group.icon}</span>
+                <span className="menu-text">{group.name}</span>
+                <span className="submenu-arrow"><ChevronRightIcon/></span>
+              </button>
+            ) : (
+              <NavLink to={group.path}>
+                <span className="menu-icon">{group.icon}</span>
+                <span className="menu-text">{group.name}</span>
+              </NavLink>
+            )}
+            {group.subMenus && (
+              <div className="submenu-container-wrapper">
+                <ul className="submenu-container">
+                  {group.subMenus.map(submenu => (
+                    <li key={submenu.name} className="submenu-item">
+                      <NavLink to={submenu.path} className={({ isActive }) => isActive ? "active" : ""}>
+                        {submenu.name}
+                      </NavLink>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </li>
+        ))}
       </ul>
-
-      {isOpen && (
-        <div className="admin-sidebar-footer">
-          <button onClick={handleLogout} className="admin-logout-button-sidebar">
-            Logout Admin
-          </button>
-        </div>
-      )}
-      {!isOpen && (
-         <div className="admin-sidebar-footer-collapsed">
-            <button onClick={handleLogout} className="admin-logout-button-sidebar-collapsed" title="Logout Admin">
-                <LogoutIconSvg />
-            </button>
-         </div>
-      )}
-    </div>
+    </nav>
   );
 }
 

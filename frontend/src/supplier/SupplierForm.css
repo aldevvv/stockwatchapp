@@ -98,13 +98,13 @@
 }
 
 .supplier-form-container .button-submit {
-  background-color: #17a2b8; /* Warna submit untuk supplier, bisa disamakan dengan tombol tambah supplier */
+  background-color: #16a34a; /* Warna submit untuk supplier, bisa disamakan dengan tombol tambah supplier */
   color: white;
-  border-color: #17a2b8;
+  border-color: #15803d;
 }
 .supplier-form-container .button-submit:hover {
-  background-color: #138496;
-  border-color: #117a8b;
+  background-color: #16a34a;
+  border-color: #15803d;
 }
 .supplier-form-container .button-submit:disabled {
   background-color: #cccccc;
@@ -127,5 +127,4 @@
   color: #721c24;
   font-size: 0.85rem;
   margin-top: 0.25rem; 
-  /* Tidak lagi pakai background, biarkan teks merah saja di bawah input jika diperlukan */
 }

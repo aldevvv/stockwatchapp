@@ -1,0 +1,30 @@
+.form-container-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.add-saldo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.add-saldo-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.add-saldo-form label {
+    font-weight: 500;
+}
+.add-saldo-form input,
+.add-saldo-form select {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.add-saldo-form button {
+    justify-content: center;
+}

@@ -72,11 +72,16 @@ function LandingNavbar() {
               </NavLink>
             </li>
                         <li>
+              <NavLink to="/faq" onClick={closeMobileMenu}>
+                FAQ
+              </NavLink>
+            </li>
+            <li>
               <NavLink to="/contactus" onClick={closeMobileMenu}>
                 Hubungi Kami
               </NavLink>
             </li>
-          </ul>
+        </ul>
           
           <div className="navbar-auth-buttons">
             <button 

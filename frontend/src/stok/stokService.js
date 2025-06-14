@@ -8,12 +8,8 @@ export const getAllStok = () => {
   return api.get('/stok');
 };
 
-export const updateJumlahStokService = (itemId, dataJumlah) => {
-  return api.put(`/stok/${itemId}/jumlah`, dataJumlah);
-};
-
-export const updateDetailStokItemService = (itemId, dataDetail) => {
-  return api.put(`/stok/${itemId}/detail`, dataDetail);
+export const updateStok = (itemId, dataToUpdate) => {
+    return api.put(`/stok/${itemId}`, dataToUpdate);
 };
 
 export const deleteStok = (itemId) => {
@@ -21,7 +17,7 @@ export const deleteStok = (itemId) => {
 };
 
 export const deleteAllStok = async (password) => {
-  return api.delete('/stok/all', {
-    data: { password }
+  return api.delete('/stok/all', { 
+    data: { password } 
   });
 };

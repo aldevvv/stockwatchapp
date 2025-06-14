@@ -149,7 +149,7 @@ function AboutPage() {
             Punya pertanyaan? Mau sharing pengalaman? Atau pengen tau lebih lanjut tentang StockWatch? 
             Jangan ragu untuk menghubungi kami. Tim kami siap membantu Anda.
           </p>
-          <Link to="/contact" className="btn-new btn-primary-new">Hubungi Kami Sekarang</Link>
+          <Link to="/contactus" className="btn-new btn-primary-new">Hubungi Kami Sekarang</Link>
         </div>
       </section>
     </div>

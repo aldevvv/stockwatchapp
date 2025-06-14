@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
+import DashboardNavbar from './DashboardNavbar';
 import './DashboardLayout.css';
 
 function DashboardLayout() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isMobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
+  const toggleMobileSidebar = () => {
+    setMobileSidebarOpen(!isMobileSidebarOpen);
   };
 
   return (
-    <div className={`dashboard-layout ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-      <main className="dashboard-main-content">
-        <Outlet />
-      </main>
+    <div className="dashboard-layout">
+      <Sidebar isOpen={isMobileSidebarOpen} toggleSidebar={toggleMobileSidebar} />
+      
+      <div className="dashboard-content-wrapper">
+        <DashboardNavbar toggleSidebar={toggleMobileSidebar} />
+        <main className="dashboard-main-content">
+          <Outlet />
+        </main>
+      </div>
     </div>
   );
 }

@@ -106,7 +106,7 @@ function RegisterPage() {
             <div className="terms-group">
               <input type="checkbox" id="terms" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)} />
               <label htmlFor="terms">
-                Saya setuju dengan <Link to="/syarat-ketentuan" target="_blank">Syarat & Ketentuan</Link> dan <Link to="/kebijakan-privasi" target="_blank">Kebijakan Privasi</Link>.
+                Saya setuju dengan <Link to="/terms" target="_blank">Syarat & Ketentuan</Link> dan <Link to="/privacypolicy" target="_blank">Kebijakan Privasi</Link>.
               </label>
             </div>
 

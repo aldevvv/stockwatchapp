@@ -273,13 +273,13 @@ function PengaturanPage() {
               <div className="pengaturan-card-header"><h3>Profil Akun</h3></div>
               <div className="pengaturan-card-body">
                 <div className="profile-picture-section">
-                    <img src={profileData.fotoProfilUrl || 'https://via.placeholder.com/150/e0e0e0/555?text=Foto'} alt="Foto Profil" className="profile-picture-preview"/>
+                    <img src={profileData.fotoProfilUrl || 'https://scontent.fupg3-1.fna.fbcdn.net/v/t39.30808-6/504679677_122112574616877950_6728358399841732826_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=6ee11a&_nc_eui2=AeGeeaa_tA0hlbzBs--LnV53KcEZlK5n0PkpwRmUrmfQ-U90qyDLakkGakX9LuExqZhQXFdQRfWaqpDsH8Ujb5Y4&_nc_ohc=pK96FfnTaukQ7kNvwGKGhZ2&_nc_oc=Adn7GBqBf188c7YdpdC26vBRj009VhDCfmebjdIK1AGbHBfrnIbcaBFaY-SfAU9kyYM&_nc_zt=23&_nc_ht=scontent.fupg3-1.fna&_nc_gid=jtdpWZqdO9HuuB9H2k6WHA&oh=00_AfOuq4qucjOlTz2z2JKjPybLNpJvRz8TK5QzQnKS5MxySw&oe=68521F9E'} alt="Foto Profil" className="profile-picture-preview"/>
                     <input type="file" onChange={handleImageChange} ref={fileInputRef} style={{ display: 'none' }} accept="image/png, image/jpeg"/>
                     <div className="profile-picture-actions">
                         <button type="button" onClick={() => fileInputRef.current.click()} className="button-change-pic">Pilih Gambar</button>
                         <button type="button" onClick={handleUploadAndSave} className="button-upload-pic" disabled={!imageUpload || isUploading}>{isUploading ? 'Mengunggah...' : 'Upload & Simpan'}</button>
                     </div>
-                    {imageUpload && <p className="file-selected-info">File dipilih: {imageUpload.name}</p>}
+                    {imageUpload && <p className="file-selected-info">File dipilih : {imageUpload.name}</p>}
                 </div>
                 <hr className="pengaturan-divider" />
                 <form onSubmit={handleProfileSubmit}>

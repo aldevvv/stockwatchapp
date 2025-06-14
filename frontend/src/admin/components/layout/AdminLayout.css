@@ -1,33 +1,38 @@
-/* frontend/src/admin/components/layout/AdminLayout.css */
 .admin-layout {
   display: flex;
-  min-height: 100vh;
-  font-family: sans-serif;
-  position: relative;
+  background-color: #f9fafb;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+}
+
+.admin-content-wrapper {
+  flex-grow: 1;
+  margin-left: 260px;
+  width: calc(100% - 260px);
 }
 
 .admin-main-content {
-  flex-grow: 1;
-  padding: 2rem;
-  background-color: #e8edf1; /* Warna latar sedikit berbeda untuk admin panel */
-  overflow-y: auto;
-  transition: margin-left 0.3s ease-in-out;
+  padding: 1.5rem;
+  margin-top: 60px;
 }
 
-/* Sesuaikan dengan lebar AdminSidebar Anda */
-.admin-layout.sidebar-open .admin-main-content {
-  margin-left: 260px; 
-}
-
-.admin-layout.sidebar-closed .admin-main-content {
-  margin-left: 65px;
+.admin-sidebar-overlay {
+  display: none;
 }
 
 @media (max-width: 768px) {
-  .admin-layout.sidebar-open .admin-main-content {
-    margin-left: 230px; /* Sesuaikan dengan lebar AdminSidebar mobile */
+  .admin-content-wrapper {
+    margin-left: 0;
+    width: 100%;
   }
-  .admin-layout.sidebar-closed .admin-main-content {
-    margin-left: 60px; /* Sesuaikan dengan lebar AdminSidebar mobile collapsed */
+  .admin-sidebar-overlay {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
   }
 }

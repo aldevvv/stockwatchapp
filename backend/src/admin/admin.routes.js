@@ -1,18 +1,30 @@
 import express from 'express';
-import { 
-    getAllUsersProfiles, 
-    getUserStockForAdmin, 
-    sendMessageToUser,
-    getPlatformStats
-} from './admin.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 import { adminAuthMiddleware } from '../middleware/adminAuthMiddleware.js';
+import { 
+    getPlatformStats,
+    getAllUsersProfiles,
+    getUserDetailsForAdmin,
+    addSaldoToUser,
+    createRedeemCode,
+    getAllRedeemCodes,
+    updateRedeemCode,
+    deleteRedeemCode
+} from './admin.controller.js';
 
 const router = express.Router();
 
-router.get('/stats', authMiddleware, adminAuthMiddleware, getPlatformStats);
-router.get('/users', authMiddleware, adminAuthMiddleware, getAllUsersProfiles);
-router.get('/users/:targetUserId/stok', authMiddleware, adminAuthMiddleware, getUserStockForAdmin);
-router.post('/messages/send', authMiddleware, adminAuthMiddleware, sendMessageToUser);
+router.use(authMiddleware, adminAuthMiddleware);
+
+router.get('/stats', getPlatformStats);
+
+router.get('/users', getAllUsersProfiles);
+router.get('/users/:targetUserId/details', getUserDetailsForAdmin);
+router.post('/users/add-saldo', addSaldoToUser);
+
+router.post('/redeem-codes', createRedeemCode);
+router.get('/redeem-codes', getAllRedeemCodes);
+router.put('/redeem-codes/:codeId', updateRedeemCode);
+router.delete('/redeem-codes/:codeId', deleteRedeemCode);
 
 export default router;

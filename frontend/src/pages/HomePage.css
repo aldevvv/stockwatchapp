@@ -11,7 +11,7 @@
   line-height: 1.6;
   margin: 0;
   padding: 0;
-  overflow-x: hidden; /* Prevents horizontal scrollbars if content accidentally overflows */
+  overflow-x: hidden; 
 }
 
 /* Hero Section */
@@ -80,7 +80,6 @@
   box-shadow: 0 10px 25px rgba(0,0,0,0.2);
 }
 
-/* Button Styles */
 .btn {
   display: inline-block;
   font-weight: 600;

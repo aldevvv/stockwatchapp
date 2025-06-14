@@ -19,7 +19,7 @@ function ListStokForm({ itemToSell, onSuccess, onClose, isEditMode = false, init
         catatan: initialListingData.catatan || ''
       });
     }
-  }, [isEditMode, initialListingData]);
+  }, [initialListingData, isEditMode]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,99 +28,48 @@ function ListStokForm({ itemToSell, onSuccess, onClose, isEditMode = false, init
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    const jumlahDitawarkanNum = Number(formData.jumlahDitawarkan);
-    const hargaPerUnitNum = Number(formData.hargaPerUnit);
-
-    if (!formData.jumlahDitawarkan || !formData.hargaPerUnit) {
-      showErrorToast("Jumlah dan Harga per Unit wajib diisi.");
-      return;
-    }
-    if (jumlahDitawarkanNum <= 0 || hargaPerUnitNum < 0) {
-      showErrorToast("Jumlah dan Harga harus angka positif.");
-      return;
-    }
-    
-    const stokTersedia = isEditMode ? (initialListingData.stokTersedia || jumlahDitawarkanNum) : itemToSell.jumlah;
-    if (jumlahDitawarkanNum > Number(stokTersedia)) {
-      showErrorToast(`Jumlah yang ditawarkan (${jumlahDitawarkanNum}) tidak boleh melebihi stok yang tersedia (${stokTersedia}).`);
-      return;
-    }
-
     setIsSubmitting(true);
     try {
-        if (isEditMode) {
-            await updateMyListing(initialListingData.id, formData);
-            showSuccessToast('Listing berhasil diperbarui!');
-        } else {
-            const listingData = { itemId: itemToSell.id, ...formData };
-            await createListing(listingData);
-            showSuccessToast(`"${itemToSell.namaBarang}" berhasil dilisting di StockShare!`);
-        }
-        onSuccess();
+      if (isEditMode) {
+        await updateMyListing(initialListingData.id, formData);
+        showSuccessToast('Listing berhasil diperbarui!');
+      } else {
+        const listingData = { itemId: itemToSell.id, ...formData };
+        await createListing(listingData);
+        showSuccessToast(`"${itemToSell.namaBarang}" berhasil dilisting di StockShare!`);
+      }
+      onSuccess();
     } catch (err) {
-      console.error("Gagal menyimpan listing:", err);
-      showErrorToast(err.response?.data?.message || "Gagal menyimpan listing.");
+      showErrorToast(err.response?.data?.message || 'Gagal menyimpan perubahan.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="list-stok-form profesional">
-      {!isEditMode && itemToSell && (
-        <div className="item-info-header">
-            <span className="info-header-label">Menawarkan Barang</span>
-            <span className="info-header-value">{itemToSell.namaBarang}</span>
-            <span className="info-header-subtext">Stok Tersedia: {itemToSell.jumlah} {itemToSell.satuan}</span>
-        </div>
-      )}
-       {isEditMode && initialListingData && (
-        <div className="item-info-header">
-            <span className="info-header-label">Mengedit Listing</span>
-            <span className="info-header-value">{initialListingData.namaBarang}</span>
-        </div>
-      )}
+  const displayData = isEditMode ? initialListingData : itemToSell;
 
-      <div className="form-row two-columns">
-        <div className="form-group-flex">
-          <label htmlFor="jumlahDitawarkan">Jumlah Ditawarkan*</label>
-          <input 
-            type="number" 
-            id="jumlahDitawarkan" 
-            name="jumlahDitawarkan" 
-            value={formData.jumlahDitawarkan} 
-            onChange={handleChange} 
-            required 
-          />
+  return (
+    <form onSubmit={handleSubmit} className="list-stok-form">
+      <div className="item-to-sell-info">
+        <span className="info-label">{isEditMode ? "Mengedit Listing" : "Menawarkan Barang"}</span>
+        <strong className="info-item-name">{displayData?.namaBarang}</strong>
+        {!isEditMode && <small>Stok Tersedia : {displayData?.jumlah} {displayData?.satuan}</small>}
+      </div>
+
+      <div className="form-row-list">
+        <div className="form-group-list">
+            <label htmlFor="jumlahDitawarkan">Jumlah yang Ditawarkan</label>
+            <input type="number" id="jumlahDitawarkan" name="jumlahDitawarkan" value={formData.jumlahDitawarkan} onChange={handleChange} required />
         </div>
-        <div className="form-group-flex">
-          <label htmlFor="hargaPerUnit">Harga Jual per {isEditMode ? initialListingData.satuan : itemToSell.satuan}*</label>
-          <input 
-            type="number" 
-            id="hargaPerUnit" 
-            name="hargaPerUnit"
-            step="1" 
-            value={formData.hargaPerUnit} 
-            onChange={handleChange} 
-            placeholder="Contoh: 55000"
-            required 
-          />
+        <div className="form-group-list">
+            <label htmlFor="hargaPerUnit">Harga Jual / {displayData?.satuan}</label>
+            <input type="number" id="hargaPerUnit" name="hargaPerUnit" value={formData.hargaPerUnit} onChange={handleChange} required />
         </div>
       </div>
       
-      <div className="form-row">
-        <div className="form-group-flex">
-          <label htmlFor="catatan">Catatan</label>
-          <textarea 
-            id="catatan" 
-            name="catatan" 
-            rows="3" 
-            value={formData.catatan} 
-            onChange={handleChange}
-            placeholder="Contoh: Kondisi baru, nego tipis, kadaluwarsa 1 tahun lagi, dll."
-          ></textarea>
-        </div>
+       <div className="form-group-list">
+          <label htmlFor="catatan">Catatan (Opsional)</label>
+          <textarea id="catatan" name="catatan" rows="3" value={formData.catatan} onChange={handleChange}></textarea>
       </div>
 
       <div className="form-actions">
