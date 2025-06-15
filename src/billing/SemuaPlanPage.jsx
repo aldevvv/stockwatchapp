@@ -11,8 +11,8 @@ function SemuaPlanPage() {
     const currentUserPlanLevel = user ? planHierarchy[user.plan] : 0;
 
     const plans = [
-        { name: 'Free', price: 'Rp 0', period: '/ selamanya', description: 'Untuk memulai dan mencoba fitur dasar.', features: ['5 Stok', '5 Supplier', '5 Produk', 'Notifikasi via Email', 'Fitur StockShare'], ctaLink: '#', level: 0 },
-        { name: 'Basic', price: 'Rp 10.000', period: '/ bulan', description: 'Untuk UMKM yang mulai berkembang.', features: ['Semua Fitur Free', '25 Stok', '25 Supplier', '25 Produk', 'Notifikasi WhatsApp & Email'], ctaLink: '/upgrade-plan/Basic', level: 1 },
+        { name: 'Free', price: 'Rp 0', period: '/ selamanya', description: 'Untuk memulai dan mencoba fitur dasar.', features: ['10 Stok', '10 Produk', '5 Supplier', 'Notifikasi via Email', 'Fitur StockShare'], ctaLink: '#', level: 0 },
+        { name: 'Basic', price: 'Rp 10.000', period: '/ bulan', description: 'Untuk UMKM yang mulai berkembang.', features: ['Semua Fitur Free', '75 Stok', '75 Produk', '50 Supplier', 'Notifikasi WhatsApp & Email'], ctaLink: '/upgrade-plan/Basic', level: 1 },
         { name: 'Pro', price: 'Rp 25.000', period: '/ bulan', description: 'Solusi lengkap untuk efisiensi maksimal.', features: ['Semua Fitur Basic','Unlimited Stok', 'Unlimited Supplier', 'Unlimited Produk', 'Notifikasi Whatsapp & Email', 'Dukungan Prioritas'], ctaLink: '/upgrade-plan/Pro', isPopular: true, level: 2 },
         { name: 'Enterprise', price: 'Kustom', period: '', description: 'Untuk bisnis skala besar dengan kebutuhan spesifik.', features: ['Semua Fitur Pro', 'Integrasi API', 'Dukungan SLA Penuh', 'Fitur Kustom'], ctaLink: '/stock-dashboard', level: 3 },
     ];
