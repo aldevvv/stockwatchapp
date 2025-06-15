@@ -3,7 +3,7 @@ import cors from 'cors';
 import authRoutes from './auth/auth.routes.js';
 import stokRoutes from './stok/stok.routes.js'; 
 import userRoutes from './user/user.routes.js';
-import './scheduler/index.js'; 
+import initializeSchedulers from './scheduler/index.js';
 import supplierRoutes from './supplier/supplier.routes.js'; 
 import adminRoutes from './admin/admin.routes.js'; 
 import stockshareRoutes from './stockshare/stockshare.routes.js';
@@ -12,8 +12,6 @@ import historyRoutes from './history/history.routes.js'; // <-- PASTIKAN BARIS I
 import produkRoutes from './produk/produk.routes.js';
 import penjualanRoutes from './penjualan/penjualan.routes.js';
 import billingRoutes from './billing/billing.routes.js';
-
-
 
 
 
@@ -46,4 +44,6 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Server backend berjalan di http://localhost:${PORT}`);
+  initializeSchedulers();
+
 });

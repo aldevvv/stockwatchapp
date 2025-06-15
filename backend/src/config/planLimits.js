@@ -4,7 +4,6 @@ export const PLAN_LIMITS = {
     produk: 10,
     supplier: 5,
     notifikasi: ['Email'],
-    // Tambahkan batasan lain di sini
   },
   Basic: {
     stok: 50,

@@ -3,7 +3,7 @@ import { checkStockAndSendNotifications } from '../services/notification.service
 import { checkAndDowngradePlans } from '../billing/billing.controller.js';
 
 const initializeSchedulers = () => {
-  cron.schedule('*/5 * * * *', () => {
+  cron.schedule('* * * * *', () => {
     console.log('Menjalankan scheduler notifikasi stok...');
     checkStockAndSendNotifications();
   });
