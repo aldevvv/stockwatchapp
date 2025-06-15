@@ -1,0 +1,27 @@
+.redeem-card {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+.redeem-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.redeem-form label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #374151;
+}
+.redeem-form input {
+    padding: 0.8rem 1rem;
+    font-size: 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+}
+.redeem-form button {
+    justify-content: center;
+}

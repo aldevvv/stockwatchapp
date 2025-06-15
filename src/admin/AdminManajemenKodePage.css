@@ -1,0 +1,37 @@
+.redeem-code-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 400px;
+}
+.redeem-code-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.redeem-code-form label {
+    font-weight: 500;
+}
+.redeem-code-form input[type="number"] {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.redeem-code-form .form-group-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.redeem-code-form .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+.code-text {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 600;
+    color: #16a34a;
+}

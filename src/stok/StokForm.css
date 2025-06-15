@@ -1,0 +1,117 @@
+.stok-form.profesional {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 0.5rem;
+}
+
+.stok-form.profesional .form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.stok-form.profesional .form-row.two-columns {
+  flex-direction: row;
+  gap: 1.5rem;
+}
+
+.stok-form.profesional .form-group-flex {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  gap: 0.3rem;
+}
+
+.stok-form.profesional label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.stok-form.profesional input[type="text"],
+.stok-form.profesional input[type="number"],
+.stok-form.profesional select,
+.stok-form.profesional textarea {
+  width: 100%;
+  padding: 0.8rem 0.75rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  box-sizing: border-box;
+  font-size: 1rem;
+  background-color: #fff;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.stok-form.profesional select {
+  min-height: calc(1.5em + 1.6rem + 2px);
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23555%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+  background-repeat: no-repeat;
+  background-position: right .9rem center;
+  background-size: .55em auto;
+  padding-right: 2.5rem;
+}
+.stok-form.profesional select:disabled {
+    background-color: #e9ecef;
+    opacity: 0.7;
+}
+
+.stok-form.profesional input:focus,
+.stok-form.profesional select:focus,
+.stok-form.profesional textarea:focus {
+  border-color: #16a34a;
+  box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+  outline: none;
+}
+
+.stok-form.profesional .form-group-separator {
+  margin: 1rem 0 0.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e0e0e0;
+}
+.stok-form.profesional .form-group-separator label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #16a34a;
+}
+
+.stok-form.profesional .form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.stok-form.profesional .button-cancel,
+.stok-form.profesional .button-submit {
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.25rem;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+}
+
+.stok-form.profesional .button-submit {
+  background-color: #16a34a;
+  color: white;
+}
+.stok-form.profesional .button-submit:hover:not(:disabled) {
+  background-color: #15803d;
+}
+.stok-form.profesional .button-submit:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.stok-form.profesional .button-cancel {
+  background-color: #6c757d;
+  color: white;
+}
+.stok-form.profesional .button-cancel:hover {
+  background-color: #5a6268;
+}

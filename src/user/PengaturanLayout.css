@@ -1,0 +1,50 @@
+.pengaturan-layout {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+}
+
+.pengaturan-nav {
+    flex: 0 0 220px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.pengaturan-nav .nav-link {
+    display: block;
+    padding: 0.75rem 1rem;
+    text-decoration: none;
+    color: #374151;
+    font-weight: 500;
+    border-radius: 6px;
+    margin-bottom: 0.5rem;
+    transition: background-color 0.2s, color 0.2s;
+}
+
+.pengaturan-nav .nav-link:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.pengaturan-nav .nav-link.active {
+    background-color: #16a34a;
+    color: #ffffff;
+}
+
+.pengaturan-content {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 768px) {
+    .pengaturan-layout {
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .pengaturan-nav {
+        width: 100%;
+        flex-basis: auto;
+    }
+}

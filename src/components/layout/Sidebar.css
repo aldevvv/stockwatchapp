@@ -1,0 +1,188 @@
+.sidebar {
+  width: 260px;
+  background-color: #ffffff;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border-right: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  transition: width 0.3s ease-in-out, transform 0.3s ease-in-out; /* <-- TAMBAHKAN BARIS INI */
+
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.25rem;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+.sidebar-logo-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.sidebar-logo-img {
+  height: 38px;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 1rem;
+  margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.menu-item {
+  margin-bottom: 0.25rem;
+}
+
+
+.menu-item > a, .menu-item > button {
+  display: flex;
+  align-items: center;
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.95rem;
+  color: #374151;
+  font-weight: 500;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color 0.2s, color 0.2s;
+  white-space: nowrap;
+}
+
+.menu-item > a:hover, .menu-item > button:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+.menu-item > a.active, 
+.menu-item.submenu-open > button {
+  background-color: #16a34a;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.menu-item > a.active .menu-icon svg, 
+.menu-item.submenu-open > button .menu-icon svg {
+  stroke: #ffffff;
+}
+
+.menu-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  min-width: 32px;
+  flex-shrink: 0;
+  margin-right: 0.8rem;
+}
+
+.submenu-arrow {
+  margin-left: auto;
+  transition: transform 0.3s ease;
+}
+
+.menu-item.submenu-open .submenu-arrow {
+    transform: rotate(90deg);
+}
+
+.submenu-container-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease-in-out;
+  position: relative;
+  z-index: 10;
+  pointer-events: none;
+}
+.menu-item.submenu-open .submenu-container-wrapper {
+  max-height: 200px;
+  overflow: visible;
+  pointer-events: auto;
+}
+.submenu-container {
+    list-style: none;
+    padding: 0.5rem 0 0 1.25rem;
+    margin: 0;
+}
+.submenu-item a {
+  display: block;
+  padding: 0.6rem 0.6rem 0.6rem 2.8rem;
+  color: #4b5563;
+  font-size: 0.9rem;
+  text-decoration: none;
+  border-radius: 4px;
+  position: relative;
+  white-space: nowrap;
+}
+.submenu-item a::before {
+  content: '';
+  position: absolute;
+  left: 1.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  background-color: #d1d5db;
+  border-radius: 50%;
+}
+.submenu-item a:hover {
+  color: #111827;
+}
+.submenu-item a.active {
+  color: #16a34a;
+  font-weight: 600;
+}
+.submenu-item a.active::before {
+    background-color: #16a34a;
+}
+
+.sidebar-mobile-close-btn {
+  display: none; 
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    box-shadow: 0 0 40px rgba(0,0,0,0.1);
+    width: 260px;
+  }
+  .sidebar.open {
+    transform: translateX(0);
+    box-shadow: 0 0 40px rgba(0,0,0,0.1);
+
+  }
+  .sidebar-mobile-close-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 1rem;
+    right: 1.25rem;
+    background: none;
+    border: none;
+    color: #6b7280;
+    padding: 0.25rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+  .sidebar-mobile-close-btn svg {
+      width: 28px;
+      height: 28px;
+  }
+}
+

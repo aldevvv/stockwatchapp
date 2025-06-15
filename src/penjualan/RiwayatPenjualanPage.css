@@ -1,0 +1,113 @@
+.filters-container {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 220px;
+}
+
+.filter-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #4b5563;
+}
+
+.filter-group select,
+.filter-group input {
+  padding: 0.7rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+.filter-group select:focus,
+.filter-group input:focus {
+  outline: none;
+  border-color: #16a34a;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+}
+
+.filters-container .button-add, 
+.filters-container .button-secondary {
+  height: fit-content;
+  white-space: nowrap;
+  flex-shrink: 0;
+  text-align: center;
+  justify-content: center;
+}
+
+.pagination-controls {
+    justify-content: center;
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.5rem;
+    
+}
+
+.kpi-cards-container {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+.kpi-cards-container h3 {
+  text-transform: none;
+  font-size: 1rem;
+}
+.kpi-cards-container p {
+  font-size: 1.5rem;
+}
+.kpi-cards-container.safe p {
+  color: #16a34a;
+}
+
+@media (min-width: 992px) {
+  .kpi-cards-container {
+    /* pastikan masih grid */
+    display: grid;
+
+    /* paksa 4 kolom dengan lebar sama */
+    grid-template-columns: repeat(4, 1fr) !important;
+
+    /* isi baris per baris */
+    grid-auto-flow: row;
+  }
+}
+
+
+.table-title {
+  font-size: 1.2rem;
+  color: #1f2937;
+  margin: 0;
+  padding: 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.laba-positive {
+  color: #15803d;
+  font-weight: 600;
+}
+
+.data-table .items-cell {
+  white-space: normal;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+@media (max-width: 768px) {
+  .filters-container {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .filters-container .filter-group {
+    flex-basis: auto;
+  }
+}

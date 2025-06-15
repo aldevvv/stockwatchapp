@@ -1,0 +1,146 @@
+.billing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+.billing-card {
+    background-color: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+}
+
+.billing-card .card-title {
+    font-size: 1rem;
+    color: #4b5563;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin: 0 0 0.5rem 0;
+    font-weight: 600;
+}
+
+.plan-name, 
+.saldo-amount, 
+.plan-duration {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+}
+.plan-name { color: #16a34a; }
+.saldo-amount { color: #1f2937; }
+.plan-duration { color: #1f2937; }
+
+.card-actions {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f3f4f6;
+    min-height: 52px;
+}
+
+.card-actions .button-add,
+.card-actions .button-detail-plan {
+    width: 100%;
+    justify-content: center;
+}
+
+.button-detail-plan {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    color: #374151;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    padding: 0.8rem;
+    border-radius: 6px;
+    width: 100%;
+    transition: all 0.2s ease;
+}
+.button-detail-plan:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.table-title {
+    font-size: 1.2rem;
+    padding: 0 0 1rem 0;
+}
+
+.saldo-positive {
+    color: #15803d;
+    font-weight: 600;
+}
+.saldo-negative {
+    color: #ef4444;
+    font-weight: 600;
+}
+
+.plan-detail-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+.plan-detail-list li {
+    padding-left: 1.75rem;
+    position: relative;
+    margin-bottom: 0.75rem;
+    font-size: 1rem;
+}
+.plan-detail-list li::before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    top: 1px;
+    color: #16a34a;
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+/* --- Styling untuk Progress Bar di Modal --- */
+
+.modal-body-billing .usage-item {
+    margin-bottom: 1.25rem;
+}
+.modal-body-billing .usage-item:last-child {
+    margin-bottom: 0;
+}
+
+.modal-body-billing .usage-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: #4b5563;
+}
+.modal-body-billing .usage-label span:last-child {
+    font-weight: 600;
+    color: #1f2937;
+}
+
+.modal-body-billing .progress-bar {
+    height: 8px;
+    width: 100%;
+    background-color: #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.modal-body-billing .progress {
+    height: 100%;
+    background-color: #22c55e;
+    border-radius: 4px;
+    transition: width 0.5s ease-in-out;
+}
+
+@media (min-width: 768px) {
+    .billing-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}

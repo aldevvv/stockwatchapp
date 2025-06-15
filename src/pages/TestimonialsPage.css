@@ -1,0 +1,119 @@
+@keyframes animatedGreenGradient {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.testimonials-page-container {
+  padding: 80px 0;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #ffffff;
+  background: linear-gradient(135deg, #1e3a8a, #16a34a, #22c55e, #3b82f6);
+  background-size: 400% 400%;
+  animation: animatedGreenGradient 20s ease infinite;
+  overflow-x: hidden;
+}
+
+.testimonials-header {
+  text-align: center;
+  margin: 0 auto 4rem auto;
+  max-width: 700px;
+  padding: 0 20px;
+}
+
+.testimonials-header h1 {
+  font-size: 2.8rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.25);
+}
+
+.testimonials-header p {
+  font-size: 1.1rem;
+  color: #dcfce7;
+  line-height: 1.6;
+}
+
+.testimonials-marquee-container {
+  width: 100%;
+  position: relative;
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.testimonials-track {
+  display: flex;
+  width: calc(350px * 10);
+  animation: marquee 40s linear infinite;
+}
+.testimonials-track:hover {
+    animation-play-state: paused;
+}
+
+.testimonial-card {
+  width: 320px;
+  flex-shrink: 0;
+  background: rgba(255, 255, 255, 0.98);
+  color: #1f2937;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  margin: 0 15px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.testimonial-quote {
+  font-size: 1.1rem;
+  font-style: italic;
+  line-height: 1.6;
+  margin: 0 0 1.5rem 0;
+  flex-grow: 1;
+  color: #4b5563;
+  border-left: 3px solid #16a34a;
+  padding-left: 1rem;
+}
+
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: auto;
+}
+
+.author-img {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #16a34a;
+}
+
+.author-info {
+  text-align: left;
+}
+
+.author-name {
+  display: block;
+  font-weight: 700;
+  font-style: normal;
+  color: #111827;
+}
+
+.author-role {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+@media (max-width: 768px) {
+    .testimonials-track {
+        animation-duration: 30s;
+    }
+}

@@ -1,0 +1,241 @@
+.pos-page {
+  display: flex;
+  height: calc(100vh - 60px);
+  background-color: #f9fafb;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.produk-panel {
+  flex: 1 1 55%;
+  background-color: #f3f4f6;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-right: 1px solid #e5e7eb;
+}
+
+.cart-panel {
+  flex: 1 1 45%;
+  max-width: 450px;
+  display: flex;
+  flex-direction: column;
+  background-color: #ffffff;
+}
+
+.panel-header {
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  background-color: #ffffff;
+}
+
+.panel-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+  color: #1f2937;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    margin-top: 1rem;
+    position: relative;
+}
+
+.search-box svg {
+    position: absolute;
+    left: 0.85rem;
+    color: #9ca3af;
+    pointer-events: none;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.75rem 0.75rem 0.75rem 2.75rem;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+.search-box input:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+}
+
+.produk-grid {
+  padding: 1.5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  gap: 1rem;
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.produk-card {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1rem;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+.produk-card:hover {
+  border-color: #16a34a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.produk-name {
+  font-weight: 600;
+  color: #111827;
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+.produk-price {
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.cart-items {
+  flex-grow: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #f9fafb;
+}
+
+.cart-empty {
+    text-align: center;
+    color: #6b7280;
+    margin-top: 2rem;
+    padding: 2rem;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #ffffff;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #e5e7eb;
+}
+
+.item-details .item-name {
+  display: block;
+  font-weight: 600;
+  color: #1f2937;
+}
+.item-details .item-price {
+    font-size: 0.9rem;
+    color: #6b7280;
+}
+
+.item-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.item-controls button {
+    background-color: #f3f4f6;
+    border: 1px solid #e5e7eb;
+    border-radius: 50%;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: #374151;
+    transition: all 0.2s ease;
+}
+.item-controls button:hover {
+    background-color: #e5e7eb;
+}
+.item-controls .item-qty {
+    font-weight: 500;
+    width: 24px;
+    text-align: center;
+    font-size: 1rem;
+}
+.item-controls .remove-btn {
+    background: none;
+    border: none;
+}
+.item-controls .remove-btn:hover svg {
+    color: #ef4444;
+}
+
+.cart-summary {
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    background-color: #ffffff;
+}
+
+.summary-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.summary-row.total {
+    font-weight: bold;
+    font-size: 1.2rem;
+    color: #111827;
+    border-top: 1px dashed #d1d5db;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+
+.summary-row.total span:last-child {
+    color: #16a34a;
+}
+
+.button-save-transaction {
+    width: 100%;
+    background-color: #16a34a;
+    color: white;
+    padding: 0.9rem;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: background-color 0.2s ease;
+}
+.button-save-transaction:hover:not(:disabled) {
+    background-color: #15803d;
+}
+.button-save-transaction:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+@media (max-width: 992px) {
+    .pos-page {
+        flex-direction: column;
+        height: auto;
+    }
+    .produk-panel, .cart-panel {
+        flex-basis: auto;
+        max-width: 100%;
+    }
+    .cart-panel {
+        height: 50vh;
+    }
+}
+
+@media (max-width: 768px) {
+    .produk-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+}
