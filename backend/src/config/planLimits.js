@@ -6,9 +6,9 @@ export const PLAN_LIMITS = {
     notifikasi: ['Email'],
   },
   Basic: {
-    stok: 50,
-    produk: 50,
-    supplier: 25,
+    stok: 75,
+    produk: 75,
+    supplier: 50,
     notifikasi: ['Email', 'WhatsApp'],
   },
   Pro: {
