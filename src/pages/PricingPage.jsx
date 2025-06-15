@@ -53,6 +53,7 @@ function PricingPage() {
       ctaLink: '/register',
       isPopular: true,
     },
+    
     {
       name: 'Enterprise',
       price: 'Kustom',
