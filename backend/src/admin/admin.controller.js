@@ -219,3 +219,63 @@ export const deleteRedeemCode = async (req, res) => {
         res.status(500).json({ message: "Gagal menghapus kode." });
     }
 };
+
+export const manageUserAccount = async (req, res) => {
+    try {
+        const { targetUserId } = req.params;
+        const { plan, sisaDurasi, saldo, catatan } = req.body;
+
+        if (!targetUserId) {
+            return res.status(400).json({ message: "User ID target dibutuhkan." });
+        }
+        
+        const profileRef = db.ref(`users/${targetUserId}/profile`);
+        const snapshot = await profileRef.once('value');
+        if (!snapshot.exists()) {
+            return res.status(404).json({ message: "Pengguna tidak ditemukan." });
+        }
+        const currentProfile = snapshot.val();
+        
+        const updates = {};
+        
+        if (plan) {
+            updates[`users/${targetUserId}/profile/plan`] = plan;
+            if (plan === 'Free') {
+                updates[`users/${targetUserId}/profile/planExpiry`] = null;
+            } else if (sisaDurasi !== undefined && sisaDurasi !== null) {
+                const durationMs = Number(sisaDurasi) * 24 * 60 * 60 * 1000;
+                updates[`users/${targetUserId}/profile/planExpiry`] = Date.now() + durationMs;
+            }
+        }
+
+        if (saldo !== undefined && saldo !== null) {
+            const saldoSebelum = currentProfile.saldo || 0;
+            const saldoBaru = Number(saldo);
+            const perubahanSaldo = saldoBaru - saldoSebelum;
+
+            if (perubahanSaldo !== 0) {
+                updates[`users/${targetUserId}/profile/saldo`] = saldoBaru;
+                const historyRef = db.ref(`saldoHistory/${targetUserId}`).push();
+                const historyData = {
+                    id: historyRef.key,
+                    tanggal: Date.now(),
+                    deskripsi: catatan || `Penyesuaian saldo oleh admin`,
+                    jumlah: perubahanSaldo,
+                    tipe: perubahanSaldo > 0 ? 'debit' : 'expense'
+                };
+                // --- PERBAIKAN DI SINI ---
+                updates[`saldoHistory/${targetUserId}/${historyRef.key}`] = historyData;
+            }
+        }
+
+        if (Object.keys(updates).length > 0) {
+            await db.ref().update(updates);
+            res.status(200).json({ message: `Akun ${currentProfile.namaLengkap} berhasil diperbarui.` });
+        } else {
+            res.status(200).json({ message: "Tidak ada perubahan yang disimpan." });
+        }
+    } catch (error) {
+        console.error("Error managing user account:", error);
+        res.status(500).json({ message: "Gagal memperbarui akun pengguna." });
+    }
+};

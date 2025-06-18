@@ -9,7 +9,8 @@ import {
     createRedeemCode,
     getAllRedeemCodes,
     updateRedeemCode,
-    deleteRedeemCode
+    deleteRedeemCode,
+    manageUserAccount
 } from './admin.controller.js';
 
 const router = express.Router();
@@ -21,6 +22,7 @@ router.get('/stats', getPlatformStats);
 router.get('/users', getAllUsersProfiles);
 router.get('/users/:targetUserId/details', getUserDetailsForAdmin);
 router.post('/users/add-saldo', addSaldoToUser);
+router.put('/users/:targetUserId/manage', manageUserAccount);
 
 router.post('/redeem-codes', createRedeemCode);
 router.get('/redeem-codes', getAllRedeemCodes);
