@@ -1,13 +1,15 @@
 import db from '../config/firebase.js';
 import { v4 as uuidv4 } from 'uuid';
-
+import { checkAndAwardAchievements } from '../achievements/achievement.service.js';
 export const createTransaksi = async (req, res) => {
     try {
         const userId = req.user.id;
         const { items, totalPenjualan, totalModal, laba, catatan } = req.body;
+
         if (!items || !Array.isArray(items) || items.length === 0 || totalPenjualan === undefined || totalModal === undefined || laba === undefined) {
             return res.status(400).send({ message: "Data transaksi tidak lengkap." });
         }
+
         const transaksiId = uuidv4();
         const newTransaksi = {
             id: transaksiId,
@@ -18,9 +20,28 @@ export const createTransaksi = async (req, res) => {
             laba: Number(laba),
             catatan: catatan || ''
         };
+
+        // Save the transaction to the database
         await db.ref(`penjualan/${userId}/${transaksiId}`).set(newTransaksi);
-        res.status(201).send({ message: "Transaksi berhasil dicatat.", data: newTransaksi });
+
+        // --- Additional Logic ---
+        // 1. Update user statistics
+        const userStatsRef = db.ref(`userStats/${userId}/transactionCount`);
+        await userStatsRef.transaction((currentCount) => {
+            return (currentCount || 0) + 1;
+        });
+
+        // 2. Check and award achievements
+        const unlockedAchievements = await checkAndAwardAchievements(userId, 'TRANSACTION_COUNT');
+
+        // Send the response
+        res.status(201).send({
+            message: "Transaksi berhasil dicatat.",
+            data: newTransaksi,
+            unlockedAchievements // Send new achievements to the frontend
+        });
     } catch (error) {
+        console.error("Error creating transaksi:", error);
         res.status(500).send({ message: "Gagal mencatat transaksi.", error: error.message });
     }
 };

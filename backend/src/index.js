@@ -12,6 +12,9 @@ import historyRoutes from './history/history.routes.js'; // <-- PASTIKAN BARIS I
 import produkRoutes from './produk/produk.routes.js';
 import penjualanRoutes from './penjualan/penjualan.routes.js';
 import billingRoutes from './billing/billing.routes.js';
+import achievementRoutes from './achievements/achievement.routes.js';
+import leaderboardRoutes from './leaderboard/leaderboard.routes.js';
+
 
 
 
@@ -33,6 +36,10 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/produk', produkRoutes);
 app.use('/api/penjualan', penjualanRoutes);
 app.use('/api/billing', billingRoutes);
+app.use('/api/achievements', achievementRoutes);
+app.use('/api/leaderboard', leaderboardRoutes);
+
+
 
 
 
