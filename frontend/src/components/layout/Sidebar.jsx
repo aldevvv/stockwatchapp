@@ -51,6 +51,9 @@ const CloseIcon = () => (
   </svg>
 );
 
+const TrophyIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"></path><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"></path><path d="M4 22h16"></path><line x1="10" y1="14.5" x2="14" y2="14.5"></line><line x1="12" y1="22" x2="12" y2="14.5"></line><path d="M15.5 14.5A3.5 3.5 0 0 0 19 11V9H5v2a3.5 3.5 0 0 0 3.5 3.5"></path></svg>;
+
+
 function Sidebar({ isOpen, toggleSidebar }) {
   const location = useLocation();
   const [openMenu, setOpenMenu] = useState(null);
@@ -80,6 +83,11 @@ function Sidebar({ isOpen, toggleSidebar }) {
     { name: 'Billing', icon: <BillingIcon />, subMenus: [
       { name: 'Langganan & Saldo', path: '/billing' },
       { name: 'Semua Paket', path: '/semua-plan' }]},
+
+    { name: 'Leaderboard', icon: <TrophyIcon />, subMenus: [
+      { name: 'Achievements', path: '/achievements' },
+      { name: 'Leaderboard', path: '/leaderboard'}]},
+  
 
     { name: 'Redeem Kode', icon: <GiftIcon />, subMenus: [
       { name: 'Redeem Kode', path: '/redeem-kode' }]},

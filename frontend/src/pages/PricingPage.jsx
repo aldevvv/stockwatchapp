@@ -10,9 +10,9 @@ function PricingPage() {
       period: '/ selamanya',
       description: 'Cocok untuk memulai dan mencoba fitur dasar StockWatch.',
       features: [
-        '7 Stok',
+        '10 Stok',
+        '10 Produk',
         '5 Supplier',
-        '5 Produk',
         'Notifikasi via Email',
         'Fitur StockShare',
       ],
@@ -26,9 +26,9 @@ function PricingPage() {
       period: '/ bulan',
       description: 'Untuk UMKM yang mulai berkembang dan butuh kontrol lebih.',
       features: [
-        '25 Stok',
-        '25 Supplier',
-        '25 Produk',
+        '75 Stok',
+        '75 Produk',
+        '50 Supplier',
         'Notifikasi via Whatsapp & Email',
         'Dukungan Komunitas',
       ],
@@ -53,6 +53,7 @@ function PricingPage() {
       ctaLink: '/register',
       isPopular: true,
     },
+    
     {
       name: 'Enterprise',
       price: 'Kustom',

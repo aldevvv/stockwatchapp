@@ -31,3 +31,7 @@ export const updateRedeemCode = (codeId, codeData) => {
 export const deleteRedeemCode = (codeId) => {
     return api.delete(`/admin/redeem-codes/${codeId}`);
 };
+
+export const manageUserAccount = (targetUserId, updateData) => {
+    return api.put(`/admin/users/${targetUserId}/manage`, updateData);
+};

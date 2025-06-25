@@ -14,7 +14,7 @@ function AdminSidebar({ isOpen, toggleSidebar }) {
 
   const menuGroups = useMemo(() => [
     { name: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
-    { name: 'Kelola Pengguna', icon: <UsersIcon />, subMenus: [ { name: 'Daftar Pengguna', path: '/admin/manajemen-pengguna' }, { name: 'Tambah Saldo', path: '/admin/tambah-saldo' } ] },
+    { name: 'Kelola Pengguna', icon: <UsersIcon />, subMenus: [ { name: 'Daftar Pengguna', path: '/admin/manajemen-pengguna' }, { name: 'Kelola Billing', path: 'admin/edit-pengguna'}, { name: 'Tambah Saldo', path: '/admin/tambah-saldo' } ] },
     { name: 'Kelola Hadiah', icon: <RedeemIcon />, subMenus: [ { name: 'Redeem Kode', path: '/admin/kode-redeem' } ] },
   ], []);
 

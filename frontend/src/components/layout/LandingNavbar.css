@@ -170,15 +170,12 @@
     border-radius: 4px;
     transition: color 0.3s ease;
     
-    /* --- TAMBAHKAN BLOK INI --- */
-    position: absolute; /* Posisikan tombol secara absolut */
-    right: 15px; /* Jarak dari ujung kanan */
+    position: absolute; 
+    right: 15px; 
     top: 50%;
-    transform: translateY(-50%); /* Trik untuk menengahkan secara vertikal */
-    /* -------------------------- */
+    transform: translateY(-50%); 
   }
   
-  /* Mengembalikan display flex di mobile */
   .navbar-links {
     display: none; 
     flex-direction: column;
@@ -202,7 +199,7 @@
     width: 100%;
     gap: 0;
     margin-bottom: 1.5rem;
-    margin: 0 0 1rem 0; /* Atur margin agar ada jarak ke tombol di bawahnya */
+    margin: 0 0 1rem 0; 
 
   }
 

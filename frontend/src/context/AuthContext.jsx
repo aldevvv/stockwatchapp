@@ -13,11 +13,10 @@ export function AuthProvider({ children }) {
     try {
       const storedUser = localStorage.getItem('user');
       return storedUser ? JSON.parse(storedUser) : null;
-    } catch (error) {
-      return null;
-    }
+    } catch (error) { return null; }
   });
   const [token, setToken] = useState(localStorage.getItem('token'));
+  const [isLoadingUser, setIsLoadingUser] = useState(true);
 
   useEffect(() => {
     if (token) {
@@ -26,6 +25,7 @@ export function AuthProvider({ children }) {
     } else {
       delete api.defaults.headers.common['Authorization'];
       localStorage.removeItem('token');
+      localStorage.removeItem('user');
     }
   }, [token]);
 
@@ -38,34 +38,34 @@ export function AuthProvider({ children }) {
   const logout = useCallback(() => {
     setToken(null);
     setUser(null);
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
   }, []);
 
   const refreshUserData = useCallback(async () => {
-    if (!token) return;
+    if (!token) {
+      setIsLoadingUser(false);
+      return;
+    }
     try {
       const response = await getUserProfile();
       const updatedProfile = response.data.data;
-      
       setUser(currentAuthUser => {
         const newUserData = { ...currentAuthUser, ...updatedProfile };
         localStorage.setItem('user', JSON.stringify(newUserData));
         return newUserData;
       });
-
     } catch (error) {
-      console.error("Gagal refresh data pengguna, kemungkinan token kedaluwarsa.", error);
-      logout();
+      console.error("Sesi tidak valid, token akan dihapus oleh interceptor.", error);
+    } finally {
+      setIsLoadingUser(false);
     }
-  }, [token, logout]);
+  }, [token]);
 
   useEffect(() => {
     refreshUserData();
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, refreshUserData }}>
+    <AuthContext.Provider value={{ user, token, login, logout, refreshUserData, isLoadingUser }}>
       {children}
     </AuthContext.Provider>
   );

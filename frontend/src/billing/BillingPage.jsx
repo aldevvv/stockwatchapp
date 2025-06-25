@@ -13,8 +13,8 @@ import './BillingPage.css';
 const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
 
 const PLAN_LIMITS_FRONTEND = {
-  Free: { stok: 7, produk: 5, supplier: 5 },
-  Basic: { stok: 25, produk: 25, supplier: 25 },
+  Free: { stok: 10, produk: 10, supplier: 5 },
+  Basic: { stok: 75, produk: 75, supplier: 50 },
   Pro: { stok: Infinity, produk: Infinity, supplier: Infinity },
   Enterprise: { stok: Infinity, produk: Infinity, supplier: Infinity },
 };

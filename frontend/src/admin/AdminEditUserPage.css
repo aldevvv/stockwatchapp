@@ -1,0 +1,67 @@
+.form-container-card {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.edit-user-form {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.edit-user-form .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.edit-user-form .form-group {
+    flex: 1 1 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.edit-user-form label,
+.form-container-card > .form-group > label {
+    font-weight: 500;
+    font-size: 0.9rem;
+    color: #374151;
+}
+
+.edit-user-form input,
+.edit-user-form select,
+.form-container-card select {
+    padding: 0.8rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+}
+
+.edit-user-form input:focus,
+.edit-user-form select:focus,
+.form-container-card select:focus {
+    outline: none;
+    border-color: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+}
+
+.edit-user-form input:disabled {
+    background-color: #f3f4f6;
+    cursor: not-allowed;
+}
+
+.edit-user-form .button-add {
+    margin-top: 1rem;
+    justify-content: center;
+}

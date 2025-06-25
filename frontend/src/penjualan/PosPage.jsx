@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { getAllProduk } from '../produk/produkService';
 import { createTransaksi } from './penjualanService';
 import { showErrorToast, showSuccessToast } from '../utils/toastHelper';
+import { useAchievements } from '../context/AchievementContext';
 import './PosPage.css';
 
 const SearchIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>;
@@ -15,6 +16,7 @@ function PosPage() {
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const { showAchievement } = useAchievements();
 
     const formatRupiah = (angka) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka || 0);
 
@@ -96,9 +98,13 @@ function PosPage() {
                 totalModal: cartTotals.totalModal,
                 laba,
             };
-            await createTransaksi(transaksiData);
+            const response = await createTransaksi(transaksiData);
             showSuccessToast("Transaksi berhasil disimpan!");
             setCart([]);
+
+            if (response.data.unlockedAchievements && response.data.unlockedAchievements.length > 0) {
+                showAchievement(response.data.unlockedAchievements);
+            }
         } catch (error) {
             showErrorToast(error.response?.data?.message || "Gagal menyimpan transaksi.");
         } finally {

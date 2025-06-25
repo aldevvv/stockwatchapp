@@ -1,0 +1,105 @@
+.leaderboard-controls {
+    max-width: 700px;
+    margin: 0 auto 2rem auto;
+}
+.leaderboard-tabs {
+    display: flex;
+    gap: 0.5rem;
+    background-color: #f3f4f6;
+    border-radius: 8px;
+    padding: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.tab-button {
+    flex: 1;
+    min-width: 120px;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-weight: 500;
+    color: #4b5563;
+    border-radius: 6px;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+.tab-button.active {
+    background-color: #fff;
+    color: #16a34a;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+.leaderboard-container {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+.rank-item {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    border: 1px solid #e5e7eb;
+}
+.rank-item.top-1 { border-left: 5px solid #FFD700; }
+.rank-item.top-2 { border-left: 5px solid #C0C0C0; }
+.rank-item.top-3 { border-left: 5px solid #CD7F32; }
+.rank-position {
+    flex: 0 0 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #6b7280;
+    text-align: center;
+}
+.rank-item.top-1 .rank-position svg,
+.rank-item.top-2 .rank-position svg,
+.rank-item.top-3 .rank-position svg {
+    stroke-width: 1;
+}
+.rank-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 1rem;
+    border: 2px solid #eee;
+}
+.rank-details { flex-grow: 1; }
+.rank-name-container {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+}
+.rank-user-name { font-weight: 600; color: #1f2937; }
+.rank-store-badge {
+    padding: 0.15rem 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 9999px;
+    color: #065f46;
+    background-color: #d1fae5;
+}
+.rank-score { font-size: 0.9rem; color: #4b5563; }
+.my-rank-card {
+    position: sticky;
+    bottom: 0;
+    padding: 1rem 0;
+    background-color: rgba(249, 250, 251, 0.9);
+    backdrop-filter: blur(5px);
+    border-top: 1px solid #e5e7eb;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.05);
+    margin: 2rem -1.5rem -1.5rem -1.5rem;
+}
+.my-rank-card .rank-item.mine {
+    max-width: 700px;
+    margin: 0 auto;
+    background-color: #d1fae5;
+    border-color: #16a34a;
+}
