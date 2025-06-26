@@ -7,7 +7,6 @@ import {
     deleteAllSuppliers
 } from './supplier.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
-import { isOwner } from '../middleware/permissionMiddleware.js';
 import { checkLimit } from '../middleware/checkLimit.middleware.js';
 
 const router = express.Router();
@@ -15,9 +14,9 @@ const router = express.Router();
 router.use(authMiddleware);
 
 router.get('/', getAllSuppliers);
-router.post('/', checkLimit('supplier'), createSupplier);
+router.post('/', authMiddleware, checkLimit('supplier'), createSupplier);
+router.delete('/all', deleteAllSuppliers); 
 router.put('/:supplierId', updateSupplier);
-router.delete('/all', isOwner, deleteAllSuppliers);
-router.delete('/:supplierId', isOwner, deleteSupplier);
+router.delete('/:supplierId', deleteSupplier);
 
 export default router;

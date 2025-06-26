@@ -1,8 +1,12 @@
 import axios from 'axios';
 
+// Logika untuk menentukan URL API yang benar
+const baseURL = import.meta.env.MODE === 'production'
+  ? 'https://api.stockwatch.web.id/api'
+  : 'http://localhost:5000/api';
+
 const api = axios.create({
-  // Langsung arahkan ke alamat API produksi Anda
-  baseURL: 'https://api.stockwatch.web.id/api'
+  baseURL: baseURL
 });
 
 api.interceptors.request.use(config => {
