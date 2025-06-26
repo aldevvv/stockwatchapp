@@ -9,14 +9,17 @@ import {
 import { authMiddleware } from '../middleware/auth.middleware.js';
 import { checkLimit } from '../middleware/checkLimit.middleware.js';
 
+console.log('Loading supplier.routes.js');
+
+
 const router = express.Router();
 
 router.use(authMiddleware);
 
 router.get('/', getAllSuppliers);
-router.post('/', authMiddleware, checkLimit('supplier'), createSupplier);
-router.delete('/all', deleteAllSuppliers); 
+router.post('/', checkLimit('supplier'), createSupplier);
 router.put('/:supplierId', updateSupplier);
+router.delete('/all', deleteAllSuppliers);
 router.delete('/:supplierId', deleteSupplier);
 
 export default router;

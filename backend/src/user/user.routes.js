@@ -1,3 +1,4 @@
+
 import express from 'express';
 import { 
     getUserProfile, 
@@ -9,6 +10,9 @@ import {
 } from './user.controller.js';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 import multer from 'multer';
+
+console.log('Loading user.routes.js');
+
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -22,4 +26,4 @@ router.post('/profile/upload-picture', upload.single('profilePicture'), uploadPr
 router.post('/deactivate', deactivateAccount);
 router.delete('/me', deleteCurrentUserAccount);
 
-export default router;
+export default router; 

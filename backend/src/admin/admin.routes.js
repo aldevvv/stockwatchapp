@@ -13,17 +13,18 @@ import {
     manageUserAccount
 } from './admin.controller.js';
 
+console.log('Loading admin.routes.js');
+
+
 const router = express.Router();
 
 router.use(authMiddleware, adminAuthMiddleware);
 
 router.get('/stats', getPlatformStats);
-
 router.get('/users', getAllUsersProfiles);
 router.get('/users/:targetUserId/details', getUserDetailsForAdmin);
 router.post('/users/add-saldo', addSaldoToUser);
 router.put('/users/:targetUserId/manage', manageUserAccount);
-
 router.post('/redeem-codes', createRedeemCode);
 router.get('/redeem-codes', getAllRedeemCodes);
 router.put('/redeem-codes/:codeId', updateRedeemCode);

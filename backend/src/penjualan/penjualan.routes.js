@@ -2,6 +2,9 @@ import express from 'express';
 import { authMiddleware } from '../middleware/auth.middleware.js';
 import { createTransaksi, getAllTransaksi, getLaporanPenjualan } from './penjualan.controller.js';
 
+console.log('Loading penjualan.routes.js');
+
+
 const router = express.Router();
 
 router.use(authMiddleware);
