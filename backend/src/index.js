@@ -15,11 +15,10 @@ import stockshareRoutes from './stockshare/stockshare.routes.js';
 import billingRoutes from './billing/billing.routes.js';
 import adminRoutes from './admin/admin.routes.js';
 import contactRoutes from './contact/contact.routes.js';
-import leaderboardRoutes from './leaderboard/leaderboard.routes.js';
-import achievementRoutes from './achievements/achievement.routes.js';
 
 const app = express();
 
+// --- KONFIGURASI CORS BARU & LEBIH LENGKAP ---
 const allowedOrigins = [
   'https://stockwatch.web.id', 
   'http://localhost:5173'
@@ -27,15 +26,25 @@ const allowedOrigins = [
 
 const corsOptions = {
   origin: (origin, callback) => {
-    if (allowedOrigins.includes(origin) || !origin) {
+    // Izinkan permintaan tanpa origin (seperti dari Postman atau server-ke-server)
+    if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Akses diblokir oleh kebijakan CORS'));
     }
-  }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 };
 
+// Aktifkan handler untuk preflight request di semua rute
+app.options('*', cors(corsOptions)); 
+
+// Terapkan CORS untuk semua permintaan lain
 app.use(cors(corsOptions));
+// --- AKHIR PERBAIKAN ---
+
 app.use(morgan('dev'));
 app.use(express.json());
 
@@ -52,8 +61,6 @@ app.use('/api/stockshare', stockshareRoutes);
 app.use('/api/billing', billingRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/contact', contactRoutes);
-app.use('/api/leaderboard', leaderboardRoutes);
-app.use('/api/achievements', achievementRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
