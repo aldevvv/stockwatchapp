@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
+  // Langsung arahkan ke alamat API produksi Anda
+  baseURL: 'https://api.stockwatch.web.id/api'
 });
 
 api.interceptors.request.use(config => {
